@@ -104,6 +104,7 @@ class _LoadItemsState extends State<LoadItems> {
   }
 
   updateLedgerOnline() async {
+    await addtoLocalLedger();
     List bal = [];
     var getBal = await db.getBalance(UserData.id, RequestData.tranNo);
     bal = json.decode(json.encode(getBal));
@@ -127,7 +128,6 @@ class _LoadItemsState extends State<LoadItems> {
 
     if (changeStat == 1) {
       ///CHANGING TRANSACTION STATUS SA LOCAL
-      await addtoLocalLedger();
       db.updateStat(
           RequestData.tranNo, RequestData.appQty, 'Loaded', date.toString());
 

@@ -14,12 +14,15 @@ class LoadingSpinkit extends StatefulWidget {
 class _LoadingSpinkitState extends State<LoadingSpinkit> {
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      // child: confirmContent(context),
-      child: loadingContent(context),
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        // child: confirmContent(context),
+        child: loadingContent(context),
+      ),
     );
   }
 
