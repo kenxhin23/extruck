@@ -31,6 +31,8 @@ class StockRequest extends StatefulWidget {
 
 class _StockRequestState extends State<StockRequest> {
   List cartList = [];
+  List convList = [];
+  List convLine = [];
   String imgPath = "";
   bool emptyCart = true;
   bool noImage = true;
@@ -44,15 +46,9 @@ class _StockRequestState extends State<StockRequest> {
   @override
   void initState() {
     super.initState();
-    // initPlatformState();
     loadCart();
-    // loadTran();
+    loadforUpload();
   }
-
-  // loadTran() async {
-  //   var rsp = await db.fetchTest();
-  //   print(rsp);
-  // }
 
   loadCart() async {
     var documentDirectory = await getApplicationDocumentsDirectory();
@@ -62,36 +58,27 @@ class _StockRequestState extends State<StockRequest> {
     CartData.itmNo = '0';
     CartData.totalAmount = "0.00";
     var rsp = await db.ofFetchCart(UserData.id);
-    // var rsp = await getTemp(UserData.id, CustomerData.accountCode);
     cartList = json.decode(json.encode(rsp));
-    // print(cartList);
 
     setState(() {
       if (cartList.isNotEmpty) {
         emptyCart = false;
       }
       computeTotal();
-      // loadMinOrder();
     });
     OrderData.setSign = false;
     OrderData.signature = '';
-    // viewSpinkit = false;
   }
 
   computeTotal() {
     setState(() {
-      // itmCat = "";
-      // categ = false;
       CartData.itmNo = '0';
       double sum = 0;
       if (cartList.isNotEmpty) {
         for (var element in cartList) {
           setState(() {
             sum = sum + double.parse(element['item_total']);
-            // print(element['item_total']);
             CartData.totalAmount = sum.toStringAsFixed(2);
-            // print(CartData.totalAmount);
-            // CartData.itmNo = cartList.length.toString();
             CartData.itmNo =
                 (int.parse(CartData.itmNo) + int.parse(element['item_qty']))
                     .toString();
@@ -103,15 +90,38 @@ class _StockRequestState extends State<StockRequest> {
           CartData.itmNo = '0';
         });
       }
-
-      // print('TOTAL AMOUNT:' + CartData.totalAmount);
-      // print(CartData.itmNo);
       CartData.itmLineNo = cartList.length.toString();
     });
     Provider.of<CartItemCounter>(context, listen: false)
         .setTotal(int.parse(CartData.itmNo));
     Provider.of<CartTotalCounter>(context, listen: false)
         .setTotal(double.parse(CartData.totalAmount));
+  }
+
+  loadforUpload() async {
+    var rsp = await db.getPendingConversion(UserData.id);
+
+    setState(() {
+      convList = json.decode(json.encode(rsp));
+    });
+    if (convList.isNotEmpty) {
+      for (var element in convList) {
+        var conLine = await db.loadConvertedItems(element['conv_no']);
+        // convLine = json.decode(json.encode(conLine));
+        var upConv = await db.uploadConversion(
+            element['sm_code'],
+            element['conv_no'],
+            element['conv_date'],
+            element['itmno'],
+            element['totAmt'],
+            element['item_qty'],
+            element['nitem_qty'],
+            conLine);
+        if (upConv != null || upConv != '') {
+          db.changeConvStat(upConv, 'Uploaded');
+        }
+      }
+    }
   }
 
   showSnackBar(context, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,

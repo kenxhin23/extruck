@@ -108,6 +108,7 @@ class _MyCartState extends State<MyCart> {
 
   Future<void> refreshList() async {
     await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
     setState(() {
       loadCart();
     });

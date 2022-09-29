@@ -5334,6 +5334,26 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
+  Future uploadConversion(
+      code, convNo, date, itmNo, totAmt, itmQty, nitmQty, List list) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadconversion');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(code),
+          'conv_no': encrypt(convNo),
+          'conv_date': encrypt(date),
+          'itmno': encrypt(itmNo),
+          'totAmt': encrypt(totAmt),
+          'item_qty': encrypt(itmQty),
+          'nitem_qty': encrypt(nitmQty),
+          'line': jsonEncode(list),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
   /////
   ///EXTRUCK CODE FOR SQL
   ///
@@ -5881,6 +5901,21 @@ class DatabaseHelper {
     return client.rawQuery(
         'SELECT * FROM xt_tran_head WHERE sm_code ="$code"  ORDER BY tran_no DESC',
         null);
+  }
+
+  Future getPendingConversion(code) async {
+    String stat = 'Pending';
+    var client = await db;
+
+    return client.rawQuery(
+        'SELECT * FROM xt_conv_head WHERE sm_code ="$code" AND stat ="$stat"  ORDER BY doc_no ASC',
+        null);
+  }
+
+  Future changeConvStat(convNo, stat) async {
+    var client = await db;
+    return client.update('xt_conv_head', {'stat': stat},
+        where: 'conv_no = ?', whereArgs: [convNo]);
   }
 
   Future ofFetchSample() async {
