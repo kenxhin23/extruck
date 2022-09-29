@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/home/stock%20request/item_list.dart';
 import 'package:extruck/home/stock%20request/send_request.dart';

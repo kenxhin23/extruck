@@ -5354,6 +5354,29 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
+  Future checkLedger(code) async {
+    var url = Uri.parse('${UrlAddress.url}/checkledger');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+    });
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future updateLedger(code, List line) async {
+    var url = Uri.parse('${UrlAddress.url}/updateledger');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+      'line': jsonEncode(line),
+    });
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
   /////
   ///EXTRUCK CODE FOR SQL
   ///
@@ -5916,6 +5939,14 @@ class DatabaseHelper {
     var client = await db;
     return client.update('xt_conv_head', {'stat': stat},
         where: 'conv_no = ?', whereArgs: [convNo]);
+  }
+
+  Future checkLedgerLocal(code) async {
+    var client = await db;
+
+    return client.rawQuery(
+        'SELECT * FROM xt_load_ldg WHERE sm_code ="$code" ORDER BY doc_no ASC',
+        null);
   }
 
   Future ofFetchSample() async {

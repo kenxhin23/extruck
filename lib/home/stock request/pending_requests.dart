@@ -3,6 +3,7 @@ import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/home/stock%20request/load_items.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/userdata.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +20,8 @@ class _PendingRequestsState extends State<PendingRequests> {
   List _temp = [];
   List _pendList = [];
   List _rfList = [];
+  List _ldgListlive = [];
+  List _ldgListloc = [];
   bool appTrue = false;
   bool revTrue = false;
   bool viewSpinkit = true;
@@ -36,7 +39,10 @@ class _PendingRequestsState extends State<PendingRequests> {
   void initState() {
     super.initState();
     getPendingRequests();
-    checkRevolving();
+    if (NetworkData.connected) {
+      checkRevolving();
+      checkLedger();
+    }
   }
 
   getPendingRequests() async {
@@ -98,6 +104,27 @@ class _PendingRequestsState extends State<PendingRequests> {
         GlobalVariables.revBal = _rfList[0]['bal'];
         // print(GlobalVariables.revBal);
       });
+    }
+  }
+
+  checkLedger() async {
+    var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
+    _ldgListloc = json.decode(json.encode(checkLedgerLocal));
+    // print(_ldgListloc);
+    var checkLedgerOnline = await db.checkLedger(UserData.id);
+    _ldgListlive = checkLedgerOnline;
+    if (_ldgListlive.length == _ldgListloc.length) {
+      if (kDebugMode) {
+        print('EQUAL');
+      }
+    } else {
+      if (kDebugMode) {
+        print('NOT EQUAL');
+      }
+      var rsp = await db.updateLedger(UserData.id, _ldgListloc);
+      if (kDebugMode) {
+        print(rsp);
+      }
     }
   }
 

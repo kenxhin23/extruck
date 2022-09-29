@@ -152,6 +152,7 @@ class _StockConversionState extends State<StockConversion> {
         'OK',
       );
       if (action == DialogAction.yes) {
+        GlobalVariables.menuKey = 0;
         // ignore: use_build_context_synchronously
         Navigator.of(context)
             .pushNamedAndRemoveUntil('/menu', (Route<dynamic> route) => false);
