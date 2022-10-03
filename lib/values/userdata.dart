@@ -254,3 +254,11 @@ class MyGlobals {
 class Spinkit {
   static String? label;
 }
+
+class RefundData {
+  static List tmplist = [];
+}
+
+class ConversionData {
+  static List list = [];
+}

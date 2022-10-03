@@ -1,3 +1,4 @@
+import 'package:extruck/order/badorder/create_badorder.dart';
 import 'package:extruck/order/history/order_history.dart';
 import 'package:extruck/order/new%20order/customer.dart';
 import 'package:extruck/order/pending%20order/pending_order.dart';
@@ -62,7 +63,9 @@ class _OrderPageState extends State<OrderPage> {
               const SizedBox(height: 10),
               historyCont(context),
               const SizedBox(height: 20),
-              boReportCont(context),
+              boRefundCont(context),
+              const SizedBox(height: 10),
+              boHistoryCont(context),
               const SizedBox(height: 10),
               changePriceCont(context),
             ],
@@ -294,7 +297,63 @@ class _OrderPageState extends State<OrderPage> {
     );
   }
 
-  Container boReportCont(BuildContext context) {
+  Container boRefundCont(BuildContext context) {
+    // ignore: avoid_unnecessary_containers
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const BadOrderRefund()));
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          color: Colors.white,
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: Icon(
+                  Icons.add_shopping_cart_outlined,
+                  color: Colors.grey,
+                  size: 24,
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 15),
+                    Text(
+                      'Create BO refund',
+                      style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 15),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              const Icon(
+                Icons.chevron_right,
+                color: Colors.grey,
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container boHistoryCont(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 60,
@@ -315,7 +374,7 @@ class _OrderPageState extends State<OrderPage> {
               children: [
                 const SizedBox(height: 15),
                 Text(
-                  'View BO Reports',
+                  'View BO History',
                   style: TextStyle(
                       color: Colors.grey[700],
                       fontSize: 16,

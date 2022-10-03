@@ -61,6 +61,7 @@ class _StockConversionState extends State<StockConversion> {
     setState(() {
       _convList = json.decode(json.encode(rsp));
       // print(_convList);
+      ConversionData.list = _convList;
       for (var element in _convList) {
         totalAmt = totalAmt +
             (double.parse(element['item_amt']) *

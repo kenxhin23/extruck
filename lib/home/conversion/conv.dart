@@ -1,6 +1,9 @@
+import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/home/conversion/conv_history.dart';
 import 'package:extruck/home/conversion/convert_stock.dart';
 import 'package:extruck/session/session_timer.dart';
+import 'package:extruck/values/userdata.dart';
+import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -12,6 +15,7 @@ class Conversion extends StatefulWidget {
 }
 
 class _ConversionState extends State<Conversion> {
+  final db = DatabaseHelper();
   void handleUserInteraction([_]) {
     SessionTimer sessionTimer = SessionTimer();
     sessionTimer.initializeTimer(context);
@@ -57,10 +61,25 @@ class _ConversionState extends State<Conversion> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const StockConversion()));
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: const StockConversion()))
+              .then((value) {
+            if (ConversionData.list.isNotEmpty) {
+              for (var element in ConversionData.list) {
+                db.addInventory(
+                    UserData.id,
+                    element['item_code'],
+                    element['item_desc'],
+                    element['item_uom'],
+                    element['item_qty']);
+              }
+              db.deleteAllConvItem(UserData.id);
+              showGlobalSnackbar('Information', 'Items returned to inventory.',
+                  Colors.blue, Colors.white);
+            }
+          });
         },
         child: Container(
           width: MediaQuery.of(context).size.width,

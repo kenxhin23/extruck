@@ -1277,12 +1277,12 @@ class DatabaseHelper {
         null);
   }
 
-  Future getOrderedItems(tranNo) async {
-    var client = await db;
-    return client.rawQuery(
-        'SELECT * FROM tb_tran_line WHERE tran_no ="$tranNo" ORDER BY item_desc ASC',
-        null);
-  }
+  // Future getOrderedItems(tranNo) async {
+  //   var client = await db;
+  //   return client.rawQuery(
+  //       'SELECT * FROM tb_tran_line WHERE tran_no ="$tranNo" ORDER BY item_desc ASC',
+  //       null);
+  // }
 
   Future getAllLine() async {
     var client = await db;
@@ -3876,13 +3876,6 @@ class DatabaseHelper {
   /////////
   /////////
 
-  Future getApprovedOrders() async {
-    var client = await db;
-    return client.rawQuery(
-        "SELECT * FROM tb_tran_head WHERE tran_stat ='Approved' AND hepe_upload = 'FALSE' AND (sm_code='MNG-04' OR sm_code='MNG-05') ORDER BY store_name ASC",
-        null);
-  }
-
   // Future getPendingOrders() async {
   //   var client = await db;
   //   return client.rawQuery(
@@ -5866,7 +5859,8 @@ class DatabaseHelper {
   Future loadHistoryItems(ordNo) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_rmt_line WHERE order_no ="$ordNo"', null);
+        'SELECT *, false as mark FROM xt_rmt_line WHERE order_no ="$ordNo"',
+        null);
   }
 
   Future getPendingOrders(smcode) async {
@@ -5946,6 +5940,20 @@ class DatabaseHelper {
 
     return client.rawQuery(
         'SELECT * FROM xt_load_ldg WHERE sm_code ="$code" ORDER BY doc_no ASC',
+        null);
+  }
+
+  Future getApprovedOrders(code) async {
+    var client = await db;
+    return client.rawQuery(
+        "SELECT * FROM xt_rmt_head WHERE sm_code='$code' AND stat ='Approved' ORDER BY doc_no ASC",
+        null);
+  }
+
+  Future getRefundLines(ordNo, itmCode, itmUom) async {
+    var client = await db;
+    return client.rawQuery(
+        "SELECT *,' ' as rf_itmcode,' ' as rf_itemdesc,' ' as rf_qty, ' ' as rf_uom,' ' as rf_amount,' ' as rf_totamt,' ' as rf_image FROM xt_rmt_line WHERE order_no ='$ordNo' AND item_code ='$itmCode' AND uom ='$itmUom' ORDER BY doc_no ASC",
         null);
   }
 
