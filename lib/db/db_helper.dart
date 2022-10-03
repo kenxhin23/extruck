@@ -5583,7 +5583,7 @@ class DatabaseHelper {
   Future checkCount(smcode, custcode) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_rmt_head WHERE  sm_code  = "$smcode" AND account_code = "$custcode"',
+        'SELECT * FROM xt_rmt_head WHERE sm_code="$smcode" AND account_code="$custcode"',
         null);
   }
 

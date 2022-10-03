@@ -1,17 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/order/badorder/bo_cart.dart';
-import 'package:extruck/order/history/connect_printer.dart';
-// import 'package:extruck/order/history/reprint_receipt.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/assets.dart';
-// import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
-// import 'package:extruck/widgets/dialogs.dart';
 import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,6 +27,7 @@ class BoOrderItems extends StatefulWidget {
 
 class _BoOrderItemsState extends State<BoOrderItems> {
   bool noImage = false;
+  bool noItms = true;
   List _list = [];
 
   String imgPath = '';
@@ -349,6 +345,7 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                       } else {}
                     }
                     if (!empty) {
+                      RefundData.tmplist.clear();
                       Navigator.push(
                           context,
                           PageTransition(
@@ -356,7 +353,35 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                               child: BoCart(
                                 _list,
                                 widget.ordNo,
-                              )));
+                              ))).then((value) {
+                        if (RefundData.tmplist.isNotEmpty) {
+                          print('NOT EMPTY');
+
+                          for (var element in RefundData.tmplist) {
+                            if (element['rf_itmcode'] == '' ||
+                                element['rf_itmcode'] == ' ') {
+                              // noItms = true;
+                            } else {
+                              noItms = false;
+                              db.addInventory(
+                                  UserData.id,
+                                  element['rf_itmcode'],
+                                  element['rf_itemdesc'],
+                                  element['rf_uom'],
+                                  element['rf_qty']);
+                            }
+                          }
+
+                          // db.deleteAllConvItem(UserData.id);
+                          if (!noItms) {
+                            showGlobalSnackbar(
+                                'Information',
+                                'Items returned to inventory.',
+                                Colors.blue,
+                                Colors.white);
+                          }
+                        }
+                      });
                     } else {
                       showGlobalSnackbar(
                           'Information',

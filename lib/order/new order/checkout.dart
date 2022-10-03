@@ -72,11 +72,7 @@ class _CheckoutState extends State<Checkout> {
     if (headRsp != null) {
       // print(tranNo);
       addingTransactionLine();
-    } else {
-      // print('HEAD RSP: $headRsp');
-      // var getXTtran = await db.ofFetchSample(tranNo);
-      // print(getXTtran);
-    }
+    } else {}
   }
 
   addingTransactionLine() async {

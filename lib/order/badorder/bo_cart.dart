@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:extruck/db/db_helper.dart';
-import 'package:extruck/home/conversion/conv_list.dart';
-import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/order/badorder/item_list.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/assets.dart';
@@ -14,8 +11,6 @@ import 'package:extruck/widgets/dialogs.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import 'package:flutter/src/foundation/key.dart';
-// import 'package:flutter/src/widgets/framework.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -33,7 +28,7 @@ class BoCart extends StatefulWidget {
 
 class _BoCartState extends State<BoCart> {
   List _list = [];
-  List _convCount = [];
+  List _boCount = [];
   bool noImage = true;
   bool noItem = true;
   // bool emptyList = true;
@@ -91,92 +86,106 @@ class _BoCartState extends State<BoCart> {
     });
   }
 
-  savingConversion() async {
-    final String date =
+  savingBoRefund() async {
+    final String date1 =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     final String date2 = DateFormat("MMddyy").format(DateTime.now());
 
-    var count = await db.checkConversionCount(UserData.id);
-    _convCount = json.decode(json.encode(count));
-    int cnt = _convCount.length + 1;
-    tranNo = '$date2${cnt}CNV${UserData.id}';
+    var count = await db.checkCount(UserData.id, CustomerData.accountCode);
+    _boCount = json.decode(json.encode(count));
+    int cnt = _boCount.length + 1;
+    tranNo = '$date2${cnt}BO${CustomerData.accountCode}';
     if (kDebugMode) {
       print(tranNo);
-      print(totalAmt);
-      print(itmQty);
-      print(nitmQty);
     }
 
-    ///SAVING TRAN
+    ///ADD ORDER TRAN
     ///
+    // var headRsp = await db.addTransactionHead(
+    //     tranNo,
+    //     CartData.siNum,
+    //     date1,
+    //     CustomerData.accountCode,
+    //     CustomerData.accountName,
+    //     CartData.itmNo,
+    //     CartData.totalAmount,
+    //     CartData.pMeth,
+    //     'BO',
+    //     UserData.id);
+    // if (headRsp != null) {
+    //   // print(tranNo);
+    //   // addingTransactionLine();
+    // } else {}
+  }
 
-    ///SAVING LINE
-    ///
+  addingTransactionLine() async {
+    ///ADD ORDER LINE
+    final String date =
+        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
-    ///SAVING IN LEDGER
-    ///
-
-    ///DELETING IN CONV CART
-    // int x = 0;
-    for (var element in _list) {
-      var qty = int.parse(element['item_qty']) * int.parse(element['conv_qty']);
-      await db.saveConvertedLine(
-          UserData.id,
+    for (var element in CartData.list) {
+      // print(element);
+      db.addTransactionLine(
           tranNo,
+          CartData.siNum,
           element['item_code'],
           element['item_desc'],
           element['item_qty'],
           element['item_uom'],
           element['item_amt'],
-          element['conv_qty'],
-          element['conv_uom'],
-          element['conv_amt'],
-          element['image']);
-      var a = await db.loadItemtoInventory(
+          '0.00',
+          element['item_total'],
+          '0.00',
+          element['item_cat'],
+          'Served',
+          'F',
           UserData.id,
-          element['item_code'],
-          element['item_desc'],
-          element['conv_uom'],
-          element['conv_amt'],
-          qty.toString(),
-          '1',
-          element['conv_uom'],
           element['image']);
-      if (kDebugMode) {
-        print('*************************LOAD INNVETORY RSP: $a');
-      }
+    }
+    if (CartData.pMeth == 'Cheque') {
+      db.addChequeData(
+          date,
+          tranNo,
+          UserData.id,
+          CustomerData.accountCode,
+          ChequeData.bankName,
+          ChequeData.accName,
+          ChequeData.accNum,
+          ChequeData.chequeNum,
+          ChequeData.chequeDate,
+          ChequeData.type,
+          CartData.totalAmount,
+          'Pending');
+      // print('Cheque Data Saved!');
     }
 
-    var headrsp = await db.saveConvertedHead(
-        UserData.id, tranNo, date, _list.length, totalAmt, itmQty, nitmQty);
+    ///ADD LOG TO LEDGER
+    db.minustoLoadLedger(
+        UserData.id, date.toString(), CartData.itmNo, 'STOCK OUT', tranNo);
 
-    var minLedger = await db.minustoLoadLedger(
-        UserData.id, date, itmQty.toString(), 'CONVERSION', tranNo);
+    ///CLEAN CUSTOMER CART
+    db.cleanCustomerCart(UserData.id, CustomerData.accountCode);
 
-    var addLedger = await db.addtoLoadLedger(
-        UserData.id, date, nitmQty.toString(), 'CONVERSION', tranNo);
+    Navigator.pop(context);
 
-    // db.removeItems();
-    if (headrsp != null && minLedger != null && addLedger != null) {
-      db.deleteAllConvItem(UserData.id);
+    String msg =
+        'Your Order #$tranNo has been saved successfully. Continue to print receipt';
+    // ignore: use_build_context_synchronously
+    final action = await WarningDialogs.openDialog(
+      context,
+      'Information',
+      msg,
+      false,
+      'OK',
+    );
+    if (action == DialogAction.yes) {
       // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-      String msg = 'Items successfully converted.';
-      // ignore: use_build_context_synchronously
-      final action = await WarningDialogs.openDialog(
-        context,
-        'Information',
-        msg,
-        false,
-        'OK',
-      );
-      if (action == DialogAction.yes) {
-        GlobalVariables.menuKey = 0;
-        // ignore: use_build_context_synchronously
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/menu', (Route<dynamic> route) => false);
-      } else {}
-    }
+      // Navigator.push(
+      //     context,
+      //     PageTransition(
+      //         type: PageTransitionType.rightToLeft,
+      //         child: PrintReceipt(CartData.list, tranNo)));
+    } else {}
   }
 
   deletetoRefundList(code) {
@@ -306,17 +315,17 @@ class _BoCartState extends State<BoCart> {
                             final action = await Dialogs.openDialog(
                                 context,
                                 'Confirmation',
-                                'You cannot cancel or modify after this. Are you sure you want to convert items?',
+                                'You cannot cancel or modify after this. Are you sure you want to refund items?',
                                 false,
                                 'No',
                                 'Yes');
                             if (action == DialogAction.yes) {
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) =>
-                                      const ProcessingBox('Converting Items'));
-                              savingConversion();
+                              // showDialog(
+                              //     barrierDismissible: false,
+                              //     context: context,
+                              //     builder: (context) =>
+                              //         const ProcessingBox('Processing Items'));
+                              savingBoRefund();
                             } else {}
                           },
                           child: const Text(
@@ -505,7 +514,9 @@ class _BoCartState extends State<BoCart> {
                                             _list[index]['qty'])))
                                 .then((value) {
                               setState(() {
-                                _list = RefundData.tmplist;
+                                if (RefundData.tmplist.isNotEmpty) {
+                                  _list = RefundData.tmplist;
+                                }
                               });
                               print(_list);
 
