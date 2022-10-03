@@ -29,6 +29,7 @@ class _PendingOrdersState extends State<PendingOrders> {
   List _bal = [];
 
   bool viewSpinkit = true;
+  bool boRef = false;
 
   String rmtNo = '';
   String loadBal = '';
@@ -270,6 +271,12 @@ class _PendingOrdersState extends State<PendingOrders> {
                 } else {
                   cash = false;
                 }
+                if (_list[index]['tran_type'] == 'BO') {
+                  boRef = true;
+                } else {
+                  boRef = false;
+                }
+
                 return Container(
                   // width: MediaQuery.of(context).size.width,
                   color: Colors.white,
@@ -332,6 +339,20 @@ class _PendingOrdersState extends State<PendingOrders> {
                       Column(
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
+                          Visibility(
+                            visible: boRef,
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              color: Colors.grey,
+                              child: const Text(
+                                'BO REFUND',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white),
+                              ),
+                            ),
+                          ),
                           const Text(
                             'Total Amount',
                             style: TextStyle(

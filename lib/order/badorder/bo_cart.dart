@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/order/badorder/item_list.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/assets.dart';
@@ -101,21 +102,21 @@ class _BoCartState extends State<BoCart> {
 
     ///ADD ORDER TRAN
     ///
-    // var headRsp = await db.addTransactionHead(
-    //     tranNo,
-    //     CartData.siNum,
-    //     date1,
-    //     CustomerData.accountCode,
-    //     CustomerData.accountName,
-    //     CartData.itmNo,
-    //     CartData.totalAmount,
-    //     CartData.pMeth,
-    //     'BO',
-    //     UserData.id);
-    // if (headRsp != null) {
-    //   // print(tranNo);
-    //   // addingTransactionLine();
-    // } else {}
+    var headRsp = await db.addTransactionHead(
+        tranNo,
+        CartData.siNum,
+        date1,
+        CustomerData.accountCode,
+        CustomerData.accountName,
+        CartData.itmNo,
+        CartData.totalAmount,
+        CartData.pMeth,
+        'BO',
+        UserData.id);
+    if (headRsp != null) {
+      // print(tranNo);
+      addingTransactionLine();
+    } else {}
   }
 
   addingTransactionLine() async {
@@ -123,53 +124,53 @@ class _BoCartState extends State<BoCart> {
     final String date =
         DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
-    for (var element in CartData.list) {
+    for (var element in _list) {
       // print(element);
       db.addTransactionLine(
           tranNo,
           CartData.siNum,
-          element['item_code'],
-          element['item_desc'],
-          element['item_qty'],
-          element['item_uom'],
-          element['item_amt'],
+          element['rf_itmcode'],
+          element['rf_itemdesc'],
+          element['rf_qty'],
+          element['rf_uom'],
+          element['rf_amount'],
           '0.00',
-          element['item_total'],
+          element['rf_totamt:'],
           '0.00',
           element['item_cat'],
           'Served',
           'F',
           UserData.id,
-          element['image']);
+          element['rf_image']);
     }
-    if (CartData.pMeth == 'Cheque') {
-      db.addChequeData(
-          date,
-          tranNo,
-          UserData.id,
-          CustomerData.accountCode,
-          ChequeData.bankName,
-          ChequeData.accName,
-          ChequeData.accNum,
-          ChequeData.chequeNum,
-          ChequeData.chequeDate,
-          ChequeData.type,
-          CartData.totalAmount,
-          'Pending');
-      // print('Cheque Data Saved!');
-    }
+    // if (CartData.pMeth == 'Cheque') {
+    //   db.addChequeData(
+    //       date,
+    //       tranNo,
+    //       UserData.id,
+    //       CustomerData.accountCode,
+    //       ChequeData.bankName,
+    //       ChequeData.accName,
+    //       ChequeData.accNum,
+    //       ChequeData.chequeNum,
+    //       ChequeData.chequeDate,
+    //       ChequeData.type,
+    //       CartData.totalAmount,
+    //       'Pending');
+    //   // print('Cheque Data Saved!');
+    // }
 
     ///ADD LOG TO LEDGER
     db.minustoLoadLedger(
         UserData.id, date.toString(), CartData.itmNo, 'STOCK OUT', tranNo);
 
     ///CLEAN CUSTOMER CART
-    db.cleanCustomerCart(UserData.id, CustomerData.accountCode);
+    // db.cleanCustomerCart(UserData.id, CustomerData.accountCode);
 
     Navigator.pop(context);
 
     String msg =
-        'Your Order #$tranNo has been saved successfully. Continue to print receipt';
+        'Your BO Refund #$tranNo has been saved successfully. Continue to print receipt';
     // ignore: use_build_context_synchronously
     final action = await WarningDialogs.openDialog(
       context,
@@ -320,11 +321,11 @@ class _BoCartState extends State<BoCart> {
                                 'No',
                                 'Yes');
                             if (action == DialogAction.yes) {
-                              // showDialog(
-                              //     barrierDismissible: false,
-                              //     context: context,
-                              //     builder: (context) =>
-                              //         const ProcessingBox('Processing Items'));
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) =>
+                                      const ProcessingBox('Processing Items'));
                               savingBoRefund();
                             } else {}
                           },
@@ -516,9 +517,10 @@ class _BoCartState extends State<BoCart> {
                               setState(() {
                                 if (RefundData.tmplist.isNotEmpty) {
                                   _list = RefundData.tmplist;
+                                  print(_list);
                                 }
                               });
-                              print(_list);
+                              // print(_list);
 
                               // refreshList();
                             });

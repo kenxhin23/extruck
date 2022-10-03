@@ -1,3 +1,4 @@
+import 'package:extruck/order/badorder/bo_history.dart';
 import 'package:extruck/order/badorder/create_badorder.dart';
 import 'package:extruck/order/history/order_history.dart';
 import 'package:extruck/order/new%20order/customer.dart';
@@ -355,43 +356,55 @@ class _OrderPageState extends State<OrderPage> {
 
   Container boHistoryCont(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 60,
-      color: Colors.white,
-      child: Row(
-        children: [
-          const Padding(
-            padding: EdgeInsets.only(left: 15, right: 15),
-            child: Icon(
-              Icons.production_quantity_limits_rounded,
-              color: Colors.grey,
-              size: 24,
-            ),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 15),
-                Text(
-                  'View BO History',
-                  style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const BoHistory()));
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: 60,
+          color: Colors.white,
+          child: Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 15, right: 15),
+                child: Icon(
+                  Icons.production_quantity_limits_rounded,
+                  color: Colors.grey,
+                  size: 24,
                 ),
-                const SizedBox(height: 15),
-              ],
-            ),
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 15),
+                    Text(
+                      'View BO History',
+                      style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 15),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              const Icon(
+                Icons.chevron_right,
+                color: Colors.grey,
+              )
+            ],
           ),
-          const SizedBox(
-            width: 5,
-          ),
-          const Icon(
-            Icons.chevron_right,
-            color: Colors.grey,
-          )
-        ],
+        ),
       ),
     );
   }

@@ -1,21 +1,20 @@
 import 'dart:convert';
 import 'package:extruck/db/db_helper.dart';
-import 'package:extruck/order/badorder/bo_line.dart';
-// import 'package:extruck/order/history/order_history_line.dart';
+import 'package:extruck/order/history/order_history_line.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
-class BadOrderRefund extends StatefulWidget {
-  const BadOrderRefund({Key? key}) : super(key: key);
+class BoHistory extends StatefulWidget {
+  const BoHistory({Key? key}) : super(key: key);
 
   @override
-  State<BadOrderRefund> createState() => _BadOrderRefundState();
+  State<BoHistory> createState() => _BoHistoryState();
 }
 
-class _BadOrderRefundState extends State<BadOrderRefund> {
+class _BoHistoryState extends State<BoHistory> {
   String rmtNo = 'n/a';
   String _searchController = "";
   List _list = [];
@@ -27,11 +26,11 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
   @override
   void initState() {
     super.initState();
-    loadApprovedOrders();
+    loadHistory();
   }
 
-  loadApprovedOrders() async {
-    var rsp = await db.getApprovedOrders(UserData.id);
+  loadHistory() async {
+    var rsp = await db.loadBoHistory(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
       // print(_list);
@@ -68,7 +67,7 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
             children: [
               const Expanded(
                 child: Text(
-                  'Select order to refund',
+                  'Order History',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -217,13 +216,12 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
                     CartData.itmNo = _list[index]['item_count'];
                     CartData.totalAmount = _list[index]['tot_amt'];
                     CartData.siNum = _list[index]['si_no'];
-                    CartData.pMeth = _list[index]['pmeth_type'];
                   });
                   Navigator.push(
                       context,
                       PageTransition(
                           type: PageTransitionType.rightToLeft,
-                          child: BoOrderItems(
+                          child: HistoryItems(
                             _list[index]['order_no'],
                             _list[index]['si_no'],
                             _list[index]['store_name'],

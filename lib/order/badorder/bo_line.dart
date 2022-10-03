@@ -55,7 +55,7 @@ class _BoOrderItemsState extends State<BoOrderItems> {
     setState(() {
       _list = json.decode(json.encode(rsp));
       CartData.itmLineNo = _list.length.toString();
-      print(_list);
+      // print(_list);
     });
   }
 
@@ -355,7 +355,7 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                                 widget.ordNo,
                               ))).then((value) {
                         if (RefundData.tmplist.isNotEmpty) {
-                          print('NOT EMPTY');
+                          // print('NOT EMPTY');
 
                           for (var element in RefundData.tmplist) {
                             if (element['rf_itmcode'] == '' ||

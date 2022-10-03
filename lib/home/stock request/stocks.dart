@@ -73,7 +73,7 @@ class _StockPageState extends State<StockPage> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          print(NetworkData.connected);
+          // print(NetworkData.connected);
           if (!NetworkData.connected) {
             showGlobalSnackbar('Connectivity', 'Please connect to internet.',
                 Colors.black, Colors.white);

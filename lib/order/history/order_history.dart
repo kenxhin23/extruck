@@ -30,7 +30,7 @@ class _OrderHistoryState extends State<OrderHistory> {
   }
 
   loadHistory() async {
-    var rsp = await db.loadHistory(UserData.id);
+    var rsp = await db.loadOrderHistory(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
       // print(_list);

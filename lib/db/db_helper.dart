@@ -5835,10 +5835,17 @@ class DatabaseHelper {
         'SELECT * FROM xt_conv_line WHERE conv_no ="$convNo"', null);
   }
 
-  Future loadHistory(smcode) async {
+  Future loadOrderHistory(smcode) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" ORDER BY doc_no DESC',
+        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" AND tran_type ="ORDER" ORDER BY doc_no DESC',
+        null);
+  }
+
+  Future loadBoHistory(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" AND tran_type ="BO" ORDER BY doc_no DESC',
         null);
   }
 
@@ -5852,7 +5859,14 @@ class DatabaseHelper {
   Future searchOrder(text, code) async {
     var client = await db;
     return client.rawQuery(
-        "SELECT * FROM xt_rmt_head WHERE order_no LIKE '%$text%' AND sm_code ='$code'",
+        "SELECT * FROM xt_rmt_head WHERE order_no AND tran_type = 'ORDER' LIKE '%$text%' AND sm_code ='$code'",
+        null);
+  }
+
+  Future searchBO(text, code) async {
+    var client = await db;
+    return client.rawQuery(
+        "SELECT * FROM xt_rmt_head WHERE order_no AND tran_type = 'BO' LIKE '%$text%' AND sm_code ='$code'",
         null);
   }
 
@@ -5946,7 +5960,7 @@ class DatabaseHelper {
   Future getApprovedOrders(code) async {
     var client = await db;
     return client.rawQuery(
-        "SELECT * FROM xt_rmt_head WHERE sm_code='$code' AND stat ='Approved' ORDER BY doc_no ASC",
+        "SELECT * FROM xt_rmt_head WHERE sm_code='$code' AND stat ='Approved' AND tran_type = 'ORDER' ORDER BY doc_no ASC",
         null);
   }
 
