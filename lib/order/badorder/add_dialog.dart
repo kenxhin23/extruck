@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:extruck/db/db_helper.dart';
-import 'package:extruck/providers/cart_items.dart';
-import 'package:extruck/providers/cart_total.dart';
 import 'package:extruck/values/assets.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
@@ -12,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 
 class AddDialog extends StatefulWidget {
@@ -463,6 +460,7 @@ class _AddDialogState extends State<AddDialog> {
                                     // ignore: use_build_context_synchronously
                                     // RefundData.tmplist.clear();
                                     RefundData.tmplist = widget.data;
+                                    // ignore: use_build_context_synchronously
                                     Navigator.pop(context);
                                   } else {}
                                 }
