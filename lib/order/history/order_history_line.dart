@@ -56,7 +56,7 @@ class _HistoryItemsState extends State<HistoryItems> {
     setState(() {
       _list = json.decode(json.encode(rsp));
       CartData.itmLineNo = _list.length.toString();
-      // print(_list);
+      print(_list);
     });
   }
 

@@ -135,7 +135,7 @@ class _BoCartState extends State<BoCart> {
           element['rf_uom'],
           element['rf_amount'],
           '0.00',
-          element['rf_totamt:'],
+          element['rf_totamt'],
           '0.00',
           element['item_cat'],
           'Served',
@@ -181,6 +181,8 @@ class _BoCartState extends State<BoCart> {
     );
     if (action == DialogAction.yes) {
       // ignore: use_build_context_synchronously
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/menu', (Route<dynamic> route) => false);
       // Navigator.push(
       //     context,
       //     PageTransition(

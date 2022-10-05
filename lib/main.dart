@@ -5,6 +5,7 @@ import 'package:extruck/providers/cart_items.dart';
 import 'package:extruck/providers/cart_total.dart';
 import 'package:extruck/providers/img_download.dart';
 import 'package:extruck/providers/pending_counter.dart';
+import 'package:extruck/providers/sync_caption.dart';
 import 'package:extruck/providers/upload_length.dart';
 import 'package:extruck/values/assets.dart';
 import 'package:extruck/values/colors.dart';
@@ -18,6 +19,7 @@ import 'package:provider/provider.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => Caption()),
+    ChangeNotifierProvider(create: (_) => SyncCaption()),
     ChangeNotifierProvider(create: (_) => UploadLength()),
     ChangeNotifierProvider(create: (_) => CartItemCounter()),
     ChangeNotifierProvider(create: (_) => CartTotalCounter()),
