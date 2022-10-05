@@ -73,15 +73,50 @@ class _HomePageState extends State<HomePage> {
                   stockLedgerCont(context),
                 ],
               ),
-              // Row(
-              //   children: [
-              //     // pendingRequestCont(context),
-              //     stockLedgerCont(context),
-              //   ],
-              // ),
+              Row(
+                children: [
+                  // pendingRequestCont(context),
+                  balanceCont(context),
+                ],
+              ),
             ],
           ),
         ));
+  }
+
+  Expanded balanceCont(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          // Navigator.push(
+          //     context,
+          //     PageTransition(
+          //         // duration: const Duration(milliseconds: 100),
+          //         type: PageTransitionType.rightToLeft,
+          //         child: const StockLedger()));
+        },
+        child: Container(
+          margin: const EdgeInsets.all(2),
+          color: Colors.white,
+          height: MediaQuery.of(context).size.height / 4,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Icon(
+                Icons.account_balance_wallet_outlined,
+                color: Colors.deepOrange,
+                size: 48,
+              ),
+              const Text(
+                'Balance',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Expanded stockLedgerCont(BuildContext context) {

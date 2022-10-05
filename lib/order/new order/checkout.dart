@@ -521,7 +521,8 @@ class _CheckoutState extends State<Checkout> {
               child: ElevatedButton(
                   style: raisedButtonStyleGreen,
                   onPressed: () async {
-                    if (pmeth == "Select") {
+                    //print(pmeth);
+                    if (pmeth == "Select" || pmeth == '') {
                       {
                         showGlobalSnackbar(
                             'Information',

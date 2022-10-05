@@ -1,4 +1,5 @@
-import 'package:extruck/home/dialogs/syncloading.dart';
+// import 'package:extruck/home/dialogs/syncloading.dart';
+import 'package:extruck/dialogs/syncloading.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +8,11 @@ import 'package:flutter/material.dart';
 class ConfirmDialog extends StatefulWidget {
   final String? title, description, buttonText;
 
-  ConfirmDialog({this.title, this.description, this.buttonText});
+  // ignore: use_key_in_widget_constructors
+  const ConfirmDialog({this.title, this.description, this.buttonText});
 
   @override
+  // ignore: library_private_types_in_public_api
   _ConfirmDialogState createState() => _ConfirmDialogState();
 }
 
@@ -106,7 +109,7 @@ class _ConfirmDialogState extends State<ConfirmDialog> {
                         showDialog(
                             barrierDismissible: false,
                             context: context,
-                            builder: (context) => SyncLoadingSpinkit());
+                            builder: (context) => const SyncLoadingSpinkit());
                       },
                       child: Text(
                         widget.buttonText.toString(),

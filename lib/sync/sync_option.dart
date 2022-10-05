@@ -1,4 +1,4 @@
-import 'package:extruck/home/dialogs/confirm_sync.dart';
+import 'package:extruck/dialogs/confirm_sync.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
@@ -20,9 +20,10 @@ class _SyncOptionState extends State<SyncOption> {
   DateTime endDate = DateTime.now();
 
   String stoday = DateFormat("MMM. dd, yyyy")
-      .format(new DateTime.now().subtract(const Duration(days: 15)));
-  String etoday = DateFormat("MMM. dd, yyyy").format(new DateTime.now());
+      .format(DateTime.now().subtract(const Duration(days: 15)));
+  String etoday = DateFormat("MMM. dd, yyyy").format(DateTime.now());
 
+  @override
   void initState() {
     super.initState();
   }
@@ -96,7 +97,7 @@ class _SyncOptionState extends State<SyncOption> {
                         if (!NetworkData.errorMsgShow) {
                           showDialog(
                               context: context,
-                              builder: (context) => ConfirmDialog(
+                              builder: (context) => const ConfirmDialog(
                                     title: 'Confirmation',
                                     description:
                                         'Are you sure you want to update transactions?',
@@ -112,14 +113,13 @@ class _SyncOptionState extends State<SyncOption> {
                       },
                       child: const Text(
                         '  Full Sync  ',
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 24),
+                        style: TextStyle(color: Colors.white, fontSize: 24),
                       ),
                     ),
                     const Text(
                       'Note: Full Sync might take a while. Secure a strong connection.',
-                      style: const TextStyle(
-                          fontSize: 8, fontWeight: FontWeight.w300),
+                      style:
+                          TextStyle(fontSize: 8, fontWeight: FontWeight.w300),
                     ),
                   ],
                 ),
@@ -127,7 +127,7 @@ class _SyncOptionState extends State<SyncOption> {
               // Divider(thickness: 1,),
               Visibility(
                   visible: viewDtpicker,
-                  child: Container(
+                  child: SizedBox(
                     // height: 60,
                     width: MediaQuery.of(context).size.width / 2 + 40,
                     child: Column(
@@ -145,7 +145,7 @@ class _SyncOptionState extends State<SyncOption> {
                               padding: const EdgeInsets.all(5),
                               child: const Text(
                                 'Start Date :',
-                                style: const TextStyle(
+                                style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500),
@@ -265,7 +265,7 @@ class _SyncOptionState extends State<SyncOption> {
                           if (!NetworkData.errorMsgShow) {
                             showDialog(
                                 context: context,
-                                builder: (context) => ConfirmDialog(
+                                builder: (context) => const ConfirmDialog(
                                       title: 'Confirmation',
                                       description:
                                           'Are you sure you want to update transactions?',

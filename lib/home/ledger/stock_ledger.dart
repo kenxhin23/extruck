@@ -96,6 +96,7 @@ class _StockLedgerState extends State<StockLedger> {
             'Stock in',
             style: TextStyle(
               fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(width: 10),
@@ -105,6 +106,7 @@ class _StockLedgerState extends State<StockLedger> {
             'Stock out',
             style: TextStyle(
               fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(width: 10),
@@ -114,6 +116,7 @@ class _StockLedgerState extends State<StockLedger> {
             'Transfer in',
             style: TextStyle(
               fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(width: 10),
@@ -123,6 +126,7 @@ class _StockLedgerState extends State<StockLedger> {
             'Transfer out',
             style: TextStyle(
               fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(width: 10),
@@ -132,6 +136,7 @@ class _StockLedgerState extends State<StockLedger> {
             'Conversion',
             style: TextStyle(
               fontSize: 10,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -273,52 +278,53 @@ class _StockLedgerState extends State<StockLedger> {
                 Container(
                   // padding: const EdgeInsets.only(top: 10),
                   height: 50,
-                  color: Colors.white,
+                  color: varColor,
                   child: Row(
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
                       Text(
                         _ledger[index]['date'],
-                        style: TextStyle(fontSize: 10, color: varColor),
+                        style:
+                            const TextStyle(fontSize: 10, color: Colors.white),
                       ),
                       const Divider(
-                        color: Colors.grey,
-                        // height: 50,
+                        color: Colors.white,
+                        height: 50,
                         // thickness: 10,
                         indent: 10,
                       ),
                       Expanded(
                         child: Text(
                           _ledger[index]['ref_no'],
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 9,
-                              color: varColor,
+                              color: Colors.white,
                               fontWeight: FontWeight.w500),
                         ),
                       ),
                       Container(
-                        color: Colors.white,
+                        color: varColor,
                         width: 80,
                         child: Center(
                           child: Text(
                             _ledger[index]['type'],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 10,
-                                color: varColor,
-                                fontWeight: FontWeight.w400),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),
                       Container(
-                        color: Colors.white,
+                        color: varColor,
                         width: 55,
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             _ledger[index]['qty_in'],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 10,
-                                color: varColor,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
@@ -327,15 +333,15 @@ class _StockLedgerState extends State<StockLedger> {
                         width: 1,
                       ),
                       Container(
-                        color: Colors.white,
+                        color: varColor,
                         width: 55,
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             _ledger[index]['qty_out'],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 10,
-                                color: varColor,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w400),
                           ),
                         ),
@@ -344,16 +350,16 @@ class _StockLedgerState extends State<StockLedger> {
                         width: 1,
                       ),
                       Container(
-                        color: Colors.white,
+                        color: varColor,
                         width: 55,
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
                             _ledger[index]['bal'],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 10,
-                                color: varColor,
-                                fontWeight: FontWeight.w400),
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
                           ),
                         ),
                       ),

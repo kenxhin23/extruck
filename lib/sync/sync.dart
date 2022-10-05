@@ -1,6 +1,6 @@
 import 'package:extruck/db/db_helper.dart';
-import 'package:extruck/home/dialogs/confirm_sync.dart';
-import 'package:extruck/home/dialogs/confirmupload.dart';
+import 'package:extruck/dialogs/confirm_sync.dart';
+import 'package:extruck/dialogs/confirmupload.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/sync/sync_option.dart';
 import 'package:extruck/values/colors.dart';
@@ -79,7 +79,7 @@ class _SyncPageState extends State<SyncPage> {
         },
         child: Scaffold(
           appBar: AppBar(
-            toolbarHeight: 85,
+            toolbarHeight: 130,
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -199,6 +199,7 @@ class _SyncPageState extends State<SyncPage> {
                       ),
                     ),
                   ),
+                  // ignore: avoid_unnecessary_containers
                   Container(
                     // padding: EdgeInsets.all(5),
                     child: Icon(
@@ -278,7 +279,7 @@ class _SyncPageState extends State<SyncPage> {
               color: Colors.grey[500],
             ),
             Text(
-              'You have no transaction for upload.',
+              'You have no remittance report for upload.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -689,12 +690,13 @@ class _SyncPageState extends State<SyncPage> {
                                   InkWell(
                                     onTap: () {
                                       if (!NetworkData.errorMsgShow) {
-                                        print('ITEM MASTERFILE CLICKED');
+                                        //print('ITEM MASTERFILE CLICKED');
                                         GlobalVariables.updateType =
                                             'Item Masterfile';
                                         showDialog(
                                             context: context,
-                                            builder: (context) => ConfirmDialog(
+                                            builder: (context) =>
+                                                const ConfirmDialog(
                                                   title: 'Confirmation',
                                                   description:
                                                       'Are you sure you want to update item masterfile?',
@@ -867,12 +869,13 @@ class _SyncPageState extends State<SyncPage> {
                                   InkWell(
                                     onTap: () {
                                       if (!NetworkData.errorMsgShow) {
-                                        print('CUSTOMER MASTERFILE CLICKED!');
+                                        //print('CUSTOMER MASTERFILE CLICKED!');
                                         GlobalVariables.updateType =
                                             'Customer Masterfile';
                                         showDialog(
                                             context: context,
-                                            builder: (context) => ConfirmDialog(
+                                            builder: (context) =>
+                                                const ConfirmDialog(
                                                   title: 'Confirmation',
                                                   description:
                                                       'Are you sure you want to update customer masterfile?',
@@ -1031,12 +1034,13 @@ class _SyncPageState extends State<SyncPage> {
                                   InkWell(
                                     onTap: () {
                                       if (!NetworkData.errorMsgShow) {
-                                        print('SALESMAN MASTERFILE CLICKED!');
+                                        //print('SALESMAN MASTERFILE CLICKED!');
                                         GlobalVariables.updateType =
                                             'Salesman Masterfile';
                                         showDialog(
                                             context: context,
-                                            builder: (context) => ConfirmDialog(
+                                            builder: (context) =>
+                                                const ConfirmDialog(
                                                   title: 'Confirmation',
                                                   description:
                                                       'Are you sure you want to update salesman masterfile?',

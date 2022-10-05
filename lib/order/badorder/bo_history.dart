@@ -33,7 +33,7 @@ class _BoHistoryState extends State<BoHistory> {
     var rsp = await db.loadBoHistory(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
-      print(_list);
+      //print(_list);
     });
   }
 
@@ -210,7 +210,7 @@ class _BoHistoryState extends State<BoHistory> {
                   if (_list[index]['rmt_no'] != null) {
                     rmtNo = _list[index]['rmt_no'];
                   }
-                  print(rmtNo);
+                  //print(rmtNo);
                   setState(() {
                     CustomerData.accountCode = _list[index]['account_code'];
                     CustomerData.accountName = _list[index]['store_name'];

@@ -5389,13 +5389,15 @@ class DatabaseHelper {
         'SELECT * FROM xt_tran_line WHERE tran_no ="$tran"', null);
   }
 
-  Future updatePendingStat(tran, stat, date) async {
+  Future updatePendingStat(tran, stat, date, appcount, totamt) async {
     var client = await db;
     return client.update(
         'xt_tran_head',
         {
           'tran_stat': stat,
           'date_app': date,
+          'app_count': appcount,
+          'tot_amt': totamt,
         },
         where: 'tran_no = ?',
         whereArgs: [tran]);

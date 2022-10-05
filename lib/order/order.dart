@@ -355,6 +355,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Container boHistoryCont(BuildContext context) {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
         onTap: () {

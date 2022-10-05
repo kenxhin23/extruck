@@ -9,7 +9,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class SyncLoadingSpinkit extends StatefulWidget {
+  const SyncLoadingSpinkit({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _SyncLoadingSpinkitState createState() => _SyncLoadingSpinkitState();
 }
 
@@ -36,7 +39,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
   List linelist = [];
   List hepeList = [];
 
-  final date = DateFormat("yyyy-MM-dd HH:mm:ss").format(new DateTime.now());
+  final date = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
   @override
   void initState() {
@@ -45,10 +48,10 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     if (GlobalVariables.updateType == 'Transactions') {
       if (GlobalVariables.fullSync == true) {
-        print('NISUD SA FULL SYNC');
+        // print('NISUD SA FULL SYNC');
         updateTransactions();
       } else {
-        print('NISUD SA SELECTIVE');
+        // print('NISUD SA SELECTIVE');
         // updateSelectiveTransactions();
       }
     }
@@ -78,13 +81,13 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
             await db.deleteTable('tb_returned_tran');
             await db.insertTable(returnList, 'tb_returned_tran');
             await db.updateTable('tb_returned_tran', date.toString());
-            print('RETURNED TRAN Updated');
+            // print('RETURNED TRAN Updated');
             updateTranUnserved();
           }
         }
       });
     } else {
-      print('EMPTY RETURN LIST');
+      // print('EMPTY RETURN LIST');
       await db.deleteTable('tb_returned_tran');
       updateTranUnserved();
     }
@@ -105,7 +108,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
             await db.deleteTable('tb_unserved_items');
             await db.insertTable(unsrvlist, 'tb_unserved_items');
             await db.updateTable('tb_unserved_items', date.toString());
-            print('Unserved/Returned List Updated');
+            // print('Unserved/Returned List Updated');
             // updateTranCheque();
             updateTranLine();
           }
@@ -133,13 +136,13 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
             await db.deleteTable('tb_tran_line');
             await db.insertTable(linelist, 'tb_tran_line');
             await db.updateTable('tb_tran_line', date.toString());
-            print('Transaction Line Created');
+            // print('Transaction Line Created');
             updateTranHead();
           }
         }
       });
     } else {
-      print('EMPTY TRANSACTION LINE');
+      //print('EMPTY TRANSACTION LINE');
       await db.deleteTable('tb_tran_line');
       updateTranHead();
     }
@@ -149,7 +152,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
     //TRAN UPDATE
     Provider.of<SyncCaption>(context, listen: false)
         .changeCap('Updating Transactions...');
-    print(UserData.position);
+    // print(UserData.position);
     if (UserData.position == 'Salesman') {
       var thead = await db.getTranHead(context, UserData.id.toString());
       tranHeadList = thead;
@@ -173,13 +176,13 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
                 GlobalVariables.updateType,
                 'Completed',
                 GlobalVariables.updateBy);
-            print('Transaction Head Created');
+            // print('Transaction Head Created');
             GlobalVariables.updateSpinkit = true;
           }
         }
       });
     } else {
-      print('EMPTY TRANSACTION HEAD');
+      // print('EMPTY TRANSACTION HEAD');
       await db.deleteTable('tb_tran_head');
       GlobalVariables.updateSpinkit = true;
     }
@@ -344,7 +347,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
         if (x == itemImgList.length) {
           await db.insertItemImgList(itemImgList);
           await db.updateTable('tbl_item_image', date.toString());
-          print('Item Image List Updated');
+          //print('Item Image List Updated');
           updateItemCateg();
         }
       }
@@ -371,7 +374,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
           await db.deleteTable('tbl_category_masterfile');
           await db.updateCategList(categList);
           await db.updateTable('tbl_category_masterfile', date.toString());
-          print('Categ List Updated');
+          //print('Categ List Updated');
           updateItemList();
         }
       }
@@ -396,7 +399,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
               GlobalVariables.updateType,
               'Completed',
               GlobalVariables.updateBy);
-          print('Item Masterfile Updated');
+          //print('Item Masterfile Updated');
           GlobalVariables.updateSpinkit = true;
         }
       }
@@ -416,7 +419,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
           await db.deleteTable('tbl_discounts');
           await db.insertTable(discountList, 'tbl_discounts');
           await db.updateTable('tbl_discounts ', date.toString());
-          print('Discount List Created');
+          //print('Discount List Created');
           updateCustomerBank();
         }
       }
@@ -436,7 +439,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
           await db.deleteTable('tb_bank_list');
           await db.insertTable(bankList, 'tb_bank_list');
           await db.updateTable('tb_bank_list', date.toString());
-          print('Bank List Created');
+          //print('Bank List Created');
           // updateUserAccess();
           updateCustomerList();
         }
@@ -457,7 +460,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
           await db.deleteTable('user_access');
           await db.insertTable(accessList, 'user_access');
           await db.updateTable('tb_bank_list', date.toString());
-          print('User Access Created');
+          //print('User Access Created');
           updateCustomerList();
         }
       }
@@ -482,7 +485,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
               GlobalVariables.updateType,
               'Completed',
               GlobalVariables.updateBy);
-          print('Customer List Created');
+          //print('Customer List Created');
           GlobalVariables.updateSpinkit = true;
         }
       }
@@ -507,7 +510,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
               GlobalVariables.updateType,
               'Completed',
               GlobalVariables.updateBy);
-          print('Salesman List Created');
+          //print('Salesman List Created');
           updateOrderLimit();
         }
       }
@@ -532,7 +535,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
               GlobalVariables.updateType,
               'Completed',
               GlobalVariables.updateBy);
-          print('Order Limit Created');
+          //print('Order Limit Created');
           updateJefe();
         }
       }
@@ -552,7 +555,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
           await db.deleteTable('tbl_hepe_de_viaje');
           await db.insertTable(hepeList, 'tbl_hepe_de_viaje');
           await db.updateTable('tbl_hepe_de_viaje', date.toString());
-          print('Hepe List Created');
+          //print('Hepe List Created');
           GlobalVariables.updateSpinkit = true;
         }
       }

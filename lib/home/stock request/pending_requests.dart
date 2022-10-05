@@ -52,8 +52,8 @@ class _PendingRequestsState extends State<PendingRequests> {
       // print(_temp);
       if (_temp.isNotEmpty) {
         for (var element in _temp) {
-          db.updatePendingStat(
-              element['tran_no'], element['tran_stat'], date.toString());
+          db.updatePendingStat(element['tran_no'], element['tran_stat'],
+              date.toString(), element['app_count'], element['tot_amt']);
         }
       }
     }
@@ -264,11 +264,12 @@ class _PendingRequestsState extends State<PendingRequests> {
               _pendList[index]['date_req'] = newDate;
               return GestureDetector(
                 onTap: () {
-                  if (appTrue) {
+                  if (_pendList[index]['tran_stat'] != 'Pending') {
                     RequestData.reqQty = _pendList[index]['item_count'];
-                    RequestData.appQty = _temp[index]['app_count'];
+                    RequestData.appQty = _pendList[index]['app_count'];
                   } else {
                     RequestData.reqQty = _pendList[index]['item_count'];
+                    RequestData.appQty = '0';
                   }
                   RequestData.tranNo = _pendList[index]['tran_no'];
                   RequestData.status = _pendList[index]['tran_stat'];
@@ -326,7 +327,7 @@ class _PendingRequestsState extends State<PendingRequests> {
                                   children: [
                                     Text(
                                       appTrue
-                                          ? 'Qty: ${_temp[index]['app_count']}'
+                                          ? 'Qty: ${_pendList[index]['app_count']}'
                                           : 'Qty: ${_pendList[index]['item_count']}',
                                       style: const TextStyle(fontSize: 12),
                                     ),
@@ -336,13 +337,8 @@ class _PendingRequestsState extends State<PendingRequests> {
                                       style: TextStyle(fontSize: 12),
                                     ),
                                     Text(
-                                      appTrue
-                                          ? formatCurrencyTot.format(
-                                              double.parse(
-                                                  _temp[index]['tot_amt']))
-                                          : formatCurrencyTot.format(
-                                              double.parse(
-                                                  _pendList[index]['tot_amt'])),
+                                      formatCurrencyTot.format(double.parse(
+                                          _pendList[index]['tot_amt'])),
                                       style: const TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w500,

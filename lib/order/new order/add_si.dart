@@ -27,6 +27,7 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
 
   dialogContent(BuildContext context) {
     final node = FocusScope.of(context);
+    salesinvoicecontroller.text = CartData.siNum;
     return Container(
       padding: const EdgeInsets.all(15),
       color: Colors.white,
@@ -47,6 +48,7 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
             textInputAction: TextInputAction.next,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
+            // initialValue: salesinvoicecontroller.text,
             // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
             onEditingComplete: () => node.nextFocus(),
             controller: salesinvoicecontroller,
