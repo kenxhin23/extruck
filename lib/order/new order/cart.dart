@@ -51,7 +51,7 @@ class _MyCartState extends State<MyCart> {
     // emptyCart = true;
     CartData.itmNo = '0';
     CartData.totalAmount = "0.00";
-    CartData.siNum = ' ';
+    CartData.siNum = '';
     var rsp =
         await db.ofFetchCustomerCart(UserData.id, CustomerData.accountCode);
     // var rsp = await getTemp(UserData.id, CustomerData.accountCode);

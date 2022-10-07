@@ -24,7 +24,11 @@ class PendingOrders extends StatefulWidget {
 
 class _PendingOrdersState extends State<PendingOrders> {
   double totAmount = 0.00;
+  double ordAmt = 0.00;
+  double boAmt = 0.00;
   List _list = [];
+  List _ord = [];
+  List _bo = [];
   List _rmtNo = [];
   List _bal = [];
 
@@ -52,9 +56,39 @@ class _PendingOrdersState extends State<PendingOrders> {
       _list = json.decode(json.encode(rsp));
       // print(_list);
       for (var element in _list) {
+        String newDate = '';
         totAmount = totAmount + double.parse(element['tot_amt']);
+        DateTime s = DateTime.parse(element['date'].toString());
+        newDate =
+            '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        element['date'] = newDate.toString();
       }
     });
+    loadPendingOrders();
+    loadPendingBo();
+  }
+
+  loadPendingOrders() async {
+    var rsp = await db.loadPendingOrders(UserData.id);
+    setState(() {
+      _ord = json.decode(json.encode(rsp));
+      // print(_list);
+      for (var element in _ord) {
+        ordAmt = ordAmt + double.parse(element['tot_amt'].toString());
+      }
+    });
+  }
+
+  loadPendingBo() async {
+    var rsp = await db.loadPendingBo(UserData.id);
+    setState(() {
+      _bo = json.decode(json.encode(rsp));
+      // print(_list);
+      for (var element in _bo) {
+        boAmt = boAmt + double.parse(element['tot_amt']);
+      }
+    });
+    CartData.boAmt = formatCurrencyAmt.format(boAmt);
   }
 
   generateReport() async {
@@ -106,7 +140,14 @@ class _PendingOrdersState extends State<PendingOrders> {
                 context,
                 PageTransition(
                     type: PageTransitionType.rightToLeft,
-                    child: ConnectPrinter(_list, rmtNo, _list.length.toString(),
+                    child: ConnectPrinter(
+                        _list,
+                        _ord,
+                        _bo,
+                        ordAmt.toString(),
+                        boAmt.toString(),
+                        rmtNo,
+                        _list.length.toString(),
                         totAmount.toString())));
           } else {
             // ignore: use_build_context_synchronously
@@ -114,7 +155,14 @@ class _PendingOrdersState extends State<PendingOrders> {
                 context,
                 PageTransition(
                     type: PageTransitionType.rightToLeft,
-                    child: PrintReport(_list, rmtNo, _list.length.toString(),
+                    child: PrintReport(
+                        _list,
+                        _ord,
+                        _bo,
+                        ordAmt.toString(),
+                        boAmt.toString(),
+                        rmtNo,
+                        _list.length.toString(),
                         totAmount.toString())));
           }
         } else {}
@@ -259,13 +307,13 @@ class _PendingOrdersState extends State<PendingOrders> {
               itemCount: _list.length,
               itemBuilder: ((context, index) {
                 bool cash = false;
-                String newDate = "";
-                String date = "";
-                date = _list[index]['date'].toString();
-                DateTime s = DateTime.parse(date);
-                newDate =
-                    '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-                _list[index]['date'] = newDate.toString();
+                // String newDate = "";
+                // String date = "";
+                // date = _list[index]['date'].toString();
+                // DateTime s = DateTime.parse(date);
+                // newDate =
+                //     '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+                // _list[index]['date'] = newDate.toString();
                 if (_list[index]['pmeth_type'] == 'Cash') {
                   cash = true;
                 } else {
@@ -398,6 +446,9 @@ class _PendingOrdersState extends State<PendingOrders> {
                       ? raisedButtonStyleGrey
                       : raisedButtonStyleGreen,
                   onPressed: () async {
+                    print('ORDER TOTAL:${ordAmt}');
+                    print('BO TOTAL:${boAmt}');
+                    print('GRAND TOTAL:${totAmount}');
                     if (_list.isEmpty) {
                     } else {
                       final action = await Dialogs.openDialog(

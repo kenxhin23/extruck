@@ -13,12 +13,13 @@ import 'package:image/image.dart';
 import 'package:intl/intl.dart';
 
 class PrintReport extends StatefulWidget {
-  final List data;
-  final String rmtNo, ordCount, totAmt;
+  final List data, ord, bo;
+  final String ordTot, boTot, rmtNo, ordCount, totAmt;
 
   // const PrintPreview({Key? key}) : super(key: key);
   // ignore: use_key_in_widget_constructors
-  const PrintReport(this.data, this.rmtNo, this.ordCount, this.totAmt);
+  const PrintReport(this.data, this.ord, this.bo, this.ordTot, this.boTot,
+      this.rmtNo, this.ordCount, this.totAmt);
 
   @override
   State<PrintReport> createState() => _PrintReportState();
@@ -478,7 +479,7 @@ class _PrintReportState extends State<PrintReport> {
           Row(
             children: [
               const SizedBox(width: 15),
-              const Text('No. of Items   :'),
+              const Text('No. of Orders   :'),
               const SizedBox(
                 width: 40,
               ),

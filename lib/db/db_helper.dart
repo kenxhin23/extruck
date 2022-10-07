@@ -5858,6 +5858,20 @@ class DatabaseHelper {
         null);
   }
 
+  Future loadPendingOrders(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" AND tran_type="ORDER" AND stat ="Pending" ORDER BY doc_no DESC',
+        null);
+  }
+
+  Future loadPendingBo(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" AND tran_type="BO" AND stat ="Pending" ORDER BY doc_no DESC',
+        null);
+  }
+
   Future searchOrder(text, code) async {
     var client = await db;
     return client.rawQuery(

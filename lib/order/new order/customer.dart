@@ -152,12 +152,12 @@ class _SelectCustomerState extends State<SelectCustomer> {
                                   CustomerData.accountCode,
                                   element['item_code'].toString(),
                                   element['item_uom'].toString());
-                              showGlobalSnackbar(
-                                  'Information',
-                                  'Items returned to inventory.',
-                                  Colors.blue,
-                                  Colors.white);
                             }
+                            showGlobalSnackbar(
+                                'Information',
+                                'Items returned to inventory.',
+                                Colors.blue,
+                                Colors.white);
                           } else {
                             // print('EMPTY CART');
                           }

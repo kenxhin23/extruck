@@ -120,6 +120,7 @@ class CartData {
   static String convQty = '';
   static String convUom = '';
   static String convAmt = '';
+  static String boAmt = '';
 }
 
 class RequestData {

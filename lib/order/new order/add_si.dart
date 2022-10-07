@@ -27,7 +27,9 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
 
   dialogContent(BuildContext context) {
     final node = FocusScope.of(context);
-    salesinvoicecontroller.text = CartData.siNum;
+    if (CartData.siNum != '') {
+      salesinvoicecontroller.text = CartData.siNum;
+    }
     return Container(
       padding: const EdgeInsets.all(15),
       color: Colors.white,

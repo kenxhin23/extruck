@@ -438,7 +438,7 @@ class _CheckoutState extends State<Checkout> {
                       fontWeight: FontWeight.bold),
                 ),
               ),
-              if (siNum == '')
+              if (CartData.siNum == '')
                 const Text(
                   'Click to Add',
                   style: TextStyle(
@@ -446,9 +446,9 @@ class _CheckoutState extends State<Checkout> {
                       fontSize: 16,
                       fontWeight: FontWeight.w500),
                 )
-              else if (siNum != '')
+              else if (CartData.siNum != '')
                 Text(
-                  siNum,
+                  CartData.siNum,
                   style: const TextStyle(
                       color: Colors.green,
                       fontSize: 16,
@@ -531,7 +531,7 @@ class _CheckoutState extends State<Checkout> {
                             Colors.white);
                       }
                     } else {
-                      if (siNum == '') {
+                      if (CartData.siNum == '') {
                         showGlobalSnackbar(
                             'Information',
                             'Please input sales invoice #.',

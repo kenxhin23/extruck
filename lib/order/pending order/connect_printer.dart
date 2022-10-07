@@ -11,11 +11,12 @@ import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 
 class ConnectPrinter extends StatefulWidget {
-  final List data;
-  final String rmtNo, ordCount, totAmt;
+  final List data, ord, bo;
+  final String ordTot, boTot, rmtNo, ordCount, totAmt;
 
   // ignore: use_key_in_widget_constructors
-  const ConnectPrinter(this.data, this.rmtNo, this.ordCount, this.totAmt);
+  const ConnectPrinter(this.data, this.ord, this.bo, this.ordTot, this.boTot,
+      this.rmtNo, this.ordCount, this.totAmt);
 
   @override
   State<ConnectPrinter> createState() => _ConnectPrinterState();
@@ -239,6 +240,10 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                                       type: PageTransitionType.rightToLeft,
                                       child: PrintReport(
                                           widget.data,
+                                          widget.ord,
+                                          widget.bo,
+                                          widget.ordTot,
+                                          widget.boTot,
                                           widget.rmtNo,
                                           widget.ordCount,
                                           widget.totAmt)));
