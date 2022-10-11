@@ -22,7 +22,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.7.db';
+  static const _dbName = 'EXTRUCK_TEST1.8.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -6065,9 +6065,274 @@ class DatabaseHelper {
     }
   }
 
+  Future addLoadBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['load_bal']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'load_bal': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future minusLoadBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['load_bal']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'load_bal': (bal - double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future addCashBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['cash_onhand']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'cash_onhand': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future minusCashBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['cash_onhand']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'cash_onhand': (bal - double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future addChequeBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['cheque_amt']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'cheque_amt': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future minusChequeBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['cheque_amt']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'cheque_amt': (bal - double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future addBoBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['bo_amt']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'bo_amt': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future minusBoBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['bo_amt']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'bo_amt': (bal - double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future addRemitBal(smcode, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['rmt_amt']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'rmt_amt': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future addtoCashLog(smcode, date, amt, type, details, refno) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT bal FROM xt_cash_ldg WHERE sm_code = "$smcode" ORDER BY date ASC',
+        null);
+    if (res.isEmpty) {
+      return client.insert('xt_cash_ldg', {
+        'sm_code': smcode,
+        'date': date,
+        'qty_in': amt,
+        'qty_out': '0.00',
+        'bal': amt,
+        'type': type,
+        'details': details,
+        'ref_no': refno,
+      });
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['bal']);
+      }
+      return client.insert('xt_load_ldg', {
+        'sm_code': smcode,
+        'date': date,
+        'qty_in': amt,
+        'qty_out': '0.00',
+        'bal': bal + amt,
+        'type': type,
+        'details': details,
+        'ref_no': refno,
+      });
+    }
+  }
+
+  Future minustoCashLog(smcode, date, amt, type, details, refno) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT bal FROM xt_cash_ldg WHERE sm_code = "$smcode" ORDER BY date ASC',
+        null);
+    if (res.isEmpty) {
+      return client.insert('xt_cash_ldg', {
+        'sm_code': smcode,
+        'date': date,
+        'qty_in': '0.00',
+        'qty_out': amt,
+        'bal': amt,
+        'type': type,
+        'details': details,
+        'ref_no': refno,
+      });
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['bal']);
+      }
+      return client.insert('xt_cash_ldg', {
+        'sm_code': smcode,
+        'date': date,
+        'qty_in': '0.00',
+        'qty_out': amt,
+        'bal': bal - amt,
+        'type': type,
+        'details': details,
+        'ref_no': refno,
+      });
+    }
+  }
+
+  Future getCashLedger(code) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_cash_ldg WHERE sm_code="$code" ', null);
+  }
+
   Future ofFetchSample(code) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_sm_balance WHERE sm_code="$code" ', null);
+        'SELECT * FROM xt_cash_ldg WHERE sm_code="$code" ', null);
   }
 }

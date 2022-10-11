@@ -107,7 +107,7 @@ class _MenuState extends State<Menu> {
   }
 
   checkAppEnvironment() {
-    if (UrlAddress.url == 'https://distapp1.alturush.com/') {
+    if (UrlAddress.url != 'https://distApp2.alturush.com/') {
       setState(() {
         testEnv = true;
       });

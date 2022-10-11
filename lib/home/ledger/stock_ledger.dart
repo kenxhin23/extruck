@@ -371,6 +371,9 @@ class _StockLedgerState extends State<StockLedger> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        width: 5,
+                      )
                     ],
                   ),
                 ),

@@ -107,8 +107,20 @@ class _PendingOrdersState extends State<PendingOrders> {
     for (var element in _list) {
       x++;
       await db.changeOrderStat(element['order_no'], rmtNo, 'Approved');
+      if (element['tran_type'] == 'BO') {
+        db.minusBoBal(UserData.id, element['tot_amt']);
+      } else {
+        if (element['pmeth_type'] == 'Cash') {
+          db.minusCashBal(UserData.id, element['tot_amt']);
+          db.minustoCashLog(UserData.id, date1, element['tot_amt'], 'CASH OUT',
+              'REMIT', rmtNo);
+        } else {
+          db.minusChequeBal(UserData.id, element['tot_amt']);
+        }
+      }
     }
     if (x == _list.length) {
+      await db.addRemitBal(UserData.id, totAmount.toString());
       var rsp = await db.saveRemittanceReport(
           rmtNo,
           date1,
@@ -307,13 +319,6 @@ class _PendingOrdersState extends State<PendingOrders> {
               itemCount: _list.length,
               itemBuilder: ((context, index) {
                 bool cash = false;
-                // String newDate = "";
-                // String date = "";
-                // date = _list[index]['date'].toString();
-                // DateTime s = DateTime.parse(date);
-                // newDate =
-                //     '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-                // _list[index]['date'] = newDate.toString();
                 if (_list[index]['pmeth_type'] == 'Cash') {
                   cash = true;
                 } else {

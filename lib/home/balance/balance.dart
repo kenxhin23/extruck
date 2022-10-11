@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/balance/cash_ledger.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:page_transition/page_transition.dart';
 
 class BalancePage extends StatefulWidget {
   const BalancePage({Key? key}) : super(key: key);
@@ -39,8 +41,10 @@ class _BalancePageState extends State<BalancePage> {
   checkBalance() async {
     List tmp = [];
     var rsp = await db.checkSmBalance(UserData.id);
+
     setState(() {
       tmp = json.decode(json.encode(rsp));
+      print(tmp);
       cash = tmp[0]['cash_onhand'];
       cheque = tmp[0]['cheque_amt'];
       badorder = tmp[0]['bo_amt'];
@@ -149,69 +153,81 @@ class _BalancePageState extends State<BalancePage> {
 
   Container cashCont() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      height: 100,
-      // width: MediaQuery.of(context).size.width / 2 - 30,
-      decoration: BoxDecoration(
-          color: Colors.green[300],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const CashLedger()));
+        },
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          height: 100,
+          // width: MediaQuery.of(context).size.width / 2 - 30,
+          decoration: BoxDecoration(
+              color: Colors.green[300],
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(10)),
+          child: Stack(
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      // SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const <Widget>[
+                          // SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Cash',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 36,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
                       Expanded(
-                        child: Text(
-                          'Cash',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 36,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: const Text(
+                            'Click to view ledger',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: const Text(
-                        'Click to view ledger',
-                        style: TextStyle(
+                      Text(
+                        formatCurrencyAmt.format(double.parse(cash)).toString(),
+                        style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 36,
                         ),
                       ),
-                    ),
-                  ),
-                  Text(
-                    formatCurrencyAmt.format(double.parse(cash)).toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 36,
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -269,7 +285,7 @@ class _BalancePageState extends State<BalancePage> {
                     ),
                   ),
                   Text(
-                    formatCurrencyAmt.format(double.parse(badorder)).toString(),
+                    formatCurrencyAmt.format(double.parse(cheque)).toString(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,
