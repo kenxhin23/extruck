@@ -30,6 +30,8 @@ class _PrintReportState extends State<PrintReport> {
   String vat = '';
   double totalSales = 0.00;
 
+  bool viewBo = false;
+
   final date =
       DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
 
@@ -123,23 +125,44 @@ class _PrintReportState extends State<PrintReport> {
     ]);
 
     for (var i = 0; i < widget.data.length; i++) {
+      if (widget.data[i]['tran_type'] == 'BO') {
+        viewBo = true;
+        // print('BO TRUE');
+      } else {
+        viewBo = false;
+        // print('BO FALSE');
+      }
       bytes += generator.text(
           'SI #${widget.data[i]['si_no']} - #${widget.data[i]['order_no']}',
           styles: const PosStyles(align: PosAlign.left));
       bytes += generator.row([
         // PosColumn(text: ' ', width: 1),
-        PosColumn(
-            text: '${widget.data[i]['store_name']}',
-            width: 5,
-            styles: const PosStyles(
-              align: PosAlign.left,
-            )),
-        PosColumn(
-            text: '(${widget.data[i]['pmeth_type']})',
-            width: 2,
-            styles: const PosStyles(
-              align: PosAlign.center,
-            )),
+        viewBo
+            ? PosColumn(
+                text: '${widget.data[i]['store_name']}',
+                width: 4,
+                styles: const PosStyles(
+                  align: PosAlign.left,
+                ))
+            : PosColumn(
+                text: '${widget.data[i]['store_name']}',
+                width: 5,
+                styles: const PosStyles(
+                  align: PosAlign.left,
+                )),
+        viewBo
+            ? PosColumn(
+                text: '(Bo Refund)',
+                width: 3,
+                styles: const PosStyles(
+                  align: PosAlign.center,
+                ))
+            : PosColumn(
+                text: '(${widget.data[i]['pmeth_type']})',
+                width: 2,
+                styles: const PosStyles(
+                  align: PosAlign.center,
+                )),
         PosColumn(
             text: '@',
             width: 1,
@@ -158,22 +181,37 @@ class _PrintReportState extends State<PrintReport> {
             styles: const PosStyles(align: PosAlign.right)),
       ]);
     }
+
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: 'TOTAL',
-          width: 3,
+          text: 'Order Amount Total',
+          width: 6,
           styles: const PosStyles(
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
-          width: 9,
+          text: formatCurrencyAmt.format(double.parse(widget.ordTot)),
+          width: 6,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
     ]);
     bytes += generator.hr(ch: ' ');
+    bytes += generator.row([
+      PosColumn(
+          text: 'BO Amount Total',
+          width: 7,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: formatCurrencyAmt.format(double.parse(widget.boTot)),
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
     bytes += generator.text('  No. of Orders  :      ${widget.ordCount}',
         styles: const PosStyles(align: PosAlign.left));
     // bytes += generator.text('  No. of Lines   :      ${widget.data.length}',
@@ -206,23 +244,10 @@ class _PrintReportState extends State<PrintReport> {
     //         align: PosAlign.right,
     //       )),
     // ]);
+
     bytes += generator.row([
       PosColumn(
-          text: 'Total BO Amount',
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: '-',
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
-    ]);
-    bytes += generator.row([
-      PosColumn(
-          text: 'Total Amount Due',
+          text: 'Total Sales Amount',
           width: 5,
           styles: const PosStyles(
             align: PosAlign.left,
@@ -426,6 +451,12 @@ class _PrintReportState extends State<PrintReport> {
               child: ListView.builder(
                   itemCount: widget.data.length,
                   itemBuilder: ((context, index) {
+                    bool viewBo = false;
+                    if (widget.data[index]['tran_type'] == 'BO') {
+                      viewBo = true;
+                    } else {
+                      viewBo = false;
+                    }
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -448,11 +479,11 @@ class _PrintReportState extends State<PrintReport> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            Text('(${widget.data[index]['pmeth_type']})'),
-                            const SizedBox(width: 10),
+                            // const SizedBox(width: 10),
+                            viewBo
+                                ? const Text('(BO Refund)')
+                                : Text('(${widget.data[index]['pmeth_type']})'),
                             const Text('@'),
-                            const SizedBox(width: 10),
                             Expanded(
                                 child: Align(
                                     alignment: Alignment.centerLeft,
@@ -466,16 +497,107 @@ class _PrintReportState extends State<PrintReport> {
                   })),
             ),
           ),
+          // const Expanded(
+          //   child: SizedBox(
+          //     height: 5,
+          //   ),
+          // ),
           Row(
             children: [
               const SizedBox(width: 15),
               const Expanded(
                   child: Align(
-                      alignment: Alignment.centerLeft, child: Text('TOTAL'))),
-              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)))
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Order Amount Total',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.ordTot)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
-          const SizedBox(height: 15),
+          const SizedBox(
+            height: 5,
+          ),
+          // Visibility(
+          //   visible: widget.bo.isNotEmpty,
+          //   child: Row(
+          //     // ignore: prefer_const_literals_to_create_immutables
+          //     children: [
+          //       const SizedBox(width: 15),
+          //       const Expanded(
+          //           child: Align(
+          //               alignment: Alignment.centerLeft,
+          //               child: Text('BO Refund Orders'))),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 5,
+          // ),
+          // Visibility(
+          //   visible: widget.bo.isNotEmpty,
+          //   child: SizedBox(
+          //     height: 50,
+          //     width: MediaQuery.of(context).size.width,
+          //     child: ListView.builder(
+          //         itemCount: widget.bo.length,
+          //         itemBuilder: (context, index) {
+          //           return Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: [
+          //               Row(
+          //                 children: [
+          //                   Text('SI # ${widget.bo[index]['si_no']}',
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.w500)),
+          //                   Text('- ${widget.bo[index]['order_no']}',
+          //                       style: const TextStyle(
+          //                           fontWeight: FontWeight.w500)),
+          //                 ],
+          //               ),
+          //               Row(
+          //                 children: [
+          //                   SizedBox(
+          //                     width: MediaQuery.of(context).size.width / 2,
+          //                     child: Text(
+          //                       '${widget.bo[index]['store_name']}',
+          //                       overflow: TextOverflow.ellipsis,
+          //                     ),
+          //                   ),
+          //                   const SizedBox(width: 10),
+          //                   // Text('(${widget.bo[index]['pmeth_type']})'),
+          //                   // const SizedBox(width: 10),
+          //                   // const Text('@'),
+          //                   const SizedBox(width: 10),
+          //                   Expanded(
+          //                       child: Align(
+          //                           alignment: Alignment.centerLeft,
+          //                           child: Text(
+          //                               '${widget.bo[index]['item_count']}'))),
+          //                   Text('${widget.bo[index]['tot_amt']}'),
+          //                 ],
+          //               )
+          //             ],
+          //           );
+          //         }),
+          //   ),
+          // ),
+          Row(
+            children: [
+              const SizedBox(width: 15),
+              const Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'BO Amount Total',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.boTot)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
+            ],
+          ),
+          const SizedBox(height: 5),
           Row(
             children: [
               const SizedBox(width: 15),
@@ -486,45 +608,18 @@ class _PrintReportState extends State<PrintReport> {
               Text(widget.ordCount)
             ],
           ),
-          // Row(
-          //   children: [
-          //     const SizedBox(width: 15),
-          //     const Expanded(
-          //         child: Align(
-          //             alignment: Alignment.centerLeft,
-          //             child: Text('Vat Amount'))),
-          //     Text(formatCurrencyAmt.format(double.parse(vat)))
-          //   ],
-          // ),
-          // Row(
-          //   children: [
-          //     const SizedBox(width: 15),
-          //     const Expanded(
-          //         child: Align(
-          //             alignment: Alignment.centerLeft,
-          //             child: Text('Total Sales'))),
-          //     Text(formatCurrencyAmt.format(totalSales))
-          //   ],
-          // ),
-          Row(
-            // ignore: prefer_const_literals_to_create_immutables
-            children: [
-              const SizedBox(width: 15),
-              const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Total BO Amount'))),
-              const Text('-')
-            ],
-          ),
           Row(
             children: [
               const SizedBox(width: 15),
               const Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Total Amount Due'))),
-              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)))
+                      child: Text(
+                        'Total Sales Amount',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
+                  style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),
           Row(
@@ -557,6 +652,7 @@ class _PrintReportState extends State<PrintReport> {
                   style: raisedButtonStyleGreen,
                   onPressed: () async {
                     printTicket();
+                    // print(widget.data);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

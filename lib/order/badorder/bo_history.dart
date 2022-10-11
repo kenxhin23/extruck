@@ -67,7 +67,7 @@ class _BoHistoryState extends State<BoHistory> {
             children: [
               const Expanded(
                 child: Text(
-                  'Order History',
+                  'BO Refund History',
                   style: TextStyle(fontSize: 16),
                 ),
               ),

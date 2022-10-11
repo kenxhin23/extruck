@@ -1,3 +1,4 @@
+import 'package:extruck/home/balance/balance.dart';
 import 'package:extruck/home/conversion/conv.dart';
 // import 'package:extruck/home/conversion/convert_stock.dart';
 import 'package:extruck/home/inventory/inventory.dart';
@@ -88,12 +89,12 @@ class _HomePageState extends State<HomePage> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          // Navigator.push(
-          //     context,
-          //     PageTransition(
-          //         // duration: const Duration(milliseconds: 100),
-          //         type: PageTransitionType.rightToLeft,
-          //         child: const StockLedger()));
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const BalancePage()));
         },
         child: Container(
           margin: const EdgeInsets.all(2),

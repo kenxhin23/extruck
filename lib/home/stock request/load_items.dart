@@ -16,7 +16,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoadItems extends StatefulWidget {
-  const LoadItems({Key? key}) : super(key: key);
+  final String pmeth, totAmt;
+
+  // ignore: use_key_in_widget_constructors
+  const LoadItems(this.pmeth, this.totAmt);
 
   @override
   State<LoadItems> createState() => _LoadItemsState();
@@ -98,6 +101,13 @@ class _LoadItemsState extends State<LoadItems> {
   }
 
   addtoLocalLedger() async {
+    //UPDATING LOADBAL & REVBAL OR CASH
+    if (widget.pmeth == 'RF') {
+      await db.updateRevBal(UserData.id, GlobalVariables.revBal, widget.totAmt);
+    } else {
+      // await db.updateCashBal(UserData.id);
+    }
+
     ///ADDING SA LOAD LEDGER
     await db.addtoLoadLedger(UserData.id, date.toString(), RequestData.appQty,
         'STOCK IN', RequestData.tranNo);

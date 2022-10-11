@@ -177,6 +177,7 @@ class GlobalVariables {
       .format(DateTime.now().subtract(const Duration(days: 15)));
   static String syncEndDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   static String revBal = '0.00';
+  static String revFund = '0.00';
 }
 
 class GlobalTimer {

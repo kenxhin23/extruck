@@ -24,6 +24,8 @@ class ReportsHistoryLine extends StatefulWidget {
 
 class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
   List _list = [];
+  double ordAmt = 0.00;
+  double boAmt = 0.00;
   final db = DatabaseHelper();
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
@@ -38,6 +40,19 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
     var rsp = await db.loadRmtHistoryLine(widget.rmtNo);
     setState(() {
       _list = json.decode(json.encode(rsp));
+      for (var element in _list) {
+        if (element['tran_type'] == 'BO') {
+          boAmt = boAmt + double.parse(element['tot_amt'].toString());
+        }
+        if (element['tran_type'] == 'ORDER') {
+          ordAmt = ordAmt + double.parse(element['tot_amt'].toString());
+        }
+        String newDate = "";
+        DateTime s = DateTime.parse(element['date']);
+        newDate =
+            '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        element['date'] = newDate.toString();
+      }
     });
   }
 
@@ -74,16 +89,26 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                         context,
                         PageTransition(
                             type: PageTransitionType.rightToLeft,
-                            child: ConnectPrinter(_list, widget.rmtNo,
-                                widget.ordNo, widget.totAmt)));
+                            child: ConnectPrinter(
+                                _list,
+                                widget.rmtNo,
+                                ordAmt.toString(),
+                                boAmt.toString(),
+                                widget.ordNo,
+                                widget.totAmt)));
                   } else {
                     // ignore: use_build_context_synchronously
                     Navigator.push(
                         context,
                         PageTransition(
                             type: PageTransitionType.rightToLeft,
-                            child: ReprintReport(_list, widget.rmtNo,
-                                widget.ordNo, widget.totAmt)));
+                            child: ReprintReport(
+                                _list,
+                                widget.rmtNo,
+                                ordAmt.toString(),
+                                boAmt.toString(),
+                                widget.ordNo,
+                                widget.totAmt)));
                   }
                 } else {}
               },
@@ -167,19 +192,27 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
       child: ListView.builder(
           itemCount: _list.length,
           itemBuilder: ((context, index) {
+            bool boRef = false;
             bool cash = false;
-            String newDate = "";
-            String date = "";
-            date = _list[index]['date'].toString();
-            DateTime s = DateTime.parse(date);
-            newDate =
-                '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-            _list[index]['date'] = newDate.toString();
+            // String newDate = "";
+            // String date = "";
+            // date = _list[index]['date'].toString();
+            // DateTime s = DateTime.parse(date);
+            // newDate =
+            //     '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+            // _list[index]['date'] = newDate.toString();
             if (_list[index]['pmeth_type'] == 'Cash') {
               cash = true;
             } else {
               cash = false;
             }
+
+            if (_list[index]['tran_type'] == 'BO') {
+              boRef = true;
+            } else {
+              boRef = false;
+            }
+
             return Container(
               // width: MediaQuery.of(context).size.width,
               color: Colors.white,
@@ -241,6 +274,20 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                   Column(
                     // ignore: prefer_const_literals_to_create_immutables
                     children: [
+                      Visibility(
+                        visible: boRef,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          color: Colors.grey,
+                          child: const Text(
+                            'BO REFUND',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
                       const Text(
                         'Total Amount',
                         style: TextStyle(

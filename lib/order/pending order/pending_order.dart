@@ -446,9 +446,9 @@ class _PendingOrdersState extends State<PendingOrders> {
                       ? raisedButtonStyleGrey
                       : raisedButtonStyleGreen,
                   onPressed: () async {
-                    print('ORDER TOTAL:${ordAmt}');
-                    print('BO TOTAL:${boAmt}');
-                    print('GRAND TOTAL:${totAmount}');
+                    // print('ORDER TOTAL:${ordAmt}');
+                    // print('BO TOTAL:${boAmt}');
+                    // print('GRAND TOTAL:${totAmount}');
                     if (_list.isEmpty) {
                     } else {
                       final action = await Dialogs.openDialog(

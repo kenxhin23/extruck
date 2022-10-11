@@ -22,7 +22,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.0.db';
+  static const _dbName = 'EXTRUCK_TEST1.7.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -418,6 +418,33 @@ class DatabaseHelper {
         type TEXT,
         details TEXT,
         ref_no TEXT)''');
+
+    ///XTRUCK SALESMAN CASH LEDGER
+    db.execute('''
+      CREATE TABLE xt_cash_ldg(
+        doc_no INTEGER PRIMARY KEY,
+        sm_code TEXT,
+        date TEXT,
+        qty_in TEXT,
+        qty_out TEXT,
+        bal TEXT,
+        type TEXT,
+        details TEXT,
+        ref_no TEXT)''');
+
+    ///XTRUCK SALESMAN BALANCE
+    db.execute('''
+      CREATE TABLE xt_sm_balance(
+        doc_no INTEGER PRIMARY KEY,
+        sm_code TEXT,
+        rev_fund TEXT,
+        rev_bal TEXT,
+        load_bal TEXT,
+        cash_onhand TEXT,
+        cheque_amt TEXT,
+        bo_amt TEXT,
+        rmt_amt TEXT,
+        stat TEXT)''');
 
     ///XTRUCK REMITTANCE HEAD
     db.execute('''
@@ -5987,8 +6014,60 @@ class DatabaseHelper {
         null);
   }
 
-  Future ofFetchSample() async {
+  Future checkSmBalance(code) async {
     var client = await db;
-    return client.rawQuery('SELECT * FROM xt_rmt ', null);
+    return client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code="$code" ', null);
+  }
+
+  Future addSmBalance(
+      code, rfFund, rfBal, loadBal, cash, cheque, bo, rmt) async {
+    String stat = '0';
+    var client = await db;
+    return client.insert('xt_sm_balance', {
+      'sm_code ': code,
+      'rev_fund ': rfFund,
+      'rev_bal  ': rfBal,
+      'load_bal ': loadBal,
+      'cash_onhand ': cash,
+      'cheque_amt': cheque,
+      'bo_amt ': bo,
+      'rmt_amt ': rmt,
+      'stat': 0,
+    });
+  }
+
+  Future setRevolvingFund(code, fund, bal) async {
+    var client = await db;
+    return client.update('xt_sm_balance', {'rev_fund': fund, 'rev_bal': bal},
+        where: 'sm_code = ?', whereArgs: [code]);
+  }
+
+  Future updateRevBal(smcode, revBal, amt) async {
+    double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      for (var element in res) {
+        bal = double.parse(element['load_bal']);
+      }
+      return client.update(
+          'xt_sm_balance',
+          {
+            'rev_bal': revBal,
+            'load_bal': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future ofFetchSample(code) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code="$code" ', null);
   }
 }

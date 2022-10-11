@@ -9,6 +9,7 @@ import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:extruck/widgets/dialogs.dart';
+import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -38,6 +39,8 @@ class _BoCartState extends State<BoCart> {
   String tranNo = '';
 
   double totalAmt = 0.00;
+  int itmNo = 0;
+
   int itmQty = 0;
   int nitmQty = 0;
 
@@ -54,6 +57,8 @@ class _BoCartState extends State<BoCart> {
   }
 
   loadforRefund() async {
+    CartData.totalAmount = '0.00';
+    CartData.itmNo = '0';
     // var test = await db.ofFetchSample();
     // print(test);
     var documentDirectory = await getApplicationDocumentsDirectory();
@@ -99,6 +104,13 @@ class _BoCartState extends State<BoCart> {
     if (kDebugMode) {
       print(tranNo);
     }
+
+    for (var element in _list) {
+      totalAmt = totalAmt + double.parse(element['rf_totamt']);
+      itmNo = itmNo + int.parse(element['rf_qty']);
+    }
+    CartData.totalAmount = totalAmt.toString();
+    CartData.itmNo = itmNo.toString();
 
     ///ADD ORDER TRAN
     ///
@@ -315,21 +327,38 @@ class _BoCartState extends State<BoCart> {
                               ? raisedButtonStyleGrey
                               : raisedButtonStyleGreen,
                           onPressed: () async {
-                            final action = await Dialogs.openDialog(
-                                context,
-                                'Confirmation',
-                                'You cannot cancel or modify after this. Are you sure you want to refund items?',
-                                false,
-                                'No',
-                                'Yes');
-                            if (action == DialogAction.yes) {
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) =>
-                                      const ProcessingBox('Processing Items'));
-                              savingBoRefund();
-                            } else {}
+                            bool emptyLine = true;
+                            for (var element in _list) {
+                              if (element['rf_itmcode'] == '' ||
+                                  element['rf_itmcode'] == ' ') {
+                                emptyLine = true;
+                              } else {
+                                emptyLine = false;
+                              }
+                            }
+                            if (emptyLine == true) {
+                              showGlobalSnackbar(
+                                  'Information',
+                                  'Please supply empty item.',
+                                  Colors.grey,
+                                  Colors.white);
+                            } else {
+                              final action = await Dialogs.openDialog(
+                                  context,
+                                  'Confirmation',
+                                  'You cannot cancel or modify after this. Are you sure you want to refund items?',
+                                  false,
+                                  'No',
+                                  'Yes');
+                              if (action == DialogAction.yes) {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) => const ProcessingBox(
+                                        'Processing Items'));
+                                savingBoRefund();
+                              }
+                            }
                           },
                           child: const Text(
                             'REFUND ITEMS',

@@ -1,8 +1,9 @@
+import 'dart:convert';
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/home/stock%20request/note.dart';
 import 'package:extruck/home/stock%20request/sign.dart';
 import 'package:extruck/home/stock%20request/sign_view.dart';
-import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/home/stock%20request/warehouse.dart';
 import 'package:extruck/providers/pending_counter.dart';
 import 'package:extruck/session/session_timer.dart';
@@ -13,8 +14,6 @@ import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:flutter/src/foundation/key.dart';
-// import 'package:flutter/src/widgets/framework.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
@@ -30,10 +29,16 @@ class _SendRequestState extends State<SendRequest> {
   String warehouse = "Select Warehouse";
   String pmethod = 'None';
   String revFund = '0.00';
+  String cashonHand = '0.00';
   List rfList = [];
+  List cashList = [];
   bool viewRevFund = false;
+  bool viewCash = false;
   bool checking = false;
   bool fundShort = false;
+  bool cashShort = false;
+
+  double revolvingFund = 0.00;
 
   final db = DatabaseHelper();
 
@@ -51,6 +56,17 @@ class _SendRequestState extends State<SendRequest> {
     // getCart();
     // print(date);
     // print(CartData.list);
+    checkBalance();
+  }
+
+  checkBalance() async {
+    List tmp = [];
+    var rsp = await db.checkSmBalance(UserData.id);
+    setState(() {
+      tmp = json.decode(json.encode(rsp));
+      print(tmp);
+      revolvingFund = double.parse(tmp[0]['rev_fund']);
+    });
   }
 
   // getCart()async{
@@ -90,6 +106,8 @@ class _SendRequestState extends State<SendRequest> {
       if (getTranHead != '' || getTranHead != null) {
         if (kDebugMode) {}
         addRequestLine();
+
+        // await db.updateRevBal(UserData.id,)
 
         db.cleanCart(UserData.id);
 
@@ -155,14 +173,36 @@ class _SendRequestState extends State<SendRequest> {
       setState(() {
         revFund = rfList[0]['bal'];
         GlobalVariables.revBal = rfList[0]['bal'];
+        GlobalVariables.revFund = rfList[0]['fund'];
         if (double.parse(revFund) < double.parse(CartData.totalAmount)) {
           fundShort = true;
         } else {
           fundShort = false;
         }
         checking = false;
+        //kung e update ang revolving fund sa salesman ani sya mo trigger og change sa fund sa local
+        if (double.parse(GlobalVariables.revFund) != revolvingFund) {
+          db.setRevolvingFund(
+              UserData.id, GlobalVariables.revFund, GlobalVariables.revBal);
+        }
       });
     }
+  }
+
+  checkCashonhand() async {
+    var rsp = await db.checkSmBalance(UserData.id);
+    if (!mounted) return;
+    setState(() {
+      cashList = json.decode(json.encode(rsp));
+      // print(ver);
+      cashonHand = cashList[0]['cash_onhand'];
+      if (double.parse(cashonHand) < double.parse(CartData.totalAmount)) {
+        cashShort = true;
+      } else {
+        cashShort = false;
+      }
+      checking = false;
+    });
   }
 
   void handleUserInteraction([_]) {
@@ -218,6 +258,7 @@ class _SendRequestState extends State<SendRequest> {
                       const SizedBox(
                         height: 5,
                       ),
+                      Visibility(visible: viewCash, child: buildCashCont()),
                       Visibility(
                           visible: viewRevFund, child: buildRevolvingCont()),
                       const SizedBox(
@@ -309,14 +350,20 @@ class _SendRequestState extends State<SendRequest> {
                       warehouse = CartData.warehouse;
                       pmethod = CartData.pMeth;
                       if (CartData.pMeth != 'Cash') {
+                        cashShort = false;
                         checkRevolving();
                         setState(() {
                           checking = true;
                           viewRevFund = true;
+                          viewCash = false;
                         });
                       } else {
+                        fundShort = false;
+                        checkCashonhand();
                         setState(() {
+                          checking = true;
                           viewRevFund = false;
+                          viewCash = true;
                         });
                       }
                     });
@@ -393,6 +440,47 @@ class _SendRequestState extends State<SendRequest> {
                 fontSize: 16,
                 fontWeight: FontWeight.w500),
           ),
+          const SizedBox(
+            width: 5,
+          ),
+          // const Icon(
+          //   Icons.chevron_right,
+          //   color: Colors.grey,
+          // )
+        ],
+      ),
+    );
+  }
+
+  Container buildCashCont() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(15),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Cash Available',
+              style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          // ignore: prefer_const_constructors
+          checking
+              ? const SpinKitCircle(
+                  // controller: animationController,
+                  size: 24,
+                  color: Colors.green,
+                )
+              : Text(
+                  formatCurrencyAmt.format(double.parse(cashonHand)),
+                  style: TextStyle(
+                      color: fundShort ? Colors.red : Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
           const SizedBox(
             width: 5,
           ),
@@ -639,10 +727,10 @@ class _SendRequestState extends State<SendRequest> {
                               Colors.white);
                         }
                       } else {
-                        if (fundShort) {
+                        if (fundShort || cashShort) {
                           showGlobalSnackbar(
                               'Information',
-                              'Revolving fund balance is not enough.',
+                              'Balance is not enough.',
                               Colors.red,
                               Colors.white);
                         } else {
@@ -663,11 +751,13 @@ class _SendRequestState extends State<SendRequest> {
                                 'No',
                                 'Yes');
                             if (action == DialogAction.yes) {
+                              print(CartData.totalAmount);
                               showDialog(
                                   barrierDismissible: false,
                                   context: context,
                                   builder: (context) => const ProcessingBox(
                                       'Processing Request'));
+
                               uploadingRequest();
                             } else {}
                           }

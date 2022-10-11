@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/assets.dart';
@@ -9,8 +8,6 @@ import 'package:extruck/widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-// import 'package:flutter/src/foundation/key.dart';
-// import 'package:flutter/src/widgets/framework.dart';
 
 class StockInvetory extends StatefulWidget {
   const StockInvetory({Key? key}) : super(key: key);
@@ -24,6 +21,7 @@ class _StockInvetoryState extends State<StockInvetory> {
   String imgPath = '';
   String totQty = '0';
   String totItm = '0';
+  String loadBal = '0.00';
   List _inv = [];
 
   final db = DatabaseHelper();
@@ -46,9 +44,14 @@ class _StockInvetoryState extends State<StockInvetory> {
     var rsp = await db.getInventory(UserData.id);
     setState(() {
       _inv = json.decode(json.encode(rsp));
+      print(_inv);
       for (var element in _inv) {
         totQty =
             (int.parse(totQty) + int.parse(element['item_qty'])).toString();
+        loadBal = (double.parse(loadBal) +
+                (int.parse(element['item_qty']) *
+                    double.parse(element['item_amt'])))
+            .toString();
       }
       totItm = _inv.length.toString();
     });
@@ -75,9 +78,22 @@ class _StockInvetoryState extends State<StockInvetory> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Stock Inventory',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              Row(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const Text(
+                    'Stock Inventory',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '(${formatCurrencyAmt.format(double.parse(loadBal))})',
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.yellow[400]),
+                  ),
+                ],
               ),
             ],
           ),

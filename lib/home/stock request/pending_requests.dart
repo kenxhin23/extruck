@@ -102,7 +102,7 @@ class _PendingRequestsState extends State<PendingRequests> {
     if (_rfList.isNotEmpty) {
       setState(() {
         GlobalVariables.revBal = _rfList[0]['bal'];
-        // print(GlobalVariables.revBal);
+        print(GlobalVariables.revBal);
       });
     }
   }
@@ -279,7 +279,8 @@ class _PendingRequestsState extends State<PendingRequests> {
                       PageTransition(
                           // duration: const Duration(milliseconds: 100),
                           type: PageTransitionType.rightToLeft,
-                          child: const LoadItems()));
+                          child: LoadItems(_pendList[index]['pmeth_type'],
+                              _pendList[index]['tot_amt'])));
                 },
                 child: Column(
                   children: [
