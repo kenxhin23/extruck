@@ -9,6 +9,7 @@ import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:extruck/widgets/dialogs.dart';
+import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -26,6 +27,11 @@ class _PendingOrdersState extends State<PendingOrders> {
   double totAmount = 0.00;
   double ordAmt = 0.00;
   double boAmt = 0.00;
+  double cashChequeBal = 0.00;
+
+  String cash = '0.00';
+  String cheque = '0.00';
+
   List _list = [];
   List _ord = [];
   List _bo = [];
@@ -46,8 +52,22 @@ class _PendingOrdersState extends State<PendingOrders> {
   @override
   void initState() {
     super.initState();
+    getBalance();
     loadPending();
     gettingLoadBalance();
+  }
+
+  getBalance() async {
+    List bal = [];
+    var rsp = await db.checkSmBalance(UserData.id);
+    bal = json.decode(json.encode(rsp));
+    setState(() {
+      bal = json.decode(json.encode(rsp));
+      cash = bal[0]['cash_onhand'];
+      cheque = bal[0]['cheque_amt'];
+      cashChequeBal = double.parse(cash) + double.parse(cheque);
+      // print(cashChequeBal.toStringAsFixed(2));
+    });
   }
 
   loadPending() async {
@@ -200,7 +220,7 @@ class _PendingOrdersState extends State<PendingOrders> {
       viewSpinkit = false;
     });
     if (kDebugMode) {
-      print(loadBal);
+      // print(loadBal);
     }
   }
 
@@ -456,21 +476,29 @@ class _PendingOrdersState extends State<PendingOrders> {
                     // print('GRAND TOTAL:${totAmount}');
                     if (_list.isEmpty) {
                     } else {
-                      final action = await Dialogs.openDialog(
-                          context,
-                          'Confirmation',
-                          'You cannot cancel or modify after this. Are you sure you want to generate report?',
-                          false,
-                          'No',
-                          'Yes');
-                      if (action == DialogAction.yes) {
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) =>
-                                const ProcessingBox('Generating Report'));
-                        generateReport();
-                      } else {}
+                      if (cashChequeBal < ordAmt) {
+                        showGlobalSnackbar(
+                            'Information',
+                            'Insufficient cash/cheque balance.',
+                            Colors.grey,
+                            Colors.white);
+                      } else {
+                        final action = await Dialogs.openDialog(
+                            context,
+                            'Confirmation',
+                            'You cannot cancel or modify after this. Are you sure you want to generate report?',
+                            false,
+                            'No',
+                            'Yes');
+                        if (action == DialogAction.yes) {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) =>
+                                  const ProcessingBox('Generating Report'));
+                          generateReport();
+                        } else {}
+                      }
                     }
                   },
                   child: const Text(

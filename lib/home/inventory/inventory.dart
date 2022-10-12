@@ -44,7 +44,7 @@ class _StockInvetoryState extends State<StockInvetory> {
     var rsp = await db.getInventory(UserData.id);
     setState(() {
       _inv = json.decode(json.encode(rsp));
-      print(_inv);
+      // print(_inv);
       for (var element in _inv) {
         totQty =
             (int.parse(totQty) + int.parse(element['item_qty'])).toString();

@@ -27,7 +27,7 @@ class _CashLedgerState extends State<CashLedger> {
   getCashLedger() async {
     var rsp = await db.getCashLedger(UserData.id);
     rsp = json.decode(json.encode(rsp));
-    print(rsp);
+    // print(rsp);
   }
 
   @override

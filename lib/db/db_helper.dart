@@ -14,7 +14,6 @@ import 'package:path/path.dart';
 import 'package:http/http.dart' as http;
 // ignore: depend_on_referenced_packages
 import 'package:crypto/crypto.dart';
-
 import '../encrypt/enc.dart';
 import '../url/url.dart';
 
@@ -22,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.8.db';
+  static const _dbName = 'EXTRUCK_TEST1.11.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;

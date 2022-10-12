@@ -128,6 +128,8 @@ class _BoCartState extends State<BoCart> {
     if (headRsp != null) {
       // print(tranNo);
       addingTransactionLine();
+      db.addBoBal(UserData.id, CartData.totalAmount);
+      db.minusLoadBal(UserData.id, CartData.totalAmount);
     } else {}
   }
 

@@ -64,7 +64,7 @@ class _SendRequestState extends State<SendRequest> {
     var rsp = await db.checkSmBalance(UserData.id);
     setState(() {
       tmp = json.decode(json.encode(rsp));
-      print(tmp);
+      // print(tmp);
       revolvingFund = double.parse(tmp[0]['rev_fund']);
     });
   }
@@ -751,7 +751,7 @@ class _SendRequestState extends State<SendRequest> {
                                 'No',
                                 'Yes');
                             if (action == DialogAction.yes) {
-                              print(CartData.totalAmount);
+                              // print(CartData.totalAmount);
                               showDialog(
                                   barrierDismissible: false,
                                   context: context,

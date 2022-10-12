@@ -102,7 +102,7 @@ class _PendingRequestsState extends State<PendingRequests> {
     if (_rfList.isNotEmpty) {
       setState(() {
         GlobalVariables.revBal = _rfList[0]['bal'];
-        print(GlobalVariables.revBal);
+        // print(GlobalVariables.revBal);
       });
     }
   }
@@ -110,20 +110,21 @@ class _PendingRequestsState extends State<PendingRequests> {
   checkLedger() async {
     var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
     _ldgListloc = json.decode(json.encode(checkLedgerLocal));
-    // print(_ldgListloc);
-    var checkLedgerOnline = await db.checkLedger(UserData.id);
-    _ldgListlive = checkLedgerOnline;
-    if (_ldgListlive.length == _ldgListloc.length) {
-      if (kDebugMode) {
-        print('EQUAL');
-      }
-    } else {
-      if (kDebugMode) {
-        print('NOT EQUAL');
-      }
-      var rsp = await db.updateLedger(UserData.id, _ldgListloc);
-      if (kDebugMode) {
-        print(rsp);
+    if (_ldgListloc.isNotEmpty) {
+      var checkLedgerOnline = await db.checkLedger(UserData.id);
+      _ldgListlive = checkLedgerOnline;
+      if (_ldgListlive.length == _ldgListloc.length) {
+        if (kDebugMode) {
+          print('EQUAL');
+        }
+      } else {
+        if (kDebugMode) {
+          print('NOT EQUAL');
+        }
+        var rsp = await db.updateLedger(UserData.id, _ldgListloc);
+        if (kDebugMode) {
+          print(rsp);
+        }
       }
     }
   }

@@ -10,6 +10,7 @@ import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:extruck/widgets/dialogs.dart';
+import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -30,6 +31,7 @@ class _StockConversionState extends State<StockConversion> {
   List _convCount = [];
   bool noImage = true;
   bool outofStock = false;
+  bool stopConvert = false;
   // bool emptyList = true;
 
   String imgPath = '';
@@ -51,6 +53,9 @@ class _StockConversionState extends State<StockConversion> {
   }
 
   loadConvert() async {
+    totalAmt = 0.00;
+    itmQty = 0;
+    nitmQty = 0;
     // var test = await db.ofFetchSample();
     // print(test);
     var documentDirectory = await getApplicationDocumentsDirectory();
@@ -71,6 +76,29 @@ class _StockConversionState extends State<StockConversion> {
             (int.parse(element['conv_qty']) * int.parse(element['item_qty']));
       }
     });
+  }
+
+  // totalChange() async {
+  //   for (var element in _convList) {
+  //     totalAmt = totalAmt +
+  //         (double.parse(element['item_amt']) * int.parse(element['item_qty']));
+  //     itmQty = itmQty + int.parse(element['item_qty']);
+  //     nitmQty = nitmQty +
+  //         (int.parse(element['conv_qty']) * int.parse(element['item_qty']));
+  //   }
+  // }
+
+  checkConversion() async {
+    stopConvert = false;
+    for (var element in _convList) {
+      double amt =
+          int.parse(element['conv_qty']) * double.parse(element['conv_amt']);
+      if (double.parse(element['item_amt']) != amt) {
+        stopConvert = true;
+      }
+      // print(element['item_amt']);
+      // print(amt);
+    }
   }
 
   savingConversion() async {
@@ -265,21 +293,30 @@ class _StockConversionState extends State<StockConversion> {
                               ? raisedButtonStyleGrey
                               : raisedButtonStyleGreen,
                           onPressed: () async {
-                            final action = await Dialogs.openDialog(
-                                context,
-                                'Confirmation',
-                                'You cannot cancel or modify after this. Are you sure you want to convert items?',
-                                false,
-                                'No',
-                                'Yes');
-                            if (action == DialogAction.yes) {
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) =>
-                                      const ProcessingBox('Converting Items'));
-                              savingConversion();
-                            } else {}
+                            checkConversion();
+                            if (stopConvert) {
+                              showGlobalSnackbar(
+                                  'Information',
+                                  'Unable to convert. Conversion amount does not match!',
+                                  Colors.grey,
+                                  Colors.white);
+                            } else {
+                              final action = await Dialogs.openDialog(
+                                  context,
+                                  'Confirmation',
+                                  'You cannot cancel or modify after this. Are you sure you want to convert items?',
+                                  false,
+                                  'No',
+                                  'Yes');
+                              if (action == DialogAction.yes) {
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) => const ProcessingBox(
+                                        'Converting Items'));
+                                savingConversion();
+                              } else {}
+                            }
                           },
                           child: const Text(
                             'CONVERT ITEMS',
@@ -329,6 +366,8 @@ class _StockConversionState extends State<StockConversion> {
           itemCount: _convList.length,
           itemBuilder: (context, index) {
             int convQty = 0;
+            double convTot = 0;
+            bool unmatch_amt = false;
             if (_convList[index]['image'] == '') {
               noImage = true;
             } else {
@@ -336,6 +375,13 @@ class _StockConversionState extends State<StockConversion> {
             }
             convQty = int.parse(_convList[index]['item_qty']) *
                 int.parse(_convList[index]['conv_qty']);
+            convTot = int.parse(_convList[index]['conv_qty']) *
+                double.parse(_convList[index]['conv_amt']);
+            if (double.parse(_convList[index]['item_amt']) != convTot) {
+              unmatch_amt = true;
+            } else {
+              unmatch_amt = false;
+            }
             final item = _convList[index].toString();
             return Container(
               margin: const EdgeInsets.only(top: 10),
@@ -346,7 +392,9 @@ class _StockConversionState extends State<StockConversion> {
                   // ignore: prefer_const_literals_to_create_immutables
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.grey.shade100,
+                      color: unmatch_amt
+                          ? Colors.red.shade700
+                          : Colors.grey.shade100,
                     ),
                   ]),
               child: Dismissible(
@@ -389,6 +437,12 @@ class _StockConversionState extends State<StockConversion> {
                       setState(() {
                         // print('TRUE');
                         refreshList();
+                        // totalChange();
+                      });
+                    } else {
+                      setState(() {
+                        refreshList();
+                        // totalChange();
                       });
                     }
 
@@ -577,6 +631,7 @@ class _StockConversionState extends State<StockConversion> {
                                 )),
                                 Text(
                                   convQty.toString(),
+                                  // _convList[index]['conv_qty'],
                                   textAlign: TextAlign.right,
                                   style: const TextStyle(
                                       color: Colors.green,

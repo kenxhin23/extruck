@@ -152,6 +152,7 @@ class _StockRequestState extends State<StockRequest> {
 
   Future<void> refreshList() async {
     await Future.delayed(const Duration(seconds: 1));
+    if (!mounted) return;
     setState(() {
       loadCart();
     });
