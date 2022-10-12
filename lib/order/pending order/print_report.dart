@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:extruck/session/session_timer.dart';

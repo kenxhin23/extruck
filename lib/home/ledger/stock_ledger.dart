@@ -265,13 +265,6 @@ class _StockLedgerState extends State<StockLedger> {
       child: ListView.builder(
           itemCount: _ledger.length,
           itemBuilder: ((context, index) {
-            // String newDate = "";
-            // String dateLoad = "";
-            // dateLoad = _ledger[index]['date'];
-            // DateTime s = DateTime.parse(dateLoad);
-            // newDate = DateFormat("dd-MM-yy").format(s);
-            // // print(newDate);
-            // _ledger[index]['date'] = newDate;
             if (_ledger[index]['type'] == 'STOCK IN') {
               varColor = Colors.green;
             }

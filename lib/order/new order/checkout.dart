@@ -103,8 +103,8 @@ class _CheckoutState extends State<Checkout> {
       db.addChequeData(
           date,
           tranNo,
-          UserData.id,
           CustomerData.accountCode,
+          UserData.id,
           ChequeData.bankName,
           ChequeData.accName,
           ChequeData.accNum,

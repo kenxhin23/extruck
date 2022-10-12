@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/home/balance/cash_ledger.dart';
+import 'package:extruck/home/balance/view_bo.dart';
+import 'package:extruck/home/balance/view_cheque.dart';
+import 'package:extruck/home/balance/view_remit.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
@@ -234,209 +237,249 @@ class _BalancePageState extends State<BalancePage> {
 
   Container chequeCont() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      height: 100,
-      // width: MediaQuery.of(context).size.width / 2 - 30,
-      decoration: BoxDecoration(
-          color: Colors.yellow[600],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const ChequeView()));
+        },
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          height: 100,
+          // width: MediaQuery.of(context).size.width / 2 - 30,
+          decoration: BoxDecoration(
+              color: Colors.yellow[600],
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(10)),
+          child: Stack(
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      // SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const <Widget>[
+                          // SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Cheque',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
                       Expanded(
-                        child: Text(
-                          'Cheque',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: const Text(
+                            'Click to view transactions',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: const Text(
-                        'Click to view transactions',
-                        style: TextStyle(
+                      Text(
+                        formatCurrencyAmt
+                            .format(double.parse(cheque))
+                            .toString(),
+                        style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 36,
                         ),
                       ),
-                    ),
-                  ),
-                  Text(
-                    formatCurrencyAmt.format(double.parse(cheque)).toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 36,
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Container boCont() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      height: 100,
-      // width: MediaQuery.of(context).size.width / 2 - 30,
-      decoration: BoxDecoration(
-          color: Colors.grey[600],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const BoView()));
+        },
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          height: 100,
+          // width: MediaQuery.of(context).size.width / 2 - 30,
+          decoration: BoxDecoration(
+              color: Colors.grey[600],
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(10)),
+          child: Stack(
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      // SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const <Widget>[
+                          // SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Bad Order',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
                       Expanded(
-                        child: Text(
-                          'Bad Order',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: const Text(
+                            'Click to view transactions',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: const Text(
-                        'Click to view transactions',
-                        style: TextStyle(
+                      Text(
+                        formatCurrencyAmt
+                            .format(double.parse(badorder))
+                            .toString(),
+                        style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 36,
                         ),
                       ),
-                    ),
-                  ),
-                  Text(
-                    formatCurrencyAmt.format(double.parse(badorder)).toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 36,
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
 
   Container remitCont() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-      height: 100,
-      // width: MediaQuery.of(context).size.width / 2 - 30,
-      decoration: BoxDecoration(
-          color: Colors.blue[300],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10)),
-      child: Stack(
-        children: <Widget>[
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+              context,
+              PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const RemitView()));
+        },
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          height: 100,
+          // width: MediaQuery.of(context).size.width / 2 - 30,
+          decoration: BoxDecoration(
+              color: Colors.blue[300],
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(10)),
+          child: Stack(
             children: <Widget>[
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 5, right: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: const <Widget>[
-                      // SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const <Widget>[
+                          // SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Pending Remittance',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
                       Expanded(
-                        child: Text(
-                          'Pending Remittance',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: const Text(
+                            'Click to view transactions',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: const Text(
-                        'Click to view transactions',
-                        style: TextStyle(
+                      Text(
+                        formatCurrencyAmt
+                            .format(double.parse(pendingremit))
+                            .toString(),
+                        style: const TextStyle(
                           color: Colors.white,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 36,
                         ),
                       ),
-                    ),
-                  ),
-                  Text(
-                    formatCurrencyAmt
-                        .format(double.parse(pendingremit))
-                        .toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 36,
-                    ),
-                  ),
+                    ],
+                  )
                 ],
-              )
+              ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }

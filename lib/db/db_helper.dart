@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.11.db';
+  static const _dbName = 'EXTRUCK_TEST1.1.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -6275,12 +6275,12 @@ class DatabaseHelper {
       for (var element in res) {
         bal = double.parse(element['bal']);
       }
-      return client.insert('xt_load_ldg', {
+      return client.insert('xt_cash_ldg', {
         'sm_code': smcode,
         'date': date,
         'qty_in': amt,
         'qty_out': '0.00',
-        'bal': bal + amt,
+        'bal': bal + double.parse(amt),
         'type': type,
         'details': details,
         'ref_no': refno,
@@ -6315,7 +6315,7 @@ class DatabaseHelper {
         'date': date,
         'qty_in': '0.00',
         'qty_out': amt,
-        'bal': bal - amt,
+        'bal': bal - double.parse(amt),
         'type': type,
         'details': details,
         'ref_no': refno,
@@ -6326,7 +6326,14 @@ class DatabaseHelper {
   Future getCashLedger(code) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_cash_ldg WHERE sm_code="$code" ', null);
+        'SELECT * FROM xt_cash_ldg WHERE sm_code="$code" ORDER BY doc_no DESC',
+        null);
+  }
+
+  Future getChequeDetails(ordNo) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_cheque_data WHERE order_no ="$ordNo"', null);
   }
 
   Future ofFetchSample(code) async {

@@ -93,8 +93,11 @@ class _StockConversionState extends State<StockConversion> {
     for (var element in _convList) {
       double amt =
           int.parse(element['conv_qty']) * double.parse(element['conv_amt']);
-      if (double.parse(element['item_amt']) != amt) {
+      if (double.parse(element['item_amt']) !=
+          double.parse(amt.toStringAsFixed(2))) {
         stopConvert = true;
+        print(double.parse(element['item_amt']));
+        print(amt);
       }
       // print(element['item_amt']);
       // print(amt);
@@ -377,7 +380,8 @@ class _StockConversionState extends State<StockConversion> {
                 int.parse(_convList[index]['conv_qty']);
             convTot = int.parse(_convList[index]['conv_qty']) *
                 double.parse(_convList[index]['conv_amt']);
-            if (double.parse(_convList[index]['item_amt']) != convTot) {
+            if (double.parse(_convList[index]['item_amt']) !=
+                double.parse(convTot.toStringAsFixed(2))) {
               unmatch_amt = true;
             } else {
               unmatch_amt = false;
