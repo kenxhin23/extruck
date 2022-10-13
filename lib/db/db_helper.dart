@@ -6336,6 +6336,13 @@ class DatabaseHelper {
         'SELECT * FROM xt_cheque_data WHERE order_no ="$ordNo"', null);
   }
 
+  Future getForUploadRemit(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt WHERE sm_code ="$smcode" AND flag = "0" ORDER BY doc_no DESC',
+        null);
+  }
+
   Future ofFetchSample(code) async {
     var client = await db;
     return client.rawQuery(

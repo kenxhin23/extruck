@@ -155,6 +155,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Container cashCont() {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -236,6 +237,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Container chequeCont() {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -319,6 +321,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Container boCont() {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
         onTap: () {
@@ -402,6 +405,7 @@ class _BalancePageState extends State<BalancePage> {
   }
 
   Container remitCont() {
+    // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
         onTap: () {

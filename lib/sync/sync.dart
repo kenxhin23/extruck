@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/dialogs/confirm_sync.dart';
 import 'package:extruck/dialogs/confirmupload.dart';
@@ -39,8 +42,47 @@ class _SyncPageState extends State<SyncPage> {
 
   final db = DatabaseHelper();
 
+  Timer? timer;
+
+  final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
+
   final formatCurrencyTot =
       NumberFormat.currency(locale: "en_US", symbol: "Php ");
+
+  @override
+  void initState() {
+    timer =
+        Timer.periodic(const Duration(seconds: 1), (Timer t) => checkStatus());
+    super.initState();
+    checkStatus();
+  }
+
+  checkStatus() async {
+    loadForUpload();
+  }
+
+  loadForUpload() async {
+    var getP = await db.getForUploadRemit(UserData.id);
+    if (!mounted) return;
+    setState(() {
+      _list = json.decode(json.encode(getP));
+      if (_list.isNotEmpty) {
+        for (var element in _list) {
+          String date = "";
+          date = element['date'].toString();
+          DateTime s = DateTime.parse(date);
+          element['date'] =
+              '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        }
+      }
+      // if (_list.isEmpty) {
+      //   uploading = false;
+      // } else {
+      //   GlobalVariables.uploaded = false;
+      //   GlobalVariables.uploadLength = _toList.length.toString();
+      // }
+    });
+  }
 
   uploadButtonclicked() async {
     if (NetworkData.connected == true) {
@@ -291,13 +333,13 @@ class _SyncPageState extends State<SyncPage> {
     }
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: const EdgeInsets.only(left: 15, right: 15),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: ListView.builder(
         padding: const EdgeInsets.all(0),
         itemCount: _list.length,
         itemBuilder: (context, index) {
           bool uploaded = false;
-          if (_list[index]['uploaded'] == 'FALSE') {
+          if (_list[index]['flag'] == '0') {
             uploaded = false;
           } else {
             uploaded = true;
@@ -307,160 +349,98 @@ class _SyncPageState extends State<SyncPage> {
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  height: 80,
-                  width: MediaQuery.of(context).size.width,
                   color: Colors.white,
-                  child: Stack(children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          width: 5,
-                          height: 80,
-                          color: ColorsTheme.mainColor,
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width / 3 + 30,
-                          // color: Colors.grey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                // ignore: prefer_interpolation_to_compose_strings
-                                'Order # ' + _list[index]['tran_no'],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                _list[index]['store_name'],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                _list[index]['date_req'],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              margin: const EdgeInsets.only(left: 60),
-                              width: MediaQuery.of(context).size.width / 4,
-                              // color: Colors.blueGrey,
-                              padding: const EdgeInsets.only(left: 5, right: 5),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  const Text(
-                                    'Total Amount',
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    formatCurrencyTot
-                                        .format(double.parse(amount)),
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                        // color: ColorsTheme.mainColor,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                ],
-                              ),
+                  // height: 70,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Icon(
+                        Icons.assignment_outlined,
+                        color: Colors.deepOrange,
+                        size: 36,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _list[index]['rmt_no'],
+                              style: const TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              'No. of Orders: ${_list[index]['order_count']}',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey),
+                            ),
+                            Text(
+                              _list[index]['date'],
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Container(
-                          width: 105,
-                          // color: Colors.grey,
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              !uploading
-                                  ? Text(
-                                      !uploaded
-                                          ? 'Uploaded'
-                                          : 'Ready to Upload',
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                          color: !uploaded
-                                              ? Colors.greenAccent
-                                              : ColorsTheme.mainColor,
-                                          fontSize: !uploaded ? 16 : 14,
-                                          fontWeight: FontWeight.bold),
-                                    )
-                                  // ignore: avoid_unnecessary_containers
-                                  : Container(
-                                      child: Column(
-                                        children: const <Widget>[
-                                          Text(
-                                            'Uploading...',
-                                            textAlign: TextAlign.right,
-                                            style: TextStyle(
-                                                color: Colors.green,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          SpinKitFadingCircle(
-                                            color: Colors.green,
-                                            size: 25,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ]),
+                      ),
+                      !uploading
+                          ? Column(
+                              // ignore: prefer_const_literals_to_create_immutables
+                              children: [
+                                const Text(
+                                  'Total Amount',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  formatCurrencyAmt.format(
+                                      double.parse(_list[index]['tot_amt'])),
+                                  style: const TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.green),
+                                ),
+                                Text(
+                                  uploaded ? 'Uploaded' : 'Ready to Upload',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      color: uploaded
+                                          ? Colors.green
+                                          : ColorsTheme.mainColor,
+                                      fontSize: !uploaded ? 12 : 12,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            )
+                          : Column(
+                              children: const <Widget>[
+                                Text(
+                                  'Uploading...',
+                                  textAlign: TextAlign.right,
+                                  style: TextStyle(
+                                      color: Colors.green,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                SpinKitFadingCircle(
+                                  color: Colors.green,
+                                  size: 25,
+                                ),
+                              ],
+                            ),
+                      // Icon(
+                      //   Icons.file_upload,
+                      //   color: uploaded ? Colors.green : Colors.grey,
+                      //   size: ScreenData.scrWidth * .06,
+                      // ),
+                    ],
+                  ),
                 ),
               ],
             ),

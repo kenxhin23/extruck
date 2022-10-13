@@ -43,7 +43,7 @@ class _ChequeDetailsState extends State<ChequeDetails> {
       chequeNum = list[0]['cheque_no'];
       chequeDate = list[0]['cheque_date'];
       chequeType = list[0]['cheque_type'];
-      print(accountName);
+      // print(accountName);
     });
   }
 
