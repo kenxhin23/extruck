@@ -60,6 +60,11 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        automaticallyImplyLeading: true,
+        backgroundColor: Colors.white,
         title: Row(
           children: [
             Expanded(
@@ -67,7 +72,10 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   '#${widget.rmtNo}',
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
@@ -114,7 +122,7 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
               },
               child: const Icon(
                 Icons.receipt_long_rounded,
-                color: Colors.white,
+                color: Colors.deepOrange,
               ),
             )
           ],

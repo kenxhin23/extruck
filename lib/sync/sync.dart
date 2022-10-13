@@ -10,8 +10,6 @@ import 'package:extruck/widgets/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
-// import 'package:flutter/src/foundation/key.dart';
-// import 'package:flutter/src/widgets/framework.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({Key? key}) : super(key: key);

@@ -64,9 +64,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
       },
       child: Scaffold(
         appBar: AppBar(
+          iconTheme: const IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          automaticallyImplyLeading: true,
+          backgroundColor: Colors.white,
           title: Text(
-            '#${widget.ordNo}',
-            style: const TextStyle(fontSize: 16),
+            "#${widget.ordNo}",
+            style: const TextStyle(color: Colors.black, fontSize: 12),
           ),
         ),
         body: Column(

@@ -115,7 +115,6 @@ class _ReportsHistoryState extends State<ReportsHistory> {
                             _list[index]['tot_amt'])));
               },
               child: Container(
-                // width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 // height: 70,
                 margin: const EdgeInsets.all(8),

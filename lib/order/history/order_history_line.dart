@@ -168,53 +168,6 @@ class _HistoryItemsState extends State<HistoryItems> {
             buildSummaryCont()
           ],
         ),
-        // bottomNavigationBar: BottomAppBar(
-        //   child: Container(
-        //       decoration: const BoxDecoration(
-        //         color: Colors.white,
-        //         border: Border(
-        //           top: BorderSide(width: 0.2, color: Colors.black),
-        //         ),
-        //       ),
-        //       width: MediaQuery.of(context).size.width,
-        //       height: 40,
-        //       padding: const EdgeInsets.symmetric(horizontal: 10),
-        //       child: Row(
-        //         // ignore: prefer_const_literals_to_create_immutables
-        //         children: [
-        //           const Text(
-        //             'Total Amount:',
-        //             style: TextStyle(
-        //               fontSize: 12,
-        //             ),
-        //           ),
-        //           const SizedBox(width: 5),
-        //           Expanded(
-        //             child: Text(
-        //               formatCurrencyAmt.format(double.parse(widget.totAmt)),
-        //               style: const TextStyle(
-        //                   fontSize: 12,
-        //                   color: Colors.green,
-        //                   fontWeight: FontWeight.w500),
-        //             ),
-        //           ),
-        //           const Text(
-        //             'Total Qty:',
-        //             style: TextStyle(
-        //               fontSize: 12,
-        //             ),
-        //           ),
-        //           const SizedBox(width: 5),
-        //           Text(
-        //             widget.totQty,
-        //             style: const TextStyle(
-        //                 fontSize: 12,
-        //                 color: Colors.green,
-        //                 fontWeight: FontWeight.w500),
-        //           ),
-        //         ],
-        //       )),
-        // ),
       ),
     );
   }

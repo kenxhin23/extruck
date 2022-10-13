@@ -288,7 +288,7 @@ class _BalancePageState extends State<BalancePage> {
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
                           child: const Text(
-                            'Click to view transactions',
+                            'Click to view cheque details',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,
@@ -527,7 +527,7 @@ class _BalancePageState extends State<BalancePage> {
                     child: Container(
                       padding: const EdgeInsets.only(left: 15),
                       child: const Text(
-                        'Click to view transactions',
+                        '',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w400,
