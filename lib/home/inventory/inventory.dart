@@ -1,13 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/spinkit.dart';
+import 'package:extruck/providers/caption_provider.dart';
 import 'package:extruck/session/session_timer.dart';
+import 'package:extruck/spinkit/load_spin.dart';
 import 'package:extruck/values/assets.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
+import 'package:extruck/widgets/dialogs.dart';
+import 'package:extruck/widgets/snackbar.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class StockInvetory extends StatefulWidget {
   const StockInvetory({Key? key}) : super(key: key);
@@ -22,7 +29,13 @@ class _StockInvetoryState extends State<StockInvetory> {
   String totQty = '0';
   String totItm = '0';
   String loadBal = '0.00';
+  String revBal = '0.00';
   List _inv = [];
+  List itemList = [];
+  List itemAllImgList = [];
+  List categList = [];
+  List _rsp = [];
+  String date = '';
 
   final db = DatabaseHelper();
 
@@ -36,11 +49,16 @@ class _StockInvetoryState extends State<StockInvetory> {
     getLoadInventory();
   }
 
+  //LOAD INVENTORY ITEMS
   getLoadInventory() async {
+    // var a = await db.ofFetchSample();
+    // print(a);
+    // db.setLoadBal(UserData.id, '28439.10');
     var documentDirectory = await getApplicationDocumentsDirectory();
     var firstPath = '${documentDirectory.path}/';
     imgPath = firstPath;
     totQty = '0';
+    loadBal = '0.00';
     var rsp = await db.getInventory(UserData.id);
     setState(() {
       _inv = json.decode(json.encode(rsp));
@@ -57,9 +75,166 @@ class _StockInvetoryState extends State<StockInvetory> {
     });
   }
 
+  //CHECKING PRICE CHANGE
+  checkforPriceChange() async {
+    var rsp = await db.checkPriceChange(_inv);
+    _rsp = rsp;
+    print(_rsp);
+    if (_rsp.isEmpty) {
+      Navigator.pop(context);
+      showGlobalSnackbar(
+          'Information', 'No price change found.', Colors.blue, Colors.white);
+    } else {
+      date = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+      Navigator.pop(context);
+      final action = await Dialogs.openDialog(context, 'Confirmation',
+          'Are you sure yo want to update prices?', false, 'No', 'Yes');
+      if (action == DialogAction.yes) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => const LoadingSpinkit());
+        updateItemMasterfile();
+      }
+    }
+  }
+
+  updateItemMasterfile() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Item Masterfile...');
+
+    var rsp = await db.getItemList(context);
+    itemList = rsp;
+    await db.deleteTable('item_masterfiles');
+    await db.insertItemList(itemList);
+    await db.addUpdateTable('item_masterfiles ', 'ITEM', date.toString());
+    loadItemImgPath();
+  }
+
+  loadItemImgPath() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Image Path...');
+
+    var rsp = await db.getAllItemImgList(context);
+    itemAllImgList = rsp;
+    await db.deleteTable('tbl_item_image');
+    await db.insertItemImgList(itemAllImgList);
+    await db.addUpdateTable('tbl_item_image   ', 'ITEM', date.toString());
+    loadCategory();
+  }
+
+  loadCategory() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Categories...');
+    var rsp = await db.getCategList(context);
+    categList = rsp;
+    int x = 1;
+    // ignore: unused_local_variable
+    for (var element in categList) {
+      if (x < categList.length) {
+        x++;
+        if (x == categList.length) {
+          // print(categList.length);
+          await db.deleteTable('tbl_category_masterfile');
+          await db.insertCategList(categList);
+          await db.addUpdateTable(
+              'tbl_category_masterfile', 'ITEM', date.toString());
+          // ignore: use_build_context_synchronously
+          Provider.of<Caption>(context, listen: false)
+              .changeCap('Item Masterfile Updated Successfully!');
+          updateInventoryPrice();
+        }
+      }
+    }
+  }
+
+  updateInventoryPrice() async {
+    List _rsp = [];
+    String adj = '';
+    double totalAdj = 0.00;
+    double variance = 0.00;
+    String stockPrice = '0.00';
+    String newPrice = '0.00';
+    String cpNo = '0';
+    final String date2 = DateFormat("MMddyy").format(DateTime.now());
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Inventory Stock Prices...');
+    // print(_inv);
+    int x = 0;
+    //INVENTORY ITEMS
+    _inv.forEach((element) async {
+      var rsp =
+          await db.checkItemPrice(element['item_code'], element['item_uom']);
+      _rsp = json.decode(json.encode(rsp));
+      stockPrice = double.parse(element['item_amt']).toStringAsFixed(2);
+      newPrice = double.parse(_rsp[0]['list_price_wtax']).toStringAsFixed(2);
+
+      if (stockPrice != newPrice) {
+        db.setItemPrice(
+            UserData.id, element['item_code'], element['item_uom'], newPrice);
+        variance = double.parse(stockPrice) - double.parse(newPrice);
+        cpNo = '${element['item_code']}-${element['item_uom']}';
+        adj = variance.toStringAsFixed(2);
+        if (double.parse(adj) > 0) {
+          //POSITIVE ADJ
+          double amt = double.parse(adj) * double.parse(element['item_qty']);
+          totalAdj = totalAdj - amt;
+          var rsp = await db.updateRevolving(
+              UserData.id, amt.toStringAsFixed(2), 'IN', cpNo);
+          // print('RESPONSE${rsp}');
+          if (rsp != null) {
+            await db.setRevBal(UserData.id, rsp.toString());
+          }
+        } else {
+          //NEGATIVE ADJ
+          adj = (double.parse(adj) * -1).toString();
+          double amt = double.parse(adj) * double.parse(element['item_qty']);
+          totalAdj = totalAdj + amt;
+          // print(totalAdj.toString());
+          var rsp = await db.updateRevolving(
+              UserData.id, amt.toStringAsFixed(2), 'OUT', cpNo);
+          if (rsp != null) {
+            await db.setRevBal(UserData.id, rsp.toString());
+          }
+        }
+      }
+      x++;
+      if (x == _inv.length) {
+        print('TOTAL ADJ:$totalAdj');
+        if (totalAdj > 0) {
+          db.addLoadBal(UserData.id, totalAdj.toString());
+        } else {
+          totalAdj = totalAdj * -1;
+          print('NEG TOTAL ADJ:$totalAdj');
+          db.minusLoadBal(UserData.id, totalAdj.toString());
+        }
+        Navigator.pop(context);
+        String msg = 'Price Changes Successfully Updated.';
+        // ignore: use_build_context_synchronously
+        final action = await WarningDialogs.openDialog(
+          context,
+          'Information',
+          msg,
+          false,
+          'OK',
+        );
+        if (action == DialogAction.yes) {
+          setState(() {
+            refreshList();
+          });
+        }
+      }
+    });
+  }
+
   void handleUserInteraction([_]) {
     SessionTimer sessionTimer = SessionTimer();
     sessionTimer.initializeTimer(context);
+  }
+
+  Future<void> refreshList() async {
+    await Future.delayed(const Duration(seconds: 1));
+    getLoadInventory();
   }
 
   @override
@@ -139,16 +314,43 @@ class _StockInvetoryState extends State<StockInvetory> {
                           )
                         : const Text(''),
                   ),
-                  const Text(
-                    'Total Item(s):',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500, color: Colors.deepOrange),
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    // color: Colors.green,
+                    child: ElevatedButton(
+                      style: raisedButtonStyleGreen,
+                      onPressed: () {
+                        if (!NetworkData.connected) {
+                          showGlobalSnackbar(
+                              'Connectivity',
+                              'Please connect to internet.',
+                              Colors.black,
+                              Colors.white);
+                        } else {
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) =>
+                                  const ProcessingBox('Checking for Updates'));
+                        }
+                        checkforPriceChange();
+                      },
+                      child: Text(
+                        'Price Update',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ),
-                  Text(
-                    '  $totItm',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 16),
-                  ),
+                  // const Text(
+                  //   'Total Item(s):',
+                  //   style: TextStyle(
+                  //       fontWeight: FontWeight.w500, color: Colors.deepOrange),
+                  // ),
+                  // Text(
+                  //   '  $totItm',
+                  //   style: const TextStyle(
+                  //       fontWeight: FontWeight.w500, fontSize: 16),
+                  // ),
                   const SizedBox(
                     width: 20,
                   ),

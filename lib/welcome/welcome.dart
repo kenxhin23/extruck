@@ -953,7 +953,7 @@ class _WelcomePageState extends State<WelcomePage> {
   loadCustomerDiscount() async {
     // context.read().changeCap('Creating Customer Discount...');
     Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Customer Discount...');
+        .changeCap('Creating Principal Discount...');
     var disc = await db.ofFetchDiscountList();
     discountList = disc;
     if (discountList.isEmpty) {

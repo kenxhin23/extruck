@@ -58,7 +58,7 @@ class _StockRequestState extends State<StockRequest> {
     CartData.totalAmount = "0.00";
     var rsp = await db.ofFetchCart(UserData.id);
     cartList = json.decode(json.encode(rsp));
-
+    print(cartList);
     setState(() {
       if (cartList.isNotEmpty) {
         emptyCart = false;
@@ -124,7 +124,7 @@ class _StockRequestState extends State<StockRequest> {
   }
 
   showSnackBar(context, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-      setCateg, itmImg) {
+      setCateg, itmPrcpl, itmImg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: const Text(
@@ -135,17 +135,17 @@ class _StockRequestState extends State<StockRequest> {
               onPressed: () {
                 setState(() {
                   unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-                      setCateg, itmImg);
+                      setCateg, itmPrcpl, itmImg);
                 });
               })),
     );
   }
 
-  unDoDelete(
-      itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmImg) {
+  unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg,
+      itmPrcpl, itmImg) {
     setState(() {
       db.addItemtoCart(UserData.id, itmCode, itmDesc, itmUom, itmAmt, itmQty,
-          itmTotal, setCateg, itmImg);
+          itmTotal, setCateg, itmPrcpl, itmImg);
       refreshList();
     });
   }
@@ -301,6 +301,7 @@ class _StockRequestState extends State<StockRequest> {
                   var itmqty = cartList[index]['item_qty'].toString();
                   var itmtot = cartList[index]['item_total'].toString();
                   var itmcat = cartList[index]['item_cat'].toString();
+                  var itmprcpl = cartList[index]['item_principal'].toString();
                   var itmImg = cartList[index]['image'].toString();
 
                   db.deleteRequestItem(
@@ -312,7 +313,7 @@ class _StockRequestState extends State<StockRequest> {
                   // refreshList();
 
                   showSnackBar(context, itmcode, itmdesc, itmuom, itmamt,
-                      itmqty, itmtot, itmcat, itmImg);
+                      itmqty, itmtot, itmcat, itmprcpl, itmImg);
 
                   // print(cartList);
                 });

@@ -154,6 +154,7 @@ class _SendRequestState extends State<SendRequest> {
             element['item_uom'],
             element['item_amt'],
             element['item_total'],
+            element['item_principal'],
             UserData.id,
             date.toString(),
             element['image']);

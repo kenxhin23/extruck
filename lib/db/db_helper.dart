@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.1.db';
+  static const _dbName = 'EXTRUCK_TEST1.7.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -176,6 +176,7 @@ class DatabaseHelper {
         item_qty TEXT,
         item_total TEXT,
         item_cat TEXT,
+        item_principal TEXT,
         image TEXT)''');
 
     ///SALES TYPE
@@ -543,6 +544,35 @@ class DatabaseHelper {
         conv_amt TEXT,
         image TEXT)''');
 
+    db.execute('''
+      CREATE TABLE xt_price_change_log(
+        doc_no INTEGER PRIMARY KEY,
+        sm_code TEXT,
+        date TEXT,
+        pc_no TEXT,
+        item_code TEXT,
+        item_desc TEXT,
+        item_uom TEXT,
+        item_amt TEXT,
+        new_amt TEXT,
+        var_amt TEXT,
+        stock_qty TEXT,
+        adj_total TEXT,
+        image TEXT)''');
+
+    ///DISCOUNTS TABLE
+    db.execute('''
+      CREATE TABLE tb_principal_discount(
+        doc_no INTEGER PRIMARY KEY,
+        id TEXT,
+        principal TEXT,
+        range_from TEXT,
+        range_to TEXT,
+        discount TEXT,
+        created_at TEXT,
+        updated_at TEXT,
+        status TEXT)''');
+
     ///BANNER IMAGES TABLE
     // db.execute('''
     //   CREATE TABLE tbl_banner_image (
@@ -606,7 +636,7 @@ class DatabaseHelper {
     var client = await db;
     Batch batch = client.batch();
     for (var i = 0; i < discount.length; i++) {
-      batch.insert('tbl_discounts', discount[i]);
+      batch.insert('tb_principal_discount', discount[i]);
     }
     await batch.commit(noResult: true);
   }
@@ -745,7 +775,7 @@ class DatabaseHelper {
   }
 
   Future addItemtoCart(salesmanCode, itemCode, itemDesc, itemUom, itemAmt, qty,
-      total, itemCat, itemImage) async {
+      total, itemCat, itemPrincipal, itemImage) async {
     int fqty = 0;
     double ftotal = 0.00;
     var client = await db;
@@ -765,6 +795,7 @@ class DatabaseHelper {
         'item_qty': qty,
         'item_total': total,
         'item_cat': itemCat,
+        'item_principal': itemPrincipal,
         'image': itemImage,
       });
     } else {
@@ -901,7 +932,7 @@ class DatabaseHelper {
   }
 
   Future addRequestLine(tranNo, itemCode, itemDesc, itemQty, itemUom, itemAmt,
-      totAmt, code, date, image) async {
+      totAmt, principal, code, date, image) async {
     int fqty = 0;
     double ftotal = 0.00;
     var client = await db;
@@ -923,6 +954,7 @@ class DatabaseHelper {
         'discount': '0',
         'tot_amt': totAmt,
         'discounted_amount': '0.00',
+        'item_principal': principal,
         'sm_code': code,
         'item_stat': 'Pending',
         'date_req': date,
@@ -1069,7 +1101,7 @@ class DatabaseHelper {
 
   Future ofFetchDiscountList() async {
     var client = await db;
-    return client.rawQuery('SELECT * FROM tbl_discounts', null);
+    return client.rawQuery('SELECT * FROM tb_principal_discount', null);
   }
 
   Future ofFetchBankList() async {
@@ -1959,7 +1991,7 @@ class DatabaseHelper {
 
   Future getDiscountList(BuildContext context) async {
     try {
-      var url = Uri.parse('${UrlAddress.url}/getdiscountlist');
+      var url = Uri.parse('${UrlAddress.url}/getprincipaldiscount');
       final response = await retry(() =>
           http.post(url, headers: {"Accept": "Application/json"}, body: {}));
       if (response.statusCode == 200) {
@@ -5396,6 +5428,45 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
+  Future saveitemLoad(code, List line) async {
+    var url = Uri.parse('${UrlAddress.url}/updateitemload');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+      'line': jsonEncode(line),
+    });
+    // var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    var convertedDatatoJson = jsonDecode(response.body);
+    return convertedDatatoJson;
+  }
+
+  Future checkPriceChange(List line) async {
+    var url = Uri.parse('${UrlAddress.url}/checkpricechange');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'line': jsonEncode(line),
+    });
+    // var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future updateRevolving(code, amount, type, cpno) async {
+    var url = Uri.parse('${UrlAddress.url}/updaterevolving');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+      'bal': encrypt(amount),
+      'type': encrypt(type),
+      'no': encrypt(cpno),
+    });
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
   /////
   ///EXTRUCK CODE FOR SQL
   ///
@@ -5446,7 +5517,7 @@ class DatabaseHelper {
     String z = '0';
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_sm_load WHERE sm_code ="$code" AND item_qty!="$z" ORDER BY item_desc ASC',
+        'SELECT *, 0 as amt,false as discounted FROM xt_sm_load WHERE sm_code ="$code" AND item_qty!="$z" ORDER BY item_desc ASC',
         null);
   }
 
@@ -6021,7 +6092,7 @@ class DatabaseHelper {
 
   Future addSmBalance(
       code, rfFund, rfBal, loadBal, cash, cheque, bo, rmt) async {
-    String stat = '0';
+    // String nb = '0';
     var client = await db;
     return client.insert('xt_sm_balance', {
       'sm_code ': code,
@@ -6058,6 +6129,24 @@ class DatabaseHelper {
           {
             'rev_bal': revBal,
             'load_bal': (bal + double.parse(amt)).toString(),
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future setRevBal(smcode, revBal) async {
+    // double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      return client.update(
+          'xt_sm_balance',
+          {
+            'rev_bal': revBal,
           },
           where: 'sm_code = ?',
           whereArgs: [smcode]);
@@ -6343,9 +6432,62 @@ class DatabaseHelper {
         null);
   }
 
-  Future ofFetchSample(code) async {
+  Future checkItemPrice(itmcode, uom) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_cash_ldg WHERE sm_code="$code" ', null);
+        'SELECT * FROM item_masterfiles WHERE itemcode ="$itmcode" AND uom = "$uom"',
+        null);
+  }
+
+  Future checkCPCount(smcode, itmcode, itmuom) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_price_change_log WHERE sm_code="$smcode" AND item_code="$itmcode" AND item_code="$itmuom"',
+        null);
+  }
+
+  Future setItemPrice(smcode, itmcode, itmuom, itmamt) async {
+    // int fqty = 0;
+    // double famt = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT item_qty,item_amt FROM xt_sm_load WHERE sm_code = "$smcode" AND item_code = "$itmcode" AND item_uom = "$itmuom"',
+        null);
+    // final result = count;
+    // return res;
+    if (res.isEmpty) {
+    } else {
+      return client.update(
+          'xt_sm_load',
+          {
+            'item_amt': itmamt,
+          },
+          where: 'sm_code = ? AND item_code = ? AND item_uom = ?',
+          whereArgs: [smcode, itmcode, itmuom]);
+    }
+  }
+
+  Future setLoadBal(smcode, amt) async {
+    // double bal = 0.00;
+    var client = await db;
+
+    List<Map> res = await client.rawQuery(
+        'SELECT * FROM xt_sm_balance WHERE sm_code = "$smcode"', null);
+    if (res.isEmpty) {
+    } else {
+      return client.update(
+          'xt_sm_balance',
+          {
+            'load_bal': amt,
+          },
+          where: 'sm_code = ?',
+          whereArgs: [smcode]);
+    }
+  }
+
+  Future ofFetchSample() async {
+    var client = await db;
+    return client.rawQuery('SELECT * FROM tb_principal_discount ', null);
   }
 }

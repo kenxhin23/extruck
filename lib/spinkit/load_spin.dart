@@ -1,18 +1,15 @@
+import 'package:extruck/providers/caption_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class ProcessingBox extends StatefulWidget {
-  final String caption;
-
-  // ignore: use_key_in_widget_constructors
-  const ProcessingBox(this.caption);
-  // const ProcessingBox({Key? key}) : super(key: key);
+class LoadingSpinkit extends StatefulWidget {
+  const LoadingSpinkit({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ProcessingBoxState createState() => _ProcessingBoxState();
+  _LoadingSpinkitState createState() => _LoadingSpinkitState();
 }
 
-class _ProcessingBoxState extends State<ProcessingBox> {
+class _LoadingSpinkitState extends State<LoadingSpinkit> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -31,7 +28,7 @@ class _ProcessingBoxState extends State<ProcessingBox> {
     return Stack(
       children: <Widget>[
         Container(
-            // width: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width,
             padding:
                 const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
             margin: const EdgeInsets.only(top: 16),
@@ -66,11 +63,11 @@ class _ProcessingBoxState extends State<ProcessingBox> {
                         ),
                       ]),
                   child: Column(
-                    // ignore: prefer_const_literals_to_create_immutables
                     children: [
                       Text(
-                        widget.caption,
-                        style: TextStyle(
+                        // Provider.of<Caption>(context).cap,
+                        context.watch<Caption>().cap,
+                        style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                             color: Colors.black),

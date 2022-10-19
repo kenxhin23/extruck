@@ -6,6 +6,7 @@ import 'package:extruck/providers/cart_total.dart';
 import 'package:extruck/providers/img_download.dart';
 import 'package:extruck/providers/pending_counter.dart';
 import 'package:extruck/providers/sync_caption.dart';
+import 'package:extruck/providers/upload_count.dart';
 import 'package:extruck/providers/upload_length.dart';
 import 'package:extruck/values/assets.dart';
 import 'package:extruck/values/colors.dart';
@@ -25,6 +26,7 @@ void main() {
     ChangeNotifierProvider(create: (_) => CartTotalCounter()),
     ChangeNotifierProvider(create: (_) => DownloadStat()),
     ChangeNotifierProvider(create: (_) => PendingCounter()),
+    ChangeNotifierProvider(create: (_) => UploadCount()),
   ], child: const MyApp()));
 }
 

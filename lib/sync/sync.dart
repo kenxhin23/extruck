@@ -4,15 +4,20 @@ import 'dart:convert';
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/dialogs/confirm_sync.dart';
 import 'package:extruck/dialogs/confirmupload.dart';
+// import 'package:extruck/providers/sync_caption.dart';
+import 'package:extruck/providers/upload_count.dart';
 import 'package:extruck/session/session_timer.dart';
+import 'package:extruck/spinkit/upload_spin.dart';
 import 'package:extruck/sync/sync_option.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
 import 'package:extruck/widgets/snackbar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({Key? key}) : super(key: key);
@@ -40,6 +45,16 @@ class _SyncPageState extends State<SyncPage> {
 
   String amount = "";
 
+  List _toList = [];
+
+  List _upList = [];
+  List _inv = [];
+  List _cash = [];
+  List _tempList = [];
+
+  List _loadldgloc = [];
+  List _loadldglive = [];
+
   final db = DatabaseHelper();
 
   Timer? timer;
@@ -59,6 +74,17 @@ class _SyncPageState extends State<SyncPage> {
 
   checkStatus() async {
     loadForUpload();
+
+    if (GlobalVariables.upload == true) {
+      if (NetworkData.uploaded == false && uploading == false) {
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => UploadingSpinkit());
+        await upload();
+        print('UPLOADING.........');
+      }
+    }
   }
 
   loadForUpload() async {
@@ -75,30 +101,93 @@ class _SyncPageState extends State<SyncPage> {
               '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
         }
       }
-      // if (_list.isEmpty) {
-      //   uploading = false;
-      // } else {
-      //   GlobalVariables.uploaded = false;
-      //   GlobalVariables.uploadLength = _toList.length.toString();
-      // }
+      if (_list.isEmpty) {
+        uploading = false;
+      } else {
+        GlobalVariables.uploaded = false;
+        GlobalVariables.uploadLength = _toList.length.toString();
+      }
     });
   }
 
   uploadButtonclicked() async {
-    if (NetworkData.connected == true) {
-      if (NetworkData.uploaded == false) {
-        showDialog(
-            context: context,
-            builder: (context) => const ConfirmUpload(
-                  // iconn: 59137,
-                  title: 'Confirmation!',
-                  description1: 'Are you sure you want to upload transactions?',
-                  description2: 'Please secure stable internet connection.',
-                ));
+    getInventoryLoad();
+
+    var rsp = await db.saveitemLoad(UserData.id, _inv);
+    print(rsp);
+
+    // if (NetworkData.connected == true) {
+    //   if (NetworkData.uploaded == false) {
+    //     showDialog(
+    //         context: context,
+    //         builder: (context) => const ConfirmUpload(
+    //               // iconn: 59137,
+    //               title: 'Confirmation!',
+    //               description1: 'Are you sure you want to upload transactions?',
+    //               description2: 'Please secure stable internet connection.',
+    //             ));
+    //   }
+    // } else {
+    //   showGlobalSnackbar('Connectivity', 'Please connect to internet.',
+    //       Colors.red.shade900, Colors.white);
+    // }
+  }
+
+  upload() async {
+    int x = 0;
+    Provider.of<UploadCount>(context, listen: false).setTotal(x);
+    if (NetworkData.errorMsgShow == false &&
+        uploading == false &&
+        !GlobalVariables.uploaded) {
+      NetworkData.uploaded = true;
+      uploading = true;
+      var rsp = await db.saveitemLoad(UserData.id, _inv);
+      print(rsp);
+      if (rsp != '' || rsp != null) {
+        GlobalVariables.uploaded = true;
+        NetworkData.uploaded = false;
+        GlobalVariables.upload = false;
+        Navigator.pop(context);
       }
-    } else {
-      showGlobalSnackbar('Connectivity', 'Please connect to internet.',
-          Colors.red.shade900, Colors.white);
+    }
+  }
+
+  getInventoryLoad() async {
+    var rsp = await db.getInventory(UserData.id);
+    setState(() {
+      _inv = json.decode(json.encode(rsp));
+      // print(_inv);
+    });
+  }
+
+  getCashLedger() async {
+    var rsp = await db.getCashLedger(UserData.id);
+    if (!mounted) return;
+    setState(() {
+      _cash = json.decode(json.encode(rsp));
+      // print(_cash);
+    });
+  }
+
+  updateLoadLedger() async {
+    var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
+    _loadldgloc = json.decode(json.encode(checkLedgerLocal));
+    if (_loadldgloc.isNotEmpty) {
+      var checkLedgerOnline = await db.checkLedger(UserData.id);
+      _loadldglive = checkLedgerOnline;
+      if (_loadldglive.length == _loadldgloc.length) {
+        if (kDebugMode) {
+          print('EQUAL');
+        }
+      } else {
+        if (kDebugMode) {
+          print('NOT EQUAL');
+        }
+        var rsp = await db.updateLedger(UserData.id, _loadldgloc);
+        if (kDebugMode) {
+          print(rsp);
+        }
+      }
     }
   }
 
@@ -151,7 +240,7 @@ class _SyncPageState extends State<SyncPage> {
                 child: FloatingActionButton(
                   onPressed: () {
                     if (_list.isNotEmpty) {
-                      // uploadButtonclicked();
+                      uploadButtonclicked();
                     }
                   },
                   tooltip: 'Upload',

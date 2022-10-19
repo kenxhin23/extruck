@@ -210,6 +210,7 @@ class _ItemListState extends State<ItemList> {
                             CartData.itmQty = '1';
                             CartData.setCateg =
                                 _itemlist[index]['product_family'];
+                            CartData.principal = _itemlist[index]['principal'];
                             CartData.imgpath = _itemlist[index]['image'];
                             // print(CartData.imgpath);
                             CartData.itmTotal = (double.parse(

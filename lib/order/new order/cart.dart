@@ -118,7 +118,7 @@ class _MyCartState extends State<MyCart> {
   }
 
   showSnackBar(context, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-      setCateg, itmImg) {
+      setCateg, itmPrcpl, itmImg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
           content: const Text(
@@ -129,17 +129,17 @@ class _MyCartState extends State<MyCart> {
               onPressed: () {
                 setState(() {
                   unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-                      setCateg, itmImg);
+                      setCateg, itmPrcpl, itmImg);
                 });
               })),
     );
   }
 
-  unDoDelete(
-      itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmImg) {
+  unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg,
+      itmPrcpl, itmImg) {
     setState(() {
       db.addItemtoCart(UserData.id, itmCode, itmDesc, itmUom, itmAmt, itmQty,
-          itmTotal, setCateg, itmImg);
+          itmTotal, setCateg, itmPrcpl, itmImg);
       db.minusInventory(UserData.id, itmCode, itmDesc, itmUom, itmQty);
       refreshList();
     });
@@ -407,6 +407,7 @@ class _MyCartState extends State<MyCart> {
                   var itmqty = cartList[index]['item_qty'].toString();
                   var itmtot = cartList[index]['item_total'].toString();
                   var itmcat = cartList[index]['item_cat'].toString();
+                  var itmPrcpl = cartList[index]['item_principal'].toString();
                   var itmImg = cartList[index]['image'].toString();
                   db.addInventory(
                       UserData.id,
@@ -425,7 +426,7 @@ class _MyCartState extends State<MyCart> {
                   // refreshList();
 
                   showSnackBar(context, itmcode, itmdesc, itmuom, itmamt,
-                      itmqty, itmtot, itmcat, itmImg);
+                      itmqty, itmtot, itmcat, itmPrcpl, itmImg);
 
                   // print(cartList);
                 });

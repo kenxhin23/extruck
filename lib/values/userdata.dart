@@ -121,6 +121,7 @@ class CartData {
   static String convUom = '';
   static String convAmt = '';
   static String boAmt = '';
+  static String principal = '';
 }
 
 class RequestData {

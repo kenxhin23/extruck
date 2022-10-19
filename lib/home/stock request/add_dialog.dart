@@ -46,6 +46,7 @@ class _AddDialogState extends State<AddDialog> {
   void initState() {
     super.initState();
     getUomList();
+    print(CartData.principal);
   }
 
   uomonChanged() async {
@@ -415,6 +416,7 @@ class _AddDialogState extends State<AddDialog> {
                                       CartData.itmQty,
                                       CartData.itmTotal,
                                       CartData.setCateg,
+                                      CartData.principal,
                                       CartData.imgpath);
                                   Provider.of<CartItemCounter>(context,
                                           listen: false)
