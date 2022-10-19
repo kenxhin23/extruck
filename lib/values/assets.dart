@@ -10,6 +10,7 @@ class AssetsValues {
   static AssetImage noImageImg =
       const AssetImage('assets/images/noimageitem.jpg');
   static AssetImage receiptLogo = const AssetImage('assets/images/icon_.png');
+  static AssetImage discTag = const AssetImage('assets/images/discount.png');
   // static AssetImage smImg = AssetImage('assets/images/sm.png');
   // static AssetImage rootedImg = AssetImage('assets/images/rooted.png');
 

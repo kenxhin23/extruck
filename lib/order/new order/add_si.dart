@@ -50,8 +50,6 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
             textInputAction: TextInputAction.next,
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
-            // initialValue: salesinvoicecontroller.text,
-            // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
             onEditingComplete: () => node.nextFocus(),
             controller: salesinvoicecontroller,
             style: const TextStyle(fontWeight: FontWeight.w500),

@@ -361,6 +361,7 @@ class _AddItemState extends State<AddItem> {
                                   UserData.id,
                                   CartData.itmCode,
                                   CartData.itmDesc,
+                                  CartData.principal,
                                   CartData.itmQty,
                                   CartData.availableQty,
                                   CartData.itmUom,

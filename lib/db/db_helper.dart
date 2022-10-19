@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.7.db';
+  static const _dbName = 'EXTRUCK_TEST1.0.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -506,6 +506,7 @@ class DatabaseHelper {
         sm_code TEXT,
         item_code TEXT,
         item_desc TEXT,
+        item_principal TEXT,
         item_qty TEXT,
         avail_qty TEXT,
         item_uom TEXT,
@@ -5545,8 +5546,8 @@ class DatabaseHelper {
         null);
   }
 
-  Future loadItemtoInventory(
-      smcode, itmcode, itmdesc, itmuom, itmamt, qty, cqty, cuom, img) async {
+  Future loadItemtoInventory(smcode, itmcode, itmdesc, itmPrincipal, itmuom,
+      itmamt, qty, cqty, cuom, img) async {
     int fqty = 0;
     // double famt = 0.00;
     var client = await db;
@@ -5561,6 +5562,7 @@ class DatabaseHelper {
         'sm_code': smcode,
         'item_code': itmcode,
         'item_desc': itmdesc,
+        'item_principal': itmPrincipal,
         'item_uom': itmuom,
         'item_amt': itmamt,
         'item_qty': qty,
@@ -5818,8 +5820,8 @@ class DatabaseHelper {
     });
   }
 
-  Future addforConversion(smcode, itmcode, itmdesc, itmQty, availQty, itmUom,
-      itmAmt, convQty, convUom, convAmt, img) async {
+  Future addforConversion(smcode, itmcode, itmdesc, itmPrincipal, itmQty,
+      availQty, itmUom, itmAmt, convQty, convUom, convAmt, img) async {
     int fqty = 0;
     var client = await db;
 
@@ -5831,6 +5833,7 @@ class DatabaseHelper {
         'sm_code': smcode,
         'item_code': itmcode,
         'item_desc': itmdesc,
+        'item_principal': itmPrincipal,
         'item_qty': itmQty,
         'avail_qty': availQty,
         'item_uom': itmUom,
@@ -6484,6 +6487,19 @@ class DatabaseHelper {
           where: 'sm_code = ?',
           whereArgs: [smcode]);
     }
+  }
+
+  Future checkPrincipal() async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM tb_principal_discount WHERE status="1"', null);
+  }
+
+  Future getDiscountDetails(name) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM tb_principal_discount WHERE principal="$name" AND status="1"',
+        null);
   }
 
   Future ofFetchSample() async {

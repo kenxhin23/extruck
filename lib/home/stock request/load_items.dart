@@ -80,6 +80,7 @@ class _LoadItemsState extends State<LoadItems> {
           UserData.id,
           element['item_code'],
           element['item_desc'],
+          element['item_principal'],
           element['item_uom'],
           element['amt'],
           element['app_qty'],

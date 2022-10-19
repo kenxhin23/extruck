@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/inventory/discount_details.dart';
 import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/providers/caption_provider.dart';
 import 'package:extruck/session/session_timer.dart';
@@ -31,8 +32,10 @@ class _StockInvetoryState extends State<StockInvetory> {
   String loadBal = '0.00';
   String revBal = '0.00';
   List _inv = [];
+  List _disc = [];
   List itemList = [];
   List itemAllImgList = [];
+  List itemDiscList = [];
   List categList = [];
   List _rsp = [];
   String date = '';
@@ -46,14 +49,20 @@ class _StockInvetoryState extends State<StockInvetory> {
   @override
   void initState() {
     super.initState();
+    getPrincipalDiscounts();
     getLoadInventory();
+  }
+
+  getPrincipalDiscounts() async {
+    var disc = await db.checkPrincipal();
+    _disc = json.decode(json.encode(disc));
   }
 
   //LOAD INVENTORY ITEMS
   getLoadInventory() async {
     // var a = await db.ofFetchSample();
     // print(a);
-    // db.setLoadBal(UserData.id, '28439.10');
+    // db.setLoadBal(UserData.id, '222473.90');
     var documentDirectory = await getApplicationDocumentsDirectory();
     var firstPath = '${documentDirectory.path}/';
     imgPath = firstPath;
@@ -64,6 +73,11 @@ class _StockInvetoryState extends State<StockInvetory> {
       _inv = json.decode(json.encode(rsp));
       // print(_inv);
       for (var element in _inv) {
+        _disc.forEach((a) {
+          if (element['item_principal'] == a['principal']) {
+            element['discounted'] = 1;
+          }
+        });
         totQty =
             (int.parse(totQty) + int.parse(element['item_qty'])).toString();
         loadBal = (double.parse(loadBal) +
@@ -120,6 +134,19 @@ class _StockInvetoryState extends State<StockInvetory> {
     await db.deleteTable('tbl_item_image');
     await db.insertItemImgList(itemAllImgList);
     await db.addUpdateTable('tbl_item_image   ', 'ITEM', date.toString());
+    loadItemDiscounts();
+  }
+
+  loadItemDiscounts() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Discounts...');
+
+    var rsp = await db.getDiscountList(context);
+    itemDiscList = rsp;
+    await db.deleteTable('tb_principal_discount');
+    await db.insertDiscountList(itemDiscList);
+    await db.addUpdateTable(
+        'tb_principal_discount   ', 'ITEM', date.toString());
     loadCategory();
   }
 
@@ -279,6 +306,7 @@ class _StockInvetoryState extends State<StockInvetory> {
               child: listViewCont(),
             ),
             Container(
+              // padding: EdgeInsets.all(5),
               width: MediaQuery.of(context).size.width,
               height: 40,
               color: Colors.white,
@@ -288,9 +316,9 @@ class _StockInvetoryState extends State<StockInvetory> {
                   Expanded(
                     child: !GlobalVariables.viewImg
                         ? Container(
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(5),
                             child: ElevatedButton(
-                              style: raisedButtonStyleOrange,
+                              style: raisedButtonStyleGrey,
                               onPressed: () async {
                                 setState(() {
                                   GlobalVariables.viewImg = true;
@@ -298,7 +326,7 @@ class _StockInvetoryState extends State<StockInvetory> {
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
+                                // mainAxisSize: MainAxisSize.min,
                                 // ignore: prefer_const_literals_to_create_immutables
                                 children: [
                                   const Text(
@@ -352,7 +380,7 @@ class _StockInvetoryState extends State<StockInvetory> {
                   //       fontWeight: FontWeight.w500, fontSize: 16),
                   // ),
                   const SizedBox(
-                    width: 20,
+                    width: 5,
                   ),
                   const Text(
                     'Total Qty:',
@@ -409,6 +437,12 @@ class _StockInvetoryState extends State<StockInvetory> {
         child: ListView.builder(
             itemCount: _inv.length,
             itemBuilder: ((context, index) {
+              bool discounted = false;
+              if (_inv[index]['discounted'] == 1) {
+                discounted = true;
+              } else {
+                discounted = false;
+              }
               if (_inv[index]['image'] == '') {
                 noImage = true;
               } else {
@@ -478,6 +512,26 @@ class _StockInvetoryState extends State<StockInvetory> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Visibility(
+                              visible: discounted,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => DiscountDetails(
+                                          _inv[index]['item_principal']));
+                                },
+                                child: Container(
+                                  width: 50,
+                                  color: Colors.white,
+                                  height: 15,
+                                  child: Image(
+                                    // color: ColorsTheme.mainColor,
+                                    image: AssetsValues.discTag,
+                                  ),
+                                ),
+                              ),
+                            ),
                             const Text(
                               'Qty',
                               style: TextStyle(fontSize: 12),

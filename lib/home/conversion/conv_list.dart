@@ -214,6 +214,8 @@ class _ConversionListState extends State<ConversionList> {
                           setState(() {
                             CartData.itmCode = _itemlist[index]['item_code'];
                             CartData.itmDesc = _itemlist[index]['item_desc'];
+                            CartData.principal =
+                                _itemlist[index]['item_principal'];
                             CartData.itmUom = _itemlist[index]['item_uom'];
                             CartData.itmAmt = _itemlist[index]['item_amt'];
                             CartData.itmQty = '1';

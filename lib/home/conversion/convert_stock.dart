@@ -149,6 +149,7 @@ class _StockConversionState extends State<StockConversion> {
           UserData.id,
           element['item_code'],
           element['item_desc'],
+          element['item_principal'],
           element['conv_uom'],
           element['conv_amt'],
           qty.toString(),
