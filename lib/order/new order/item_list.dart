@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:extruck/db/db_helper.dart';
+import 'package:extruck/home/inventory/discount_details.dart';
 import 'package:extruck/order/new%20order/add_dialog.dart';
 // import 'package:extruck/home/add_dialog.dart';
 import 'package:extruck/providers/cart_total.dart';
@@ -10,7 +11,7 @@ import 'package:extruck/values/assets.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/dialogs.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -31,6 +32,7 @@ class _ItemListState extends State<ItemList> {
   bool outofStock = false;
   List _itemlist = [];
   List _tmpitm = [];
+  List _disc = [];
 
   String imgPath = '';
   String _searchController = "";
@@ -45,7 +47,13 @@ class _ItemListState extends State<ItemList> {
   void initState() {
     super.initState();
     // initPlatformState();
+    getPrincipalDiscounts();
     loadProducts();
+  }
+
+  getPrincipalDiscounts() async {
+    var disc = await db.checkPrincipal();
+    _disc = json.decode(json.encode(disc));
   }
 
   loadProducts() async {
@@ -59,16 +67,13 @@ class _ItemListState extends State<ItemList> {
       if (!mounted) return;
       setState(() {
         _itemlist = json.decode(json.encode(getO));
-        if (kDebugMode) {
-          print(_itemlist);
-        }
-        // print(_itemlist);
-        // _itemlist.forEach((element) async {
-        //   var getImg =
-        //       await db.getItemImginTable(element['itemcode'], element['uom']);
-        //   element['image'] = json.decode(json.encode(getImg.toString()));
-        //   // element['image'] = getImg;
-        // });
+        _itemlist.forEach((element) {
+          _disc.forEach((a) {
+            if (element['item_principal'] == a['principal']) {
+              element['discounted'] = 1;
+            }
+          });
+        });
         viewSpinkit = false;
         GlobalVariables.itemlist = _itemlist;
       });
@@ -77,9 +82,13 @@ class _ItemListState extends State<ItemList> {
       var getO = await db.getInventory(UserData.id);
       setState(() {
         _itemlist = json.decode(json.encode(getO));
-        if (kDebugMode) {
-          print(_itemlist);
-        }
+        _itemlist.forEach((element) {
+          _disc.forEach((a) {
+            if (element['item_principal'] == a['principal']) {
+              element['discounted'] = 1;
+            }
+          });
+        });
       });
     }
 
@@ -191,6 +200,12 @@ class _ItemListState extends State<ItemList> {
               itemCount: _itemlist.length,
               itemBuilder: (context, index) {
                 bool lowStock = false;
+                bool discounted = false;
+                if (_itemlist[index]['discounted'] == 1) {
+                  discounted = true;
+                } else {
+                  discounted = false;
+                }
                 if (_itemlist[index]['image'] == '') {
                   noImage = true;
                 } else {
@@ -224,6 +239,8 @@ class _ItemListState extends State<ItemList> {
                             CartData.itmAmt = _itemlist[index]['item_amt'];
                             CartData.itmQty = '1';
                             // CartData.setCateg = _itemlist[index]['item_cat'];
+                            CartData.principal =
+                                _itemlist[index]['item_principal'];
                             CartData.imgpath = _itemlist[index]['image'];
                             // print(CartData.imgpath);
                             CartData.itmTotal =
@@ -344,11 +361,30 @@ class _ItemListState extends State<ItemList> {
                                 // color: Colors.grey,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    // const Expanded(
-                                    //     child: SizedBox(
-                                    //   width: 50,
-                                    // )),
+                                    Visibility(
+                                      visible: discounted,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  DiscountDetails(
+                                                      _itemlist[index]
+                                                          ['item_principal']));
+                                        },
+                                        child: Container(
+                                          width: 50,
+                                          color: Colors.white,
+                                          height: 15,
+                                          child: Image(
+                                            // color: ColorsTheme.mainColor,
+                                            image: AssetsValues.discTag,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                     Text(
                                       formatCurrencyAmt.format(double.parse(
                                           _itemlist[index]['item_amt'])),

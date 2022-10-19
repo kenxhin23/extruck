@@ -101,6 +101,7 @@ class CartData {
   static String itmNo = '0';
   static String? itmLineNo;
   static String totalAmount = '0';
+  static String netAmount = '0.00';
   static String setCateg = '';
   static String? itmCode;
   static String? itmDesc;

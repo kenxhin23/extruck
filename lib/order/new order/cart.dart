@@ -26,9 +26,11 @@ class MyCart extends StatefulWidget {
 
 class _MyCartState extends State<MyCart> {
   List cartList = [];
+  List _disc = [];
   String imgPath = "";
   bool emptyCart = true;
   bool noImage = true;
+  bool loadDisc = false;
 
   final db = DatabaseHelper();
 
@@ -40,15 +42,24 @@ class _MyCartState extends State<MyCart> {
   void initState() {
     super.initState();
     // initPlatformState();
+    getPrincipalDiscounts();
     loadCart();
     // loadTran();
   }
 
+  getPrincipalDiscounts() async {
+    var disc = await db.checkPrincipal();
+    setState(() {
+      _disc = json.decode(json.encode(disc));
+      // print(_disc);
+    });
+  }
+
   loadCart() async {
+    // getPrincipalDiscounts();
     var documentDirectory = await getApplicationDocumentsDirectory();
     var firstPath = '${documentDirectory.path}/';
     imgPath = firstPath;
-    // emptyCart = true;
     CartData.itmNo = '0';
     CartData.totalAmount = "0.00";
     CartData.siNum = '';
@@ -61,8 +72,10 @@ class _MyCartState extends State<MyCart> {
     setState(() {
       if (cartList.isNotEmpty) {
         emptyCart = false;
+        // print(CartData.list);
       }
-      computeTotal();
+      computeDiscount();
+      // computeTotal();
       // loadMinOrder();
     });
     OrderData.setSign = false;
@@ -70,10 +83,45 @@ class _MyCartState extends State<MyCart> {
     // viewSpinkit = false;
   }
 
+  computeDiscount() async {
+    List tmp = [];
+    double amt = 0.00;
+    CartData.discAmt = '0.00';
+    var rsp = await db.getTotalAmountperPrincipal(UserData.id);
+    setState(() {
+      tmp = json.decode(json.encode(rsp));
+      print(tmp);
+      if (tmp.isNotEmpty) {
+        tmp.forEach((element) {
+          _disc.forEach((a) {
+            if (element['item_principal'] == a['principal']) {
+              if (double.parse(element['total'].toString()) >=
+                      double.parse(a['range_from'].toString()) &&
+                  double.parse(element['total'].toString()) <=
+                      double.parse(a['range_to'].toString())) {
+                setState(() {
+                  print(a['principal']);
+                  print(element['total']);
+                  print(a['discount']);
+                  amt = 0.00;
+                  amt = double.parse(element['total'].toString()) *
+                      double.parse(a['discount'].toString());
+
+                  CartData.discAmt =
+                      (double.parse(CartData.discAmt) + amt).toStringAsFixed(2);
+                  print(CartData.discAmt);
+                });
+              }
+            }
+          });
+        });
+      }
+    });
+    computeTotal();
+  }
+
   computeTotal() {
     setState(() {
-      // itmCat = "";
-      // categ = false;
       CartData.itmNo = '0';
       CartData.totalAmount = '0.00';
       double sum = 0;
@@ -81,10 +129,7 @@ class _MyCartState extends State<MyCart> {
         for (var element in cartList) {
           setState(() {
             sum = sum + double.parse(element['item_total']);
-            // print(element['item_total']);
             CartData.totalAmount = sum.toStringAsFixed(2);
-            // print(CartData.totalAmount);
-            // CartData.itmNo = cartList.length.toString();
             CartData.itmNo =
                 (int.parse(CartData.itmNo) + int.parse(element['item_qty']))
                     .toString();
@@ -96,15 +141,18 @@ class _MyCartState extends State<MyCart> {
           CartData.itmNo = '0';
         });
       }
-
-      // print('TOTAL AMOUNT:' + CartData.totalAmount);
+      CartData.netAmount =
+          (double.parse(CartData.totalAmount) - double.parse(CartData.discAmt))
+              .toStringAsFixed(2);
+      print(CartData.discAmt);
+      print('TOTAL AMOUNT:' + CartData.netAmount);
       // print(CartData.itmNo);
       CartData.itmLineNo = cartList.length.toString();
     });
     Provider.of<CartItemCounter>(context, listen: false)
         .setTotal(int.parse(CartData.itmNo));
     Provider.of<CartTotalCounter>(context, listen: false)
-        .setTotal(double.parse(CartData.totalAmount));
+        .setTotal(double.parse(CartData.netAmount));
   }
 
   Future<void> refreshList() async {
@@ -258,15 +306,16 @@ class _MyCartState extends State<MyCart> {
           ],
         ),
         Row(
-          children: const [
+          children: [
             Expanded(
                 child: Text(
               'Total Discount',
               style: TextStyle(fontSize: 12),
             )),
             Text(
-              '0.00',
-              style: TextStyle(fontSize: 12),
+              formatCurrencyTot.format(double.parse(CartData.discAmt)),
+              style: TextStyle(
+                  fontSize: 12, color: Colors.red, fontStyle: FontStyle.italic),
             )
           ],
         ),
@@ -280,7 +329,7 @@ class _MyCartState extends State<MyCart> {
               ),
             ),
             Text(
-              formatCurrencyTot.format(double.parse(CartData.totalAmount)),
+              formatCurrencyTot.format(double.parse(CartData.netAmount)),
               // formatCurrencyTot.format(double.parse(totalAmount)),
               // '',
               textAlign: TextAlign.left,
@@ -421,8 +470,8 @@ class _MyCartState extends State<MyCart> {
                       cartList[index]['item_code'].toString(),
                       cartList[index]['item_uom'].toString());
                   cartList.removeAt(index);
-
-                  computeTotal();
+                  computeDiscount();
+                  // computeTotal();
                   // refreshList();
 
                   showSnackBar(context, itmcode, itmdesc, itmuom, itmamt,

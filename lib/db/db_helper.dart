@@ -457,6 +457,8 @@ class DatabaseHelper {
         store_name TEXT,
         item_count TEXT,
         tot_amt TEXT,
+        disc_amt TEXT,
+        net_amt TEXT,
         pmeth_type TEXT,
         tran_type TEXT,
         sm_code TEXT,
@@ -497,6 +499,8 @@ class DatabaseHelper {
         sale_amt TEXT,
         bo_amt TEXT,
         tot_amt TEXT,
+        tot_disc TEXT,
+        tot_net TEXT,
         flag TEXT)''');
 
     ///XTRUCK CONVERSION CART
@@ -855,7 +859,7 @@ class DatabaseHelper {
   // }
 
   Future addOrdertoCart(salesmanCode, custCode, itemCode, itemDesc, itemUom,
-      itemAmt, qty, total, itemCat, itemImage) async {
+      itemAmt, qty, total, itemCat, itemPrincipal, itemImage) async {
     int fqty = 0;
     double ftotal = 0.00;
     var client = await db;
@@ -876,6 +880,7 @@ class DatabaseHelper {
         'item_qty': qty,
         'item_total': total,
         'item_cat': itemCat,
+        'item_principal': itemPrincipal,
         'image': itemImage,
       });
     } else {
@@ -5689,7 +5694,7 @@ class DatabaseHelper {
   }
 
   Future addTransactionHead(ordno, sino, date, acccode, storename, itmcount,
-      totAmt, pmeth, tranType, smCode) async {
+      totAmt, discAmt, netAmt, pmeth, tranType, smCode) async {
     // int rsp = 0;
     String stat = 'Pending';
     var client = await db;
@@ -5706,6 +5711,8 @@ class DatabaseHelper {
         'store_name': storename,
         'item_count': itmcount,
         'tot_amt': totAmt,
+        'disc_amt': discAmt,
+        'net_amt': netAmt,
         'pmeth_type': pmeth,
         'tran_type': tranType,
         'sm_code': smCode,
@@ -6492,13 +6499,21 @@ class DatabaseHelper {
   Future checkPrincipal() async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM tb_principal_discount WHERE status="1"', null);
+        'SELECT *,0.00 as discamt FROM tb_principal_discount WHERE status="1"',
+        null);
   }
 
   Future getDiscountDetails(name) async {
     var client = await db;
     return client.rawQuery(
         'SELECT * FROM tb_principal_discount WHERE principal="$name" AND status="1"',
+        null);
+  }
+
+  Future getTotalAmountperPrincipal(code) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT item_principal,SUM(tb_salesman_cart.item_total) as total FROM tb_salesman_cart WHERE salesman_code ="$code" GROUP BY item_principal',
         null);
   }
 

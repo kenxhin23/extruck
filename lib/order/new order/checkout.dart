@@ -66,6 +66,8 @@ class _CheckoutState extends State<Checkout> {
         CustomerData.accountName,
         CartData.itmNo,
         CartData.totalAmount,
+        CartData.discAmt,
+        CartData.netAmount,
         CartData.pMeth,
         'ORDER',
         UserData.id);
@@ -393,6 +395,15 @@ class _CheckoutState extends State<Checkout> {
             ],
           ),
           Row(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Expanded(child: Text('Total Discount')),
+              Text(
+                formatCurrencyAmt.format(double.parse(CartData.discAmt)),
+              ),
+            ],
+          ),
+          Row(
             children: [
               Expanded(
                 child: Text(
@@ -404,7 +415,7 @@ class _CheckoutState extends State<Checkout> {
                 ),
               ),
               Text(
-                formatCurrencyTot.format(double.parse(CartData.totalAmount)),
+                formatCurrencyTot.format(double.parse(CartData.netAmount)),
                 style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 20,

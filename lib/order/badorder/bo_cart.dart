@@ -122,6 +122,8 @@ class _BoCartState extends State<BoCart> {
         CustomerData.accountName,
         CartData.itmNo,
         CartData.totalAmount,
+        '0.00',
+        CartData.totalAmount,
         CartData.pMeth,
         'BO',
         UserData.id);

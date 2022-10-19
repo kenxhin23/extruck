@@ -73,6 +73,7 @@ class _StockInvetoryState extends State<StockInvetory> {
       _inv = json.decode(json.encode(rsp));
       // print(_inv);
       for (var element in _inv) {
+        //to set discounted in view
         _disc.forEach((a) {
           if (element['item_principal'] == a['principal']) {
             element['discounted'] = 1;
@@ -450,101 +451,111 @@ class _StockInvetoryState extends State<StockInvetory> {
               }
               return Column(
                 children: [
-                  Row(
-                    children: [
-                      if (GlobalVariables.viewImg)
-                        Container(
-                          // margin: const EdgeInsets.only(left: 3, top: 3),
-                          width: 75,
-                          height: 80,
+                  GestureDetector(
+                    onTap: () {
+                      if (discounted) {
+                        showDialog(
+                            context: context,
+                            builder: (context) =>
+                                DiscountDetails(_inv[index]['item_principal']));
+                      }
+                    },
+                    child: Row(
+                      children: [
+                        if (GlobalVariables.viewImg)
+                          Container(
+                            // margin: const EdgeInsets.only(left: 3, top: 3),
+                            width: 75,
+                            height: 80,
+                            color: Colors.white,
+                            child: noImage
+                                ? Image(image: AssetsValues.noImageImg)
+                                : Image.file(
+                                    File(imgPath + _inv[index]['image'])),
+                          )
+                        else if (!GlobalVariables.viewImg)
+                          Container(
+                            // margin: const EdgeInsets.only(left: 3, top: 3),
+                            width: 75,
+                            height: 80,
+                            color: Colors.white,
+                            child: Image(image: AssetsValues.noImageImg),
+                          ),
+                        Expanded(
+                            child: Container(
+                          padding: const EdgeInsets.only(left: 5),
                           color: Colors.white,
-                          child: noImage
-                              ? Image(image: AssetsValues.noImageImg)
-                              : Image.file(
-                                  File(imgPath + _inv[index]['image'])),
-                        )
-                      else if (!GlobalVariables.viewImg)
-                        Container(
-                          // margin: const EdgeInsets.only(left: 3, top: 3),
-                          width: 75,
                           height: 80,
-                          color: Colors.white,
-                          child: Image(image: AssetsValues.noImageImg),
-                        ),
-                      Expanded(
-                          child: Container(
-                        padding: const EdgeInsets.only(left: 5),
-                        color: Colors.white,
-                        height: 80,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _inv[index]['item_desc'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                Text(_inv[index]['item_uom']),
-                                const SizedBox(
-                                  width: 30,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _inv[index]['item_desc'],
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                Text(
-                                  formatCurrencyAmt.format(
-                                      double.parse(_inv[index]['item_amt'])),
-                                  style: const TextStyle(
-                                      // fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.green),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      )),
-                      Container(
-                        color: Colors.white,
-                        width: 50,
-                        height: 80,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Visibility(
-                              visible: discounted,
-                              child: GestureDetector(
-                                onTap: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => DiscountDetails(
-                                          _inv[index]['item_principal']));
-                                },
-                                child: Container(
-                                  width: 50,
-                                  color: Colors.white,
-                                  height: 15,
-                                  child: Image(
-                                    // color: ColorsTheme.mainColor,
-                                    image: AssetsValues.discTag,
+                              ),
+                              Row(
+                                children: [
+                                  Text(_inv[index]['item_uom']),
+                                  const SizedBox(
+                                    width: 30,
+                                  ),
+                                  Text(
+                                    formatCurrencyAmt.format(
+                                        double.parse(_inv[index]['item_amt'])),
+                                    style: const TextStyle(
+                                        // fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.green),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                        Container(
+                          color: Colors.white,
+                          width: 50,
+                          height: 80,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Visibility(
+                                visible: discounted,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) => DiscountDetails(
+                                            _inv[index]['item_principal']));
+                                  },
+                                  child: Container(
+                                    width: 50,
+                                    color: Colors.white,
+                                    height: 15,
+                                    child: Image(
+                                      // color: ColorsTheme.mainColor,
+                                      image: AssetsValues.discTag,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            const Text(
-                              'Qty',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            Text(
-                              _inv[index]['item_qty'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                              const Text(
+                                'Qty',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                _inv[index]['item_qty'],
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10)
                 ],
