@@ -62,7 +62,7 @@ class _StockInvetoryState extends State<StockInvetory> {
   getLoadInventory() async {
     // var a = await db.ofFetchSample();
     // print(a);
-    // db.setLoadBal(UserData.id, '222473.90');
+    // db.setBal(UserData.id, '0.00');
     var documentDirectory = await getApplicationDocumentsDirectory();
     var firstPath = '${documentDirectory.path}/';
     imgPath = firstPath;

@@ -113,15 +113,18 @@ class _CheckoutState extends State<Checkout> {
           ChequeData.chequeNum,
           ChequeData.chequeDate,
           ChequeData.type,
-          CartData.totalAmount,
+          CartData.netAmount,
           'Pending');
-      db.addChequeBal(UserData.id, CartData.totalAmount);
+      db.addChequeBal(UserData.id, CartData.netAmount);
       // db.addtoChequeLog(
       //     UserData.id, date, CartData.totalAmount, 'CASH IN', 'ORDER', tranNo);
     } else {
-      db.addCashBal(UserData.id, CartData.totalAmount);
+      db.addCashBal(UserData.id, CartData.netAmount);
       db.addtoCashLog(
-          UserData.id, date, CartData.totalAmount, 'CASH IN', 'ORDER', tranNo);
+          UserData.id, date, CartData.netAmount, 'CASH IN', 'ORDER', tranNo);
+    }
+    if (double.parse(CartData.discAmt) > 0) {
+      db.addDiscBal(UserData.id, CartData.discAmt);
     }
     db.minusLoadBal(UserData.id, CartData.totalAmount);
 

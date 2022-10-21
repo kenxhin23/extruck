@@ -102,14 +102,14 @@ class _LoadItemsState extends State<LoadItems> {
   }
 
   addtoLocalLedger() async {
-    var newdate = DateTime.parse(
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
+    final String date1 =
+        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     //UPDATING LOADBAL & REVBAL OR CASH
     if (widget.pmeth == 'RF') {
       await db.updateRevBal(UserData.id, GlobalVariables.revBal, widget.totAmt);
     } else {
       db.minusCashBal(UserData.id, widget.totAmt);
-      db.minustoCashLog(UserData.id, newdate, CartData.totalAmount, 'CASH OUT',
+      db.minustoCashLog(UserData.id, date1, CartData.totalAmount, 'CASH OUT',
           'STOCK IN', RequestData.tranNo);
       db.addLoadBal(UserData.id, widget.totAmt);
     }

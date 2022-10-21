@@ -47,7 +47,7 @@ class _PrintPreviewState extends State<PrintPreview> {
   getVat() async {
     // print(CartData.totalAmount);
 
-    totalSales = double.parse(CartData.totalAmount) / 1.12;
+    totalSales = double.parse(CartData.netAmount) / 1.12;
     vat = (totalSales * .12).toString();
     // print('TOTAL SALES: ${totalSales}');
     // print('VAT: ${vat}');
@@ -224,7 +224,7 @@ class _PrintPreviewState extends State<PrintPreview> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: '-',
+          text: formatCurrencyAmt.format(double.parse(CartData.discAmt)),
           width: 5,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -238,7 +238,7 @@ class _PrintPreviewState extends State<PrintPreview> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(CartData.totalAmount)),
+          text: formatCurrencyAmt.format(double.parse(CartData.netAmount)),
           width: 7,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -548,7 +548,7 @@ class _PrintPreviewState extends State<PrintPreview> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Total Discounted Amount'))),
-              const Text('-')
+              Text(formatCurrencyAmt.format(double.parse(CartData.discAmt)))
             ],
           ),
           Row(
@@ -557,8 +557,8 @@ class _PrintPreviewState extends State<PrintPreview> {
               const Expanded(
                   child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text('Total Amount Due'))),
-              Text(formatCurrencyAmt.format(double.parse(CartData.totalAmount)))
+                      child: Text('Net Amount'))),
+              Text(formatCurrencyAmt.format(double.parse(CartData.netAmount)))
             ],
           ),
           Row(

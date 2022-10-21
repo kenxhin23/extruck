@@ -16,11 +16,29 @@ import 'package:page_transition/page_transition.dart';
 import 'package:path_provider/path_provider.dart';
 
 class HistoryItems extends StatefulWidget {
-  final String ordNo, siNo, storeName, itmCount, pmeth, type, totAmt, rmtNo;
+  final String ordNo,
+      siNo,
+      storeName,
+      itmCount,
+      pmeth,
+      type,
+      totAmt,
+      discAmt,
+      netAmt,
+      rmtNo;
 
   // ignore: use_key_in_widget_constructors
-  const HistoryItems(this.ordNo, this.siNo, this.storeName, this.itmCount,
-      this.pmeth, this.type, this.totAmt, this.rmtNo);
+  const HistoryItems(
+      this.ordNo,
+      this.siNo,
+      this.storeName,
+      this.itmCount,
+      this.pmeth,
+      this.type,
+      this.totAmt,
+      this.discAmt,
+      this.netAmt,
+      this.rmtNo);
   // const ConvertedItems({Key? key}) : super(key: key);
 
   @override
@@ -343,6 +361,15 @@ class _HistoryItemsState extends State<HistoryItems> {
             ],
           ),
           Row(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Expanded(child: Text('Total Discount')),
+              Text(
+                formatCurrencyAmt.format(double.parse(widget.discAmt)),
+              ),
+            ],
+          ),
+          Row(
             children: [
               Expanded(
                 child: Text(
@@ -354,7 +381,7 @@ class _HistoryItemsState extends State<HistoryItems> {
                 ),
               ),
               Text(
-                formatCurrencyTot.format(double.parse(widget.totAmt)),
+                formatCurrencyTot.format(double.parse(widget.netAmt)),
                 style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 20,

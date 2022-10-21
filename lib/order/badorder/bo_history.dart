@@ -216,6 +216,8 @@ class _BoHistoryState extends State<BoHistory> {
                     CustomerData.accountName = _list[index]['store_name'];
                     CartData.itmNo = _list[index]['item_count'];
                     CartData.totalAmount = _list[index]['tot_amt'];
+                    CartData.discAmt = _list[index]['disc_amt'];
+                    CartData.netAmount = _list[index]['net_amt'];
                     CartData.siNum = _list[index]['si_no'];
                   });
                   Navigator.push(
@@ -230,6 +232,8 @@ class _BoHistoryState extends State<BoHistory> {
                             _list[index]['pmeth_type'],
                             _list[index]['tran_type'],
                             _list[index]['tot_amt'],
+                            _list[index]['disc_amt'],
+                            _list[index]['net_amt'],
                             rmtNo,
                           )));
                 },

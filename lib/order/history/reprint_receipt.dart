@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:extruck/session/session_timer.dart';
@@ -42,7 +41,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
   }
 
   getVat() async {
-    totalSales = double.parse(CartData.totalAmount) / 1.12;
+    totalSales = double.parse(CartData.netAmount) / 1.12;
     vat = (totalSales * .12).toString();
     nDate = DateFormat("dd/MM/yyyy HH:mm:ss").format(date);
   }
@@ -217,7 +216,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: '-',
+          text: formatCurrencyAmt.format(double.parse(CartData.discAmt)),
           width: 5,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -231,7 +230,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(CartData.totalAmount)),
+          text: formatCurrencyAmt.format(double.parse(CartData.netAmount)),
           width: 7,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -495,7 +494,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Total Discounted Amount'))),
-              const Text('-')
+              Text(formatCurrencyAmt.format(double.parse(CartData.discAmt)))
             ],
           ),
           Row(
@@ -505,7 +504,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text('Total Amount Due'))),
-              Text(formatCurrencyAmt.format(double.parse(CartData.totalAmount)))
+              Text(formatCurrencyAmt.format(double.parse(CartData.netAmount)))
             ],
           ),
           Row(

@@ -23,6 +23,7 @@ class _BalancePageState extends State<BalancePage> {
   bool updated = true;
   String cash = '0.00';
   String cheque = '0.00';
+  String discounts = '0.00';
   String badorder = '0.00';
   String pendingremit = '0.00';
   String loadbalance = '0.00';
@@ -50,6 +51,7 @@ class _BalancePageState extends State<BalancePage> {
       // print(tmp);
       cash = tmp[0]['cash_onhand'];
       cheque = tmp[0]['cheque_amt'];
+      discounts = tmp[0]['disc_amt'];
       badorder = tmp[0]['bo_amt'];
       pendingremit = tmp[0]['rmt_amt'];
       loadbalance = tmp[0]['load_bal'];
@@ -96,6 +98,7 @@ class _BalancePageState extends State<BalancePage> {
             children: [
               cashCont(),
               chequeCont(),
+              discountCont(),
               boCont(),
               remitCont(),
               loadCont(),
@@ -250,7 +253,7 @@ class _BalancePageState extends State<BalancePage> {
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-          height: 100,
+          height: 80,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
               color: Colors.yellow[600],
@@ -320,6 +323,90 @@ class _BalancePageState extends State<BalancePage> {
     );
   }
 
+  Container discountCont() {
+    // ignore: avoid_unnecessary_containers
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          // Navigator.push(
+          //     context,
+          //     PageTransition(
+          //         // duration: const Duration(milliseconds: 100),
+          //         type: PageTransitionType.rightToLeft,
+          //         child: const BoView()));
+        },
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          height: 80,
+          // width: MediaQuery.of(context).size.width / 2 - 30,
+          decoration: BoxDecoration(
+              color: Colors.deepOrange,
+              border: Border.all(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(10)),
+          child: Stack(
+            children: <Widget>[
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 5, right: 5),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const <Widget>[
+                          // SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Discounts',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 24,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: const Text(
+                            '',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Text(
+                        formatCurrencyAmt
+                            .format(double.parse(discounts))
+                            .toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 36,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Container boCont() {
     // ignore: avoid_unnecessary_containers
     return Container(
@@ -334,7 +421,7 @@ class _BalancePageState extends State<BalancePage> {
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-          height: 100,
+          height: 80,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
               color: Colors.grey[600],
@@ -684,8 +771,8 @@ class _BalancePageState extends State<BalancePage> {
                   ),
                   Text(
                     formatCurrencyAmt.format(double.parse(revfund)).toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: Colors.grey[850],
                       fontWeight: FontWeight.w500,
                       fontSize: 36,
                     ),

@@ -32,7 +32,7 @@ class _CashLedgerState extends State<CashLedger> {
     if (!mounted) return;
     setState(() {
       _entry = json.decode(json.encode(rsp));
-      // print(rsp);
+      print(rsp);
     });
     for (var element in _entry) {
       _ledger.add(element);
@@ -203,11 +203,11 @@ class _CashLedgerState extends State<CashLedger> {
               varColor = Colors.green;
             }
             if (_ledger[index]['type'] == 'CASH OUT' &&
-                _ledger[index]['details'] == 'REMIT') {
+                _ledger[index]['details'] == 'STOCK IN') {
               varColor = Colors.grey.shade600;
             }
-            if (_ledger[index]['type'] == 'CONVERSION' &&
-                _ledger[index]['details'] == 'STOCK IN') {
+            if (_ledger[index]['type'] == 'CASH OUT' &&
+                _ledger[index]['details'] == 'REMIT') {
               varColor = Colors.orange.shade900;
             }
             return Column(

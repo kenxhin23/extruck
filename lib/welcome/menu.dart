@@ -91,8 +91,7 @@ class _MenuState extends State<Menu> {
     var rsp = await db.checkSmBalance(UserData.id);
     tmp = json.decode(json.encode(rsp));
     if (tmp.isEmpty) {
-      db.addSmBalance(
-          UserData.id, '0.00', '0.00', '0.00', '0.00', '0.00', '0.00', '0.00');
+      db.addSmBalance(UserData.id, '0.00');
     }
   }
 

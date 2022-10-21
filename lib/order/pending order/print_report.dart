@@ -13,12 +13,12 @@ import 'package:intl/intl.dart';
 
 class PrintReport extends StatefulWidget {
   final List data, ord, bo;
-  final String ordTot, boTot, rmtNo, ordCount, totAmt;
+  final String ordTot, boTot, rmtNo, ordCount, totAmt, totDisc, totNet;
 
   // const PrintPreview({Key? key}) : super(key: key);
   // ignore: use_key_in_widget_constructors
   const PrintReport(this.data, this.ord, this.bo, this.ordTot, this.boTot,
-      this.rmtNo, this.ordCount, this.totAmt);
+      this.rmtNo, this.ordCount, this.totAmt, this.totDisc, this.totNet);
 
   @override
   State<PrintReport> createState() => _PrintReportState();
@@ -27,6 +27,7 @@ class PrintReport extends StatefulWidget {
 class _PrintReportState extends State<PrintReport> {
   String? nDate;
   String vat = '';
+  double netAmount = 0.00;
   double totalSales = 0.00;
 
   bool viewBo = false;
@@ -48,6 +49,7 @@ class _PrintReportState extends State<PrintReport> {
     totalSales = double.parse(CartData.totalAmount) / 1.12;
     vat = (totalSales * .12).toString();
     nDate = DateFormat("dd/MM/yyyy HH:mm:ss").format(date);
+    netAmount = double.parse(widget.totNet) - double.parse(widget.totDisc);
   }
 
   Future<void> printTicket() async {
@@ -151,7 +153,7 @@ class _PrintReportState extends State<PrintReport> {
                 )),
         viewBo
             ? PosColumn(
-                text: '(Bo Refund)',
+                text: '(Bo)',
                 width: 3,
                 styles: const PosStyles(
                   align: PosAlign.center,
@@ -175,7 +177,7 @@ class _PrintReportState extends State<PrintReport> {
               align: PosAlign.center,
             )),
         PosColumn(
-            text: '${widget.data[i]['tot_amt']}',
+            text: '${widget.data[i]['net_amt']}',
             width: 3,
             styles: const PosStyles(align: PosAlign.right)),
       ]);
@@ -190,13 +192,28 @@ class _PrintReportState extends State<PrintReport> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.ordTot)),
+          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
           width: 6,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
     ]);
-    bytes += generator.hr(ch: ' ');
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Discount Total',
+          width: 7,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
+
     bytes += generator.row([
       PosColumn(
           text: 'BO Amount Total',
@@ -206,6 +223,21 @@ class _PrintReportState extends State<PrintReport> {
           )),
       PosColumn(
           text: formatCurrencyAmt.format(double.parse(widget.boTot)),
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Discount Total',
+          width: 7,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
           width: 5,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -252,7 +284,7 @@ class _PrintReportState extends State<PrintReport> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
+          text: formatCurrencyAmt.format(netAmount),
           width: 7,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -296,76 +328,81 @@ class _PrintReportState extends State<PrintReport> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () {
-        handleUserInteraction();
-      },
-      onPanDown: (details) {
-        handleUserInteraction();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.black, //change your color here
-          ),
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.white,
-          title: Row(
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Print Preview',
-                    style: TextStyle(
-                        color: Colors.grey[800], fontWeight: FontWeight.bold),
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          handleUserInteraction();
+        },
+        onPanDown: (details) {
+          handleUserInteraction();
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.black, //change your color here
+            ),
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.white,
+            title: Row(
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Print Preview',
+                      style: TextStyle(
+                          color: Colors.grey[800], fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () async {
-                  String msg = 'Are you sure you want to close?';
-                  // ignore: use_build_context_synchronously
-                  final action = await WarningDialogs.openDialog(
-                    context,
-                    'Information',
-                    msg,
-                    false,
-                    'OK',
-                  );
-                  if (action == DialogAction.yes) {
-                    GlobalVariables.menuKey = 1;
+                GestureDetector(
+                  onTap: () async {
+                    String msg = 'Are you sure you want to close?';
                     // ignore: use_build_context_synchronously
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/menu', (Route<dynamic> route) => false);
-                  } else {}
-                },
-                child: Row(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const Text(
-                      'CLOSE',
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: Colors.red,
+                    final action = await WarningDialogs.openDialog(
+                      context,
+                      'Information',
+                      msg,
+                      false,
+                      'OK',
+                    );
+                    if (action == DialogAction.yes) {
+                      GlobalVariables.menuKey = 1;
+                      // ignore: use_build_context_synchronously
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          '/menu', (Route<dynamic> route) => false);
+                    } else {}
+                  },
+                  child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Text(
+                        'CLOSE',
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-                    const Icon(
-                      Icons.cancel_presentation_rounded,
-                      color: Colors.red,
-                    )
-                  ],
+                      const Icon(
+                        Icons.cancel_presentation_rounded,
+                        color: Colors.red,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            centerTitle: false,
           ),
-          centerTitle: false,
+          body: Column(children: [
+            Expanded(child: bodyCont(context)),
+            printCont(context)
+          ]),
         ),
-        body: Column(
-            children: [Expanded(child: bodyCont(context)), printCont(context)]),
       ),
     );
   }
@@ -488,7 +525,7 @@ class _PrintReportState extends State<PrintReport> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                         '${widget.data[index]['item_count']}'))),
-                            Text('${widget.data[index]['tot_amt']}'),
+                            Text('${widget.data[index]['net_amt']}'),
                           ],
                         )
                       ],
@@ -511,7 +548,7 @@ class _PrintReportState extends State<PrintReport> {
                         'Order Amount Total',
                         style: TextStyle(fontWeight: FontWeight.w400),
                       ))),
-              Text(formatCurrencyAmt.format(double.parse(widget.ordTot)),
+              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
@@ -589,6 +626,20 @@ class _PrintReportState extends State<PrintReport> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
+                        'Discount Total',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.totDisc)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
+            ],
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 15),
+              const Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
                         'BO Amount Total',
                         style: TextStyle(fontWeight: FontWeight.w400),
                       ))),
@@ -596,6 +647,7 @@ class _PrintReportState extends State<PrintReport> {
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
+
           const SizedBox(height: 5),
           Row(
             children: [
@@ -617,7 +669,7 @@ class _PrintReportState extends State<PrintReport> {
                         'Total Sales Amount',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ))),
-              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
+              Text(formatCurrencyAmt.format(netAmount),
                   style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),

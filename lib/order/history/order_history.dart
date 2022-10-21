@@ -33,7 +33,7 @@ class _OrderHistoryState extends State<OrderHistory> {
     var rsp = await db.loadOrderHistory(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
-      // print(_list);
+      print(_list);
     });
   }
 
@@ -215,6 +215,8 @@ class _OrderHistoryState extends State<OrderHistory> {
                     CustomerData.accountName = _list[index]['store_name'];
                     CartData.itmNo = _list[index]['item_count'];
                     CartData.totalAmount = _list[index]['tot_amt'];
+                    CartData.discAmt = _list[index]['disc_amt'];
+                    CartData.netAmount = _list[index]['net_amt'];
                     CartData.siNum = _list[index]['si_no'];
                   });
                   Navigator.push(
@@ -229,6 +231,8 @@ class _OrderHistoryState extends State<OrderHistory> {
                             _list[index]['pmeth_type'],
                             _list[index]['tran_type'],
                             _list[index]['tot_amt'],
+                            _list[index]['disc_amt'],
+                            _list[index]['net_amt'],
                             rmtNo,
                           )));
                 },
@@ -301,7 +305,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                           ),
                           Text(
                             formatCurrencyAmt
-                                .format(double.parse(_list[index]['tot_amt'])),
+                                .format(double.parse(_list[index]['net_amt'])),
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,

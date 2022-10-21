@@ -338,7 +338,7 @@ class _ConversionListState extends State<ConversionList> {
                               )),
                               Container(
                                 color: Colors.transparent,
-                                width: 80,
+                                width: 90,
                                 // color: Colors.grey,
                                 child: Column(
                                   children: [

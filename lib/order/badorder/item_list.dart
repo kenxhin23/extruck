@@ -337,14 +337,11 @@ class _RefundListState extends State<RefundList> {
                               )),
                               Container(
                                 color: Colors.transparent,
-                                width: 85,
+                                width: 90,
                                 // color: Colors.grey,
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Expanded(
-                                        child: SizedBox(
-                                      width: 50,
-                                    )),
                                     Text(
                                       formatCurrencyAmt.format(double.parse(
                                           _itemlist[index]['item_amt'])),
@@ -353,9 +350,6 @@ class _RefundListState extends State<RefundList> {
                                           color: Colors.green,
                                           fontSize: 12,
                                           fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
                                     ),
                                     Text(
                                       '${_itemlist[index]['item_qty']} item(s) available',

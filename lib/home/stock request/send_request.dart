@@ -86,6 +86,7 @@ class _SendRequestState extends State<SendRequest> {
         'Pending',
         OrderData.signature!,
         cart);
+    print(rsp);
     if (rsp != null || rsp != '') {
       if (kDebugMode) {
         print(rsp);
@@ -752,7 +753,7 @@ class _SendRequestState extends State<SendRequest> {
                                 'No',
                                 'Yes');
                             if (action == DialogAction.yes) {
-                              // print(CartData.totalAmount);
+                              // print(CartData.totalAmount.toString());
                               showDialog(
                                   barrierDismissible: false,
                                   context: context,

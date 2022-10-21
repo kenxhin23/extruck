@@ -25,12 +25,18 @@ class PendingOrders extends StatefulWidget {
 
 class _PendingOrdersState extends State<PendingOrders> {
   double totAmount = 0.00;
+  double totDiscount = 0.00;
+  double totNet = 0.00;
   double ordAmt = 0.00;
   double boAmt = 0.00;
+
   double cashChequeBal = 0.00;
 
   String cash = '0.00';
   String cheque = '0.00';
+  String discount = '0.00';
+  String bo = '0.00';
+  String satWh = '0.00';
 
   List _list = [];
   List _ord = [];
@@ -40,6 +46,7 @@ class _PendingOrdersState extends State<PendingOrders> {
 
   bool viewSpinkit = true;
   bool boRef = false;
+  bool showSatWh = false;
 
   String rmtNo = '';
   String loadBal = '';
@@ -55,6 +62,28 @@ class _PendingOrdersState extends State<PendingOrders> {
     getBalance();
     loadPending();
     gettingLoadBalance();
+    getSatWarehouseRequests();
+  }
+
+  // update() async {
+  //   await db.changeSatWhStat(UserData.id, 'Loaded');
+  // }
+
+  getSatWarehouseRequests() async {
+    List satwh = [];
+    var rsp = await db.getSatWarehouseRequestTotal(UserData.id);
+    // print(rsp[0]['total']);
+    if (rsp[0]['total'] != null) {
+      satwh = json.decode(json.encode(rsp));
+      if (satwh.isNotEmpty) {
+        setState(() {
+          satWh = satwh[0]['total'].toString();
+          showSatWh = true;
+        });
+      } else {
+        showSatWh = false;
+      }
+    }
   }
 
   getBalance() async {
@@ -65,6 +94,8 @@ class _PendingOrdersState extends State<PendingOrders> {
       bal = json.decode(json.encode(rsp));
       cash = bal[0]['cash_onhand'];
       cheque = bal[0]['cheque_amt'];
+      discount = bal[0]['disc_amt'];
+      bo = bal[0]['bo_amt'];
       cashChequeBal = double.parse(cash) + double.parse(cheque);
       // print(cashChequeBal.toStringAsFixed(2));
     });
@@ -78,6 +109,8 @@ class _PendingOrdersState extends State<PendingOrders> {
       for (var element in _list) {
         String newDate = '';
         totAmount = totAmount + double.parse(element['tot_amt']);
+        totDiscount = totDiscount + double.parse(element['disc_amt']);
+        totNet = totNet + double.parse(element['net_amt']);
         DateTime s = DateTime.parse(element['date'].toString());
         newDate =
             '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
@@ -94,7 +127,7 @@ class _PendingOrdersState extends State<PendingOrders> {
       _ord = json.decode(json.encode(rsp));
       // print(_list);
       for (var element in _ord) {
-        ordAmt = ordAmt + double.parse(element['tot_amt'].toString());
+        ordAmt = ordAmt + double.parse(element['net_amt'].toString());
       }
     });
   }
@@ -105,7 +138,7 @@ class _PendingOrdersState extends State<PendingOrders> {
       _bo = json.decode(json.encode(rsp));
       // print(_list);
       for (var element in _bo) {
-        boAmt = boAmt + double.parse(element['tot_amt']);
+        boAmt = boAmt + double.parse(element['net_amt']);
       }
     });
     CartData.boAmt = formatCurrencyAmt.format(boAmt);
@@ -127,19 +160,24 @@ class _PendingOrdersState extends State<PendingOrders> {
     for (var element in _list) {
       x++;
       await db.changeOrderStat(element['order_no'], rmtNo, 'Approved');
+
       if (element['tran_type'] == 'BO') {
-        db.minusBoBal(UserData.id, element['tot_amt']);
+        db.minusBoBal(UserData.id, element['net_amt']);
       } else {
         if (element['pmeth_type'] == 'Cash') {
-          db.minusCashBal(UserData.id, element['tot_amt']);
-          db.minustoCashLog(UserData.id, date1, element['tot_amt'], 'CASH OUT',
+          db.minusCashBal(UserData.id, element['net_amt']);
+          db.minustoCashLog(UserData.id, date1, element['net_amt'], 'CASH OUT',
               'REMIT', rmtNo);
         } else {
-          db.minusChequeBal(UserData.id, element['tot_amt']);
+          db.minusChequeBal(UserData.id, element['net_amt']);
+        }
+        if (double.parse(element['disc_amt']) > 0) {
+          db.minusDiscBal(UserData.id, element['disc_amt']);
         }
       }
     }
     if (x == _list.length) {
+      await db.changeSatWhStat(UserData.id, 'Loaded');
       await db.addRemitBal(UserData.id, totAmount.toString());
       var rsp = await db.saveRemittanceReport(
           rmtNo,
@@ -149,7 +187,11 @@ class _PendingOrdersState extends State<PendingOrders> {
           GlobalVariables.revBal,
           loadBal,
           '0.00',
-          totAmount);
+          totAmount,
+          cheque,
+          totDiscount,
+          satWh,
+          totNet);
       if (rsp != null) {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
@@ -180,7 +222,9 @@ class _PendingOrdersState extends State<PendingOrders> {
                         boAmt.toString(),
                         rmtNo,
                         _list.length.toString(),
-                        totAmount.toString())));
+                        totAmount.toString(),
+                        totDiscount.toString(),
+                        totNet.toString())));
           } else {
             // ignore: use_build_context_synchronously
             Navigator.push(
@@ -195,7 +239,9 @@ class _PendingOrdersState extends State<PendingOrders> {
                         boAmt.toString(),
                         rmtNo,
                         _list.length.toString(),
-                        totAmount.toString())));
+                        totAmount.toString(),
+                        totDiscount.toString(),
+                        totNet.toString())));
           }
         } else {}
       }
@@ -251,10 +297,38 @@ class _PendingOrdersState extends State<PendingOrders> {
             Expanded(
               child: buildListView(context),
             ),
+            Visibility(visible: showSatWh, child: buildSatWCont(context)),
             buildTotalCont(context),
             buildCheckoutButton(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Container buildSatWCont(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(width: 0.1, color: Colors.grey),
+        ),
+      ),
+      width: MediaQuery.of(context).size.width,
+      // height: 40,
+      padding: const EdgeInsets.all(5),
+      child: Row(
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          const Text('Satellite Warehouse: ', style: TextStyle(fontSize: 12)),
+          Expanded(
+            child: Text(formatCurrencyAmt.format(double.parse(satWh)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12)),
+          ),
+        ],
       ),
     );
   }
@@ -268,21 +342,68 @@ class _PendingOrdersState extends State<PendingOrders> {
         ),
       ),
       width: MediaQuery.of(context).size.width,
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        // ignore: prefer_const_literals_to_create_immutables
+      // height: 40,
+      padding: const EdgeInsets.all(5),
+      child: Column(
         children: [
-          const Text('Total Orders: ', style: TextStyle(fontSize: 12)),
-          Expanded(
-              child: Text(_list.length.toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.deepOrange))),
-          const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
-          Expanded(
-              child: Text(formatCurrencyAmt.format(totAmount),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.deepOrange))),
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text('Discount: ', style: TextStyle(fontSize: 12)),
+              Text(formatCurrencyAmt.format(double.parse(discount)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                      fontSize: 12)),
+              SizedBox(width: 5),
+              const Text('Cheque: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                child: Text(formatCurrencyAmt.format(double.parse(cheque)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[700],
+                        fontSize: 12)),
+              ),
+              const Text('Cash: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                child: Text(formatCurrencyAmt.format(double.parse(cash)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[700],
+                        fontSize: 12)),
+              ),
+            ],
+          ),
+          SizedBox(height: 5),
+          Row(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text('BO: ', style: TextStyle(fontSize: 12)),
+              Text(formatCurrencyAmt.format(double.parse(bo)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                      fontSize: 12)),
+              SizedBox(
+                width: 5,
+              ),
+              const Text('Order No: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                  child: Text(_list.length.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.deepOrange,
+                          fontSize: 12))),
+              const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                  child: Text(formatCurrencyAmt.format(totNet),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.deepOrange,
+                          fontSize: 12))),
+            ],
+          ),
         ],
       ),
     );
@@ -433,7 +554,7 @@ class _PendingOrdersState extends State<PendingOrders> {
                           ),
                           Text(
                             formatCurrencyAmt
-                                .format(double.parse(_list[index]['tot_amt'])),
+                                .format(double.parse(_list[index]['net_amt'])),
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -476,29 +597,30 @@ class _PendingOrdersState extends State<PendingOrders> {
                     // print('GRAND TOTAL:${totAmount}');
                     if (_list.isEmpty) {
                     } else {
-                      if (cashChequeBal < ordAmt) {
-                        showGlobalSnackbar(
-                            'Information',
-                            'Insufficient cash/cheque balance.',
-                            Colors.grey,
-                            Colors.white);
-                      } else {
-                        final action = await Dialogs.openDialog(
-                            context,
-                            'Confirmation',
-                            'You cannot cancel or modify after this. Are you sure you want to generate report?',
-                            false,
-                            'No',
-                            'Yes');
-                        if (action == DialogAction.yes) {
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) =>
-                                  const ProcessingBox('Generating Report'));
-                          generateReport();
-                        } else {}
-                      }
+                      // if (cashChequeBal < ordAmt) {
+                      //   showGlobalSnackbar(
+                      //       'Information',
+                      //       'Insufficient cash/cheque balance.',
+                      //       Colors.grey,
+                      //       Colors.white);
+                      // } else {
+                      final action = await Dialogs.openDialog(
+                          context,
+                          'Confirmation',
+                          'You cannot cancel or modify after this. Are you sure you want to generate report?',
+                          false,
+                          'No',
+                          'Yes');
+                      if (action == DialogAction.yes) {
+                        // update();
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) =>
+                                const ProcessingBox('Generating Report'));
+                        generateReport();
+                      } else {}
+                      // }
                     }
                   },
                   child: const Text(
