@@ -16,6 +16,7 @@ class ReportsHistory extends StatefulWidget {
 
 class _ReportsHistoryState extends State<ReportsHistory> {
   List _list = [];
+
   final db = DatabaseHelper();
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
@@ -30,6 +31,13 @@ class _ReportsHistoryState extends State<ReportsHistory> {
     var rsp = await db.loadRmtHistory(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
+      for (var element in _list) {
+        String newDate = "";
+        DateTime s = DateTime.parse(element['date']);
+        newDate =
+            '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        element['date'] = newDate.toString();
+      }
     });
   }
 
@@ -86,13 +94,13 @@ class _ReportsHistoryState extends State<ReportsHistory> {
           itemCount: _list.length,
           itemBuilder: ((context, index) {
             bool uploaded = false;
-            String newDate = "";
-            String date = "";
-            date = _list[index]['date'].toString();
-            DateTime s = DateTime.parse(date);
-            newDate =
-                '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-            _list[index]['date'] = newDate.toString();
+            // String newDate = "";
+            // String date = "";
+            // date = _list[index]['date'].toString();
+            // DateTime s = DateTime.parse(date);
+            // newDate =
+            //     '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+            // _list[index]['date'] = newDate.toString();
             if (_list[index]['order_count'] == null ||
                 _list[index]['order_count'] == 'null') {
               _list[index]['order_count'] = '0';
@@ -110,9 +118,10 @@ class _ReportsHistoryState extends State<ReportsHistory> {
                         // duration: const Duration(milliseconds: 100),
                         type: PageTransitionType.rightToLeft,
                         child: ReportsHistoryLine(
-                            _list[index]['rmt_no'],
-                            _list[index]['order_count'],
-                            _list[index]['tot_amt'])));
+                          _list[index]['rmt_no'],
+                          _list[index]['order_count'],
+                          _list[index]['tot_amt'],
+                        )));
               },
               child: Container(
                 color: Colors.white,

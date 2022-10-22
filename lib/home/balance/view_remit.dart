@@ -19,6 +19,13 @@ class _RemitViewState extends State<RemitView> {
   List _list = [];
   List pending = [];
 
+  String cash = '0.00';
+  String cheque = '0.00';
+  String discount = '0.00';
+  String bo = '0.00';
+  String satWh = '0.00';
+  String totNet = '0.00';
+
   final db = DatabaseHelper();
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
@@ -30,9 +37,16 @@ class _RemitViewState extends State<RemitView> {
   }
 
   loadRemittanceHistory() async {
-    var rsp = await db.loadRmtHistory(UserData.id);
+    var rsp = await db.loadPendingRemittance(UserData.id);
+
     setState(() {
       pending = json.decode(json.encode(rsp));
+      cash = pending[0]['tot_cash'];
+      cheque = pending[0]['tot_cheque'];
+      discount = pending[0]['tot_disc'];
+      bo = pending[0]['bo_amt'];
+      satWh = pending[0]['tot_satwh'];
+      totNet = pending[0]['tot_net'];
       for (var element in pending) {
         String newDate = '';
         DateTime s = DateTime.parse(element['date'].toString());

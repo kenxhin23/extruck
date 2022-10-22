@@ -203,11 +203,11 @@ class _CashLedgerState extends State<CashLedger> {
               varColor = Colors.green;
             }
             if (_ledger[index]['type'] == 'CASH OUT' &&
-                _ledger[index]['details'] == 'STOCK IN') {
+                _ledger[index]['details'] == 'REMIT') {
               varColor = Colors.grey.shade600;
             }
             if (_ledger[index]['type'] == 'CASH OUT' &&
-                _ledger[index]['details'] == 'REMIT') {
+                _ledger[index]['details'] == 'STOCK IN') {
               varColor = Colors.orange.shade900;
             }
             return Column(

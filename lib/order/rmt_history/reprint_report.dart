@@ -15,12 +15,12 @@ import 'package:intl/intl.dart';
 class ReprintReport extends StatefulWidget {
   final List data;
 
-  final String rmtNo, ordAmt, boAmt, ordCount, totAmt;
+  final String rmtNo, boAmt, ordCount, totAmt, totDisc, satWh, totNet;
 
   // const PrintPreview({Key? key}) : super(key: key);
   // ignore: use_key_in_widget_constructors
-  const ReprintReport(this.data, this.rmtNo, this.ordAmt, this.boAmt,
-      this.ordCount, this.totAmt);
+  const ReprintReport(this.data, this.rmtNo, this.boAmt, this.ordCount,
+      this.totAmt, this.totDisc, this.satWh, this.totNet);
 
   @override
   State<ReprintReport> createState() => _ReprintReportState();
@@ -29,6 +29,7 @@ class ReprintReport extends StatefulWidget {
 class _ReprintReportState extends State<ReprintReport> {
   String? nDate;
   String vat = '';
+  double netAmount = 0.00;
   double totalSales = 0.00;
   bool viewBo = false;
 
@@ -49,6 +50,7 @@ class _ReprintReportState extends State<ReprintReport> {
     totalSales = double.parse(CartData.totalAmount) / 1.12;
     vat = (totalSales * .12).toString();
     nDate = DateFormat("dd/MM/yyyy HH:mm:ss").format(date);
+    netAmount = double.parse(widget.totNet) - double.parse(widget.boAmt);
   }
 
   Future<void> printTicket() async {
@@ -176,7 +178,7 @@ class _ReprintReportState extends State<ReprintReport> {
               align: PosAlign.center,
             )),
         PosColumn(
-            text: '${widget.data[i]['tot_amt']}',
+            text: '${widget.data[i]['net_amt']}',
             width: 3,
             styles: const PosStyles(align: PosAlign.right)),
       ]);
@@ -190,13 +192,26 @@ class _ReprintReportState extends State<ReprintReport> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.ordAmt)),
+          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
           width: 6,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
     ]);
-    bytes += generator.hr(ch: ' ');
+    bytes += generator.row([
+      PosColumn(
+          text: 'Discount Total',
+          width: 7,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
     bytes += generator.row([
       PosColumn(
           text: 'BO Amount Total',
@@ -207,6 +222,20 @@ class _ReprintReportState extends State<ReprintReport> {
       PosColumn(
           text: formatCurrencyAmt.format(double.parse(widget.boAmt)),
           width: 5,
+          styles: const PosStyles(
+            align: PosAlign.right,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'Satellite Warehouse Request',
+          width: 8,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: formatCurrencyAmt.format(double.parse(widget.satWh)),
+          width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
@@ -222,7 +251,7 @@ class _ReprintReportState extends State<ReprintReport> {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
+          text: formatCurrencyAmt.format(netAmount),
           width: 7,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -459,7 +488,7 @@ class _ReprintReportState extends State<ReprintReport> {
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                         '${widget.data[index]['item_count']}'))),
-                            Text('${widget.data[index]['tot_amt']}'),
+                            Text('${widget.data[index]['net_amt']}'),
                           ],
                         )
                       ],
@@ -477,14 +506,24 @@ class _ReprintReportState extends State<ReprintReport> {
                         'Order Amount Total',
                         style: TextStyle(fontWeight: FontWeight.w400),
                       ))),
-              Text(formatCurrencyAmt.format(double.parse(widget.ordAmt)),
+              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
-          const SizedBox(
-            height: 5,
+          Row(
+            children: [
+              const SizedBox(width: 15),
+              const Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Discount Total',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.totDisc)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
+            ],
           ),
-          const SizedBox(height: 5),
           Row(
             children: [
               const SizedBox(width: 15),
@@ -499,7 +538,21 @@ class _ReprintReportState extends State<ReprintReport> {
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
-          const SizedBox(height: 5),
+          Row(
+            children: [
+              const SizedBox(width: 15),
+              const Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Satellite Warehouse Request',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.satWh)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
+            ],
+          ),
+          // const SizedBox(height: 5),
           Row(
             children: [
               const SizedBox(width: 15),
@@ -520,7 +573,7 @@ class _ReprintReportState extends State<ReprintReport> {
                         'Total Sales Amount',
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ))),
-              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
+              Text(formatCurrencyAmt.format(netAmount),
                   style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),

@@ -29,6 +29,7 @@ class _PendingOrdersState extends State<PendingOrders> {
   double totNet = 0.00;
   double ordAmt = 0.00;
   double boAmt = 0.00;
+  double pendingRemit = 0.00;
 
   double cashChequeBal = 0.00;
 
@@ -164,21 +165,19 @@ class _PendingOrdersState extends State<PendingOrders> {
       if (element['tran_type'] == 'BO') {
         db.minusBoBal(UserData.id, element['net_amt']);
       } else {
-        if (element['pmeth_type'] == 'Cash') {
-          db.minusCashBal(UserData.id, element['net_amt']);
-          db.minustoCashLog(UserData.id, date1, element['net_amt'], 'CASH OUT',
-              'REMIT', rmtNo);
-        } else {
-          db.minusChequeBal(UserData.id, element['net_amt']);
-        }
         if (double.parse(element['disc_amt']) > 0) {
           db.minusDiscBal(UserData.id, element['disc_amt']);
         }
       }
     }
     if (x == _list.length) {
-      await db.changeSatWhStat(UserData.id, 'Loaded');
-      await db.addRemitBal(UserData.id, totAmount.toString());
+      db.minusCashBal(UserData.id, cash);
+      db.minustoCashLog(UserData.id, date1, cash, 'CASH OUT', 'REMIT', rmtNo);
+      db.minusChequeBal(UserData.id, cheque);
+
+      pendingRemit = totAmount - double.parse(satWh);
+      await db.changeSatWhStat(UserData.id, 'Posted');
+      await db.addRemitBal(UserData.id, pendingRemit.toStringAsFixed(2));
       var rsp = await db.saveRemittanceReport(
           rmtNo,
           date1,
@@ -189,9 +188,12 @@ class _PendingOrdersState extends State<PendingOrders> {
           '0.00',
           totAmount,
           cheque,
+          cash,
           totDiscount,
           satWh,
-          totNet);
+          totNet,
+          pendingRemit.toStringAsFixed(2),
+          'Pending');
       if (rsp != null) {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
@@ -224,6 +226,7 @@ class _PendingOrdersState extends State<PendingOrders> {
                         _list.length.toString(),
                         totAmount.toString(),
                         totDiscount.toString(),
+                        satWh,
                         totNet.toString())));
           } else {
             // ignore: use_build_context_synchronously
@@ -241,7 +244,9 @@ class _PendingOrdersState extends State<PendingOrders> {
                         _list.length.toString(),
                         totAmount.toString(),
                         totDiscount.toString(),
-                        totNet.toString())));
+                        satWh,
+                        totNet.toString(),
+                        false)));
           }
         } else {}
       }

@@ -13,12 +13,24 @@ import 'package:intl/intl.dart';
 
 class PrintReport extends StatefulWidget {
   final List data, ord, bo;
-  final String ordTot, boTot, rmtNo, ordCount, totAmt, totDisc, totNet;
+  final String ordTot, boTot, rmtNo, ordCount, totAmt, totDisc, satWh, totNet;
+  final bool willpop;
 
   // const PrintPreview({Key? key}) : super(key: key);
   // ignore: use_key_in_widget_constructors
-  const PrintReport(this.data, this.ord, this.bo, this.ordTot, this.boTot,
-      this.rmtNo, this.ordCount, this.totAmt, this.totDisc, this.totNet);
+  const PrintReport(
+      this.data,
+      this.ord,
+      this.bo,
+      this.ordTot,
+      this.boTot,
+      this.rmtNo,
+      this.ordCount,
+      this.totAmt,
+      this.totDisc,
+      this.satWh,
+      this.totNet,
+      this.willpop);
 
   @override
   State<PrintReport> createState() => _PrintReportState();
@@ -49,7 +61,7 @@ class _PrintReportState extends State<PrintReport> {
     totalSales = double.parse(CartData.totalAmount) / 1.12;
     vat = (totalSales * .12).toString();
     nDate = DateFormat("dd/MM/yyyy HH:mm:ss").format(date);
-    netAmount = double.parse(widget.totNet) - double.parse(widget.totDisc);
+    netAmount = double.parse(widget.totNet) - double.parse(widget.boTot);
   }
 
   Future<void> printTicket() async {
@@ -198,7 +210,6 @@ class _PrintReportState extends State<PrintReport> {
             align: PosAlign.right,
           )),
     ]);
-
     bytes += generator.row([
       PosColumn(
           text: 'Discount Total',
@@ -231,14 +242,14 @@ class _PrintReportState extends State<PrintReport> {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Discount Total',
-          width: 7,
+          text: 'Satellite Warehouse Request',
+          width: 8,
           styles: const PosStyles(
             align: PosAlign.left,
           )),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
-          width: 5,
+          text: formatCurrencyAmt.format(double.parse(widget.satWh)),
+          width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
           )),
@@ -329,7 +340,7 @@ class _PrintReportState extends State<PrintReport> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () => Future.value(false),
+      onWillPop: () => Future.value(widget.willpop),
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
@@ -647,7 +658,20 @@ class _PrintReportState extends State<PrintReport> {
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
           ),
-
+          Row(
+            children: [
+              const SizedBox(width: 15),
+              const Expanded(
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Satellite Warehouse Request',
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                      ))),
+              Text(formatCurrencyAmt.format(double.parse(widget.satWh)),
+                  style: const TextStyle(fontWeight: FontWeight.w400))
+            ],
+          ),
           const SizedBox(height: 5),
           Row(
             children: [

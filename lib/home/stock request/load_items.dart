@@ -155,6 +155,7 @@ class _LoadItemsState extends State<LoadItems> {
         false,
         'OK',
       );
+      GlobalVariables.menuKey = 0;
       if (action == DialogAction.yes) {
         // ignore: use_build_context_synchronously
         Navigator.of(context)

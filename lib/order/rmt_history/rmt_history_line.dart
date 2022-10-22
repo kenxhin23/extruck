@@ -1,11 +1,9 @@
 import 'dart:convert';
-
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/order/rmt_history/connect_printer.dart';
 import 'package:extruck/order/rmt_history/reprint_report.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/dialogs.dart';
-// import 'package:extruck/values/userdata.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:page_transition/page_transition.dart';
@@ -24,8 +22,20 @@ class ReportsHistoryLine extends StatefulWidget {
 
 class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
   List _list = [];
+  List _det = [];
   double ordAmt = 0.00;
   double boAmt = 0.00;
+
+  String totAmt = '0.00';
+  String cash = '0.00';
+  String cheque = '0.00';
+  String discount = '0.00';
+  String bo = '0.00';
+  String satWh = '0.00';
+  String totNet = '0.00';
+
+  bool showSatWh = false;
+
   final db = DatabaseHelper();
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
@@ -33,13 +43,36 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
   @override
   void initState() {
     super.initState();
+    loadRemitHeadDetails();
     loadRemittanceHistoryLine();
+  }
+
+  loadRemitHeadDetails() async {
+    var rsp = await db.loadRmtDetails(widget.rmtNo);
+    setState(() {
+      _det = json.decode(json.encode(rsp));
+      print(_det);
+
+      totAmt = _det[0]['tot_amt'];
+      cash = _det[0]['tot_cash'];
+      cheque = _det[0]['tot_cheque'];
+      discount = _det[0]['tot_disc'];
+      bo = _det[0]['bo_amt'];
+      satWh = _det[0]['tot_satwh'];
+      totNet = _det[0]['tot_net'];
+      if (double.parse(satWh) > 0) {
+        showSatWh = true;
+      } else {
+        showSatWh = false;
+      }
+    });
   }
 
   loadRemittanceHistoryLine() async {
     var rsp = await db.loadRmtHistoryLine(widget.rmtNo);
     setState(() {
       _list = json.decode(json.encode(rsp));
+      print(_list);
       for (var element in _list) {
         if (element['tran_type'] == 'BO') {
           boAmt = boAmt + double.parse(element['tot_amt'].toString());
@@ -100,10 +133,12 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                             child: ConnectPrinter(
                                 _list,
                                 widget.rmtNo,
-                                ordAmt.toString(),
                                 boAmt.toString(),
                                 widget.ordNo,
-                                widget.totAmt)));
+                                totAmt,
+                                discount,
+                                satWh,
+                                totNet)));
                   } else {
                     // ignore: use_build_context_synchronously
                     Navigator.push(
@@ -113,10 +148,12 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                             child: ReprintReport(
                                 _list,
                                 widget.rmtNo,
-                                ordAmt.toString(),
                                 boAmt.toString(),
                                 widget.ordNo,
-                                widget.totAmt)));
+                                totAmt,
+                                discount,
+                                satWh,
+                                totNet)));
                   }
                 } else {}
               },
@@ -133,7 +170,62 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
           Expanded(
             child: buildListView(context),
           ),
+          Visibility(visible: showSatWh, child: buildSatWCont(context)),
           buildTotalCont(context),
+        ],
+      ),
+    );
+  }
+
+  // Container buildTotalCont(BuildContext context) {
+  //   return Container(
+  //     decoration: const BoxDecoration(
+  //       color: Colors.white,
+  //       border: Border(
+  //         top: BorderSide(width: 0.1, color: Colors.grey),
+  //       ),
+  //     ),
+  //     width: MediaQuery.of(context).size.width,
+  //     height: 40,
+  //     padding: const EdgeInsets.symmetric(horizontal: 10),
+  //     child: Row(
+  //       // ignore: prefer_const_literals_to_create_immutables
+  //       children: [
+  //         const Text('Total Orders: ', style: TextStyle(fontSize: 12)),
+  //         Expanded(
+  //             child: Text(widget.ordNo,
+  //                 style: const TextStyle(
+  //                     fontWeight: FontWeight.w500, color: Colors.deepOrange))),
+  //         const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
+  //         Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
+  //             style: const TextStyle(
+  //                 fontWeight: FontWeight.w500, color: Colors.deepOrange)),
+  //       ],
+  //     ),
+  //   );
+  // }
+  Container buildSatWCont(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(width: 0.1, color: Colors.grey),
+        ),
+      ),
+      width: MediaQuery.of(context).size.width,
+      // height: 40,
+      padding: const EdgeInsets.all(5),
+      child: Row(
+        // ignore: prefer_const_literals_to_create_immutables
+        children: [
+          const Text('Satellite Warehouse: ', style: TextStyle(fontSize: 12)),
+          Expanded(
+            child: Text(formatCurrencyAmt.format(double.parse(satWh)),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12)),
+          ),
         ],
       ),
     );
@@ -148,20 +240,68 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
         ),
       ),
       width: MediaQuery.of(context).size.width,
-      height: 40,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        // ignore: prefer_const_literals_to_create_immutables
+      // height: 40,
+      padding: const EdgeInsets.all(5),
+      child: Column(
         children: [
-          const Text('Total Orders: ', style: TextStyle(fontSize: 12)),
-          Expanded(
-              child: Text(widget.ordNo,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.deepOrange))),
-          const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
-          Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
-              style: const TextStyle(
-                  fontWeight: FontWeight.w500, color: Colors.deepOrange)),
+          Row(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text('Discount: ', style: TextStyle(fontSize: 12)),
+              Text(formatCurrencyAmt.format(double.parse(discount)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                      fontSize: 12)),
+              SizedBox(width: 5),
+              const Text('Cheque: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                child: Text(formatCurrencyAmt.format(double.parse(cheque)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[700],
+                        fontSize: 12)),
+              ),
+              const Text('Cash: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                child: Text(formatCurrencyAmt.format(double.parse(cash)),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey[700],
+                        fontSize: 12)),
+              ),
+            ],
+          ),
+          SizedBox(height: 5),
+          Row(
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text('BO: ', style: TextStyle(fontSize: 12)),
+              Text(formatCurrencyAmt.format(double.parse(bo)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[700],
+                      fontSize: 12)),
+              SizedBox(
+                width: 5,
+              ),
+              const Text('Order No: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                  child: Text(_list.length.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.deepOrange,
+                          fontSize: 12))),
+              const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
+              Expanded(
+                  child: Text(formatCurrencyAmt.format(double.parse(totNet)),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.deepOrange,
+                          fontSize: 12))),
+            ],
+          ),
         ],
       ),
     );
@@ -303,7 +443,7 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                       ),
                       Text(
                         formatCurrencyAmt
-                            .format(double.parse(_list[index]['tot_amt'])),
+                            .format(double.parse(_list[index]['net_amt'])),
                         style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,

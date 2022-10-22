@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.5.db';
+  static const _dbName = 'EXTRUCK_TEST1.6.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -499,13 +499,14 @@ class DatabaseHelper {
         order_count TEXT,
         rev_bal TEXT,
         load_bal TEXT,
-        sale_amt TEXT,
         bo_amt TEXT,
         tot_amt TEXT,
+        tot_cash TEXT,
         tot_cheque TEXT,
         tot_disc TEXT,
         tot_satwh TEXT,
         tot_net TEXT,
+        repl_amt TEXT,
         status TEXT,
         flag TEXT)''');
 
@@ -6021,8 +6022,22 @@ class DatabaseHelper {
         'SELECT * FROM xt_rmt WHERE  sm_code  = "$smcode"', null);
   }
 
-  Future saveRemittanceReport(rmtNo, date, smCode, ordCount, revBal, loadBal,
-      boAmt, totAmt, totCheque, totDisc, totSatWh, totNet) async {
+  Future saveRemittanceReport(
+      rmtNo,
+      date,
+      smCode,
+      ordCount,
+      revBal,
+      loadBal,
+      boAmt,
+      totAmt,
+      totCash,
+      totCheque,
+      totDisc,
+      totSatWh,
+      totNet,
+      replAmt,
+      stat) async {
     String flag = '0';
     var client = await db;
     return client.insert('xt_rmt', {
@@ -6034,10 +6049,13 @@ class DatabaseHelper {
       'load_bal': loadBal,
       'bo_amt': boAmt,
       'tot_amt': totAmt,
+      'tot_cash': totCash,
       'tot_cheque': totCheque,
       'tot_disc': totDisc,
       'tot_satwh': totSatWh,
       'tot_net': totNet,
+      'repl_amt': replAmt,
+      'status': stat,
       'flag': flag,
     });
   }
@@ -6059,6 +6077,19 @@ class DatabaseHelper {
     var client = await db;
     return client.rawQuery(
         'SELECT * FROM xt_rmt_head WHERE rmt_no ="$rmtNo"', null);
+  }
+
+  Future loadRmtDetails(rmt) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt WHERE rmt_no ="$rmt" ORDER BY doc_no DESC', null);
+  }
+
+  Future loadPendingRemittance(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt WHERE sm_code ="$smcode" AND status="Pending" ORDER BY doc_no DESC',
+        null);
   }
 
   Future getRequestsHistory(code) async {
@@ -6432,7 +6463,7 @@ class DatabaseHelper {
         'date': date,
         'qty_in': amt,
         'qty_out': '0.00',
-        'bal': bal + double.parse(amt),
+        'bal': (bal + double.parse(amt)).toStringAsFixed(2),
         'type': type,
         'details': details,
         'ref_no': refno,
@@ -6466,8 +6497,8 @@ class DatabaseHelper {
         'sm_code': smcode,
         'date': date,
         'qty_in': '0.00',
-        'qty_out': amt,
-        'bal': bal - double.parse(amt),
+        'qty_out': double.parse(amt).toStringAsFixed(2),
+        'bal': (bal - double.parse(amt)).toStringAsFixed(2),
         'type': type,
         'details': details,
         'ref_no': refno,
