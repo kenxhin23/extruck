@@ -5481,6 +5481,53 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
+  Future saveRemittance(
+      code,
+      rmtNo,
+      date,
+      ordNo,
+      revBal,
+      loadBal,
+      boAmt,
+      totAmt,
+      totCash,
+      totCheque,
+      totDisc,
+      totSatwh,
+      totNet,
+      replAmt,
+      stat,
+      flag,
+      List tlist,
+      List llist) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadremittance');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(code),
+          'rmt_no': encrypt(rmtNo),
+          'date': encrypt(date),
+          'order_count': encrypt(ordNo),
+          'rev_bal': encrypt(revBal),
+          'load_bal': encrypt(loadBal),
+          'bo_amt': encrypt(boAmt),
+          'tot_amt': encrypt(totAmt),
+          'tot_cash': encrypt(totCash),
+          'tot_cheque': encrypt(totCheque),
+          'tot_disc': encrypt(totDisc),
+          'tot_satwh': encrypt(totSatwh),
+          'tot_net': encrypt(totNet),
+          'repl_amt': encrypt(replAmt),
+          'status': encrypt(stat),
+          'flag': encrypt(flag),
+          'line1': jsonEncode(tlist),
+          'line2': jsonEncode(llist),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
   /////
   ///EXTRUCK CODE FOR SQL
   ///
@@ -6001,7 +6048,7 @@ class DatabaseHelper {
         null);
   }
 
-  Future loadHistoryItems(ordNo) async {
+  Future loadRemitItems(ordNo) async {
     var client = await db;
     return client.rawQuery(
         'SELECT *, false as mark FROM xt_rmt_line WHERE order_no ="$ordNo"',
@@ -6073,7 +6120,7 @@ class DatabaseHelper {
         null);
   }
 
-  Future loadRmtHistoryLine(rmtNo) async {
+  Future loadRmtHistoryHead(rmtNo) async {
     var client = await db;
     return client.rawQuery(
         'SELECT * FROM xt_rmt_head WHERE rmt_no ="$rmtNo"', null);
@@ -6522,7 +6569,7 @@ class DatabaseHelper {
   Future getForUploadRemit(smcode) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_rmt WHERE sm_code ="$smcode" AND flag = "0" ORDER BY doc_no DESC',
+        'SELECT *, " " as newdate FROM xt_rmt WHERE sm_code ="$smcode" AND flag = "0" ORDER BY doc_no DESC',
         null);
   }
 

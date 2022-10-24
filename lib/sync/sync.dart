@@ -46,6 +46,8 @@ class _SyncPageState extends State<SyncPage> {
   String amount = "";
 
   List _toList = [];
+  List _tranList = [];
+  List _lineList = [];
 
   List _upList = [];
   List _inv = [];
@@ -97,7 +99,7 @@ class _SyncPageState extends State<SyncPage> {
           String date = "";
           date = element['date'].toString();
           DateTime s = DateTime.parse(date);
-          element['date'] =
+          element['newdate'] =
               '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
         }
       }
@@ -112,7 +114,6 @@ class _SyncPageState extends State<SyncPage> {
 
   uploadButtonclicked() async {
     getInventoryLoad();
-
     var rsp = await db.saveitemLoad(UserData.id, _inv);
     print(rsp);
 
@@ -141,14 +142,24 @@ class _SyncPageState extends State<SyncPage> {
         !GlobalVariables.uploaded) {
       NetworkData.uploaded = true;
       uploading = true;
-      var rsp = await db.saveitemLoad(UserData.id, _inv);
-      print(rsp);
-      if (rsp != '' || rsp != null) {
-        GlobalVariables.uploaded = true;
-        NetworkData.uploaded = false;
-        GlobalVariables.upload = false;
-        Navigator.pop(context);
-      }
+
+      // updatingLoadItemsOnline();
+      //updatesmbalance
+      //updateconversion
+      //updatecashledger
+      //updatestockledger
+      //saveremittance
+    }
+  }
+
+  updatingLoadItemsOnline() async {
+    var rsp = await db.saveitemLoad(UserData.id, _inv);
+    print(rsp);
+    if (rsp != '' || rsp != null) {
+      GlobalVariables.uploaded = true;
+      NetworkData.uploaded = false;
+      GlobalVariables.upload = false;
+      Navigator.pop(context);
     }
   }
 
@@ -189,6 +200,46 @@ class _SyncPageState extends State<SyncPage> {
         }
       }
     }
+  }
+
+  saveRemittance() async {
+    int x = 0;
+    List tmp = [];
+    _list.forEach((element) async {
+      // print(element);
+      _tranList.clear();
+      _lineList.clear();
+      var tranH = await db.loadRmtHistoryHead(element['rmt_no']);
+      setState(() {
+        _tranList = json.decode(json.encode(tranH));
+        // print('TRAN LIST: ${_tranList}');
+        _tranList.forEach((a) async {
+          var tranL = await db.loadRemitItems(a['order_no']);
+          tmp = json.decode(json.encode(tranL));
+          _lineList.addAll(tmp);
+          print(_lineList.length);
+        });
+      });
+      var rsp = await db.saveRemittance(
+          UserData.id,
+          element['rmt_no'],
+          element['date'],
+          element['order_count'],
+          element['rev_bal'],
+          element['load_bal'],
+          element['bo_amt'],
+          element['tot_amt'],
+          element['tot_cash'],
+          element['tot_cheque'],
+          element['tot_disc'],
+          element['tot_satwh'],
+          element['tot_net'],
+          element['repl_amt'],
+          'Posted',
+          '1',
+          _tranList,
+          _lineList);
+    });
   }
 
   void handleUserInteraction([_]) {
@@ -239,9 +290,10 @@ class _SyncPageState extends State<SyncPage> {
                 alignment: Alignment.bottomCenter,
                 child: FloatingActionButton(
                   onPressed: () {
-                    if (_list.isNotEmpty) {
-                      uploadButtonclicked();
-                    }
+                    // if (_list.isNotEmpty) {
+                    //   uploadButtonclicked();
+                    // }
+                    saveRemittance();
                   },
                   tooltip: 'Upload',
                   child: const Icon(Icons.file_upload),
@@ -468,7 +520,7 @@ class _SyncPageState extends State<SyncPage> {
                                   color: Colors.grey),
                             ),
                             Text(
-                              _list[index]['date'],
+                              _list[index]['newdate'],
                               style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,

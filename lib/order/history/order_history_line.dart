@@ -70,7 +70,7 @@ class _HistoryItemsState extends State<HistoryItems> {
     var firstPath = '${documentDirectory.path}/';
     imgPath = firstPath;
 
-    var rsp = await db.loadHistoryItems(widget.ordNo);
+    var rsp = await db.loadRemitItems(widget.ordNo);
     setState(() {
       _list = json.decode(json.encode(rsp));
       CartData.itmLineNo = _list.length.toString();

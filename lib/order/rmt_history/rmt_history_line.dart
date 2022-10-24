@@ -69,7 +69,7 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
   }
 
   loadRemittanceHistoryLine() async {
-    var rsp = await db.loadRmtHistoryLine(widget.rmtNo);
+    var rsp = await db.loadRmtHistoryHead(widget.rmtNo);
     setState(() {
       _list = json.decode(json.encode(rsp));
       print(_list);
