@@ -357,37 +357,55 @@ class _AddItemState extends State<AddItem> {
                           ElevatedButton(
                             style: raisedButtonDialogStyle,
                             onPressed: () async {
-                              db.addforConversion(
-                                  UserData.id,
-                                  CartData.itmCode,
-                                  CartData.itmDesc,
-                                  CartData.principal,
-                                  CartData.itmQty,
-                                  CartData.availableQty,
-                                  CartData.itmUom,
-                                  CartData.itmAmt,
-                                  CartData.convQty,
-                                  CartData.convUom,
-                                  CartData.convAmt,
-                                  CartData.imgpath);
+                              if (int.parse(CartData.itmQty) <= 0) {
+                                showGlobalSnackbar(
+                                    'Information',
+                                    'Unable to add less than or equal to zero.',
+                                    Colors.blue,
+                                    Colors.white);
+                              } else {
+                                if (int.parse(CartData.itmQty) >
+                                    int.parse(CartData.availableQty)) {
+                                  showGlobalSnackbar(
+                                      'Information',
+                                      'Limited stocks available.',
+                                      Colors.blue,
+                                      Colors.white);
+                                } else {
+                                  db.addforConversion(
+                                      UserData.id,
+                                      CartData.itmCode,
+                                      CartData.itmDesc,
+                                      CartData.principal,
+                                      CartData.itmQty,
+                                      CartData.availableQty,
+                                      CartData.itmUom,
+                                      CartData.itmAmt,
+                                      CartData.convQty,
+                                      CartData.convUom,
+                                      CartData.convAmt,
+                                      CartData.imgpath);
 
-                              db.minusInventory(
-                                  UserData.id,
-                                  CartData.itmCode,
-                                  CartData.itmDesc,
-                                  CartData.itmUom,
-                                  CartData.itmQty);
+                                  db.minusInventory(
+                                      UserData.id,
+                                      CartData.itmCode,
+                                      CartData.itmDesc,
+                                      CartData.itmUom,
+                                      CartData.itmQty);
 
-                              final action = await WarningDialogs.openDialog(
-                                  context,
-                                  'Information',
-                                  'Item added successfully.',
-                                  false,
-                                  'OK');
-                              if (action == DialogAction.yes) {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pop(context);
-                              } else {}
+                                  final action =
+                                      await WarningDialogs.openDialog(
+                                          context,
+                                          'Information',
+                                          'Item added successfully.',
+                                          false,
+                                          'OK');
+                                  if (action == DialogAction.yes) {
+                                    // ignore: use_build_context_synchronously
+                                    Navigator.pop(context);
+                                  } else {}
+                                }
+                              }
                             },
                             child: const Text(
                               'ADD ITEM',

@@ -34,7 +34,6 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
     var rsp = await db.getApprovedOrders(UserData.id);
     setState(() {
       _list = json.decode(json.encode(rsp));
-      // print(_list);
     });
   }
 
@@ -194,13 +193,6 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
             itemCount: _list.length,
             itemBuilder: ((context, index) {
               bool cash = false;
-              // String newDate = "";
-              // String date = "";
-              // date = _list[index]['date'].toString();
-              // DateTime s = DateTime.parse(date);
-              // newDate =
-              //     '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-              // _list[index]['date'] = newDate.toString();
               if (_list[index]['pmeth_type'] == 'Cash') {
                 cash = true;
               } else {
@@ -235,9 +227,7 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
                           )));
                 },
                 child: Container(
-                  // width: MediaQuery.of(context).size.width,
                   color: Colors.white,
-                  // height: 80,
                   margin: const EdgeInsets.all(8),
                   padding: const EdgeInsets.all(8),
                   child: Row(

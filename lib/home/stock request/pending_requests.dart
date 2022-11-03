@@ -108,20 +108,14 @@ class _PendingRequestsState extends State<PendingRequests> {
   }
 
   checkLedger() async {
-    var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
+    var checkLedgerLocal = await db.checkLoadLedgerLocal(UserData.id);
     _ldgListloc = json.decode(json.encode(checkLedgerLocal));
     if (_ldgListloc.isNotEmpty) {
-      var checkLedgerOnline = await db.checkLedger(UserData.id);
+      var checkLedgerOnline = await db.checkLoadLedger(UserData.id);
       _ldgListlive = checkLedgerOnline;
       if (_ldgListlive.length == _ldgListloc.length) {
-        if (kDebugMode) {
-          print('EQUAL');
-        }
       } else {
-        if (kDebugMode) {
-          print('NOT EQUAL');
-        }
-        var rsp = await db.updateLedger(UserData.id, _ldgListloc);
+        var rsp = await db.updateLoadLedger(UserData.id, _ldgListloc);
         if (kDebugMode) {
           print(rsp);
         }

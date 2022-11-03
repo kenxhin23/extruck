@@ -48,7 +48,7 @@ class _BalancePageState extends State<BalancePage> {
 
     setState(() {
       tmp = json.decode(json.encode(rsp));
-      // print(tmp);
+      print(tmp);
       cash = tmp[0]['cash_onhand'];
       cheque = tmp[0]['cheque_amt'];
       discounts = tmp[0]['disc_amt'];

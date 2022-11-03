@@ -30,6 +30,7 @@ class _LoadItemsState extends State<LoadItems> {
   bool viewSpinkit = true;
   bool appTrue = false;
   String imgPath = '';
+  String chequeonHand = '0.00';
   List _line = [];
 
   final db = DatabaseHelper();
@@ -45,6 +46,7 @@ class _LoadItemsState extends State<LoadItems> {
   void initState() {
     super.initState();
     checkTranStat();
+    getChequeAmt();
   }
 
   checkTranStat() async {
@@ -108,10 +110,25 @@ class _LoadItemsState extends State<LoadItems> {
     if (widget.pmeth == 'RF') {
       await db.updateRevBal(UserData.id, GlobalVariables.revBal, widget.totAmt);
     } else {
-      db.minusCashBal(UserData.id, widget.totAmt);
-      db.minustoCashLog(UserData.id, date1, CartData.totalAmount, 'CASH OUT',
-          'STOCK IN', RequestData.tranNo);
-      db.addLoadBal(UserData.id, widget.totAmt);
+      if (widget.pmeth == 'Cash') {
+        db.minusCashBal(UserData.id, widget.totAmt);
+        db.minustoCashLog(UserData.id, date1, CartData.totalAmount, 'CASH OUT',
+            'STOCK IN', RequestData.tranNo);
+        db.addLoadBal(UserData.id, widget.totAmt);
+      }
+      if (widget.pmeth == 'Cheque') {
+        // double bal = 0;
+        // bal = double.parse(widget.totAmt) - double.parse(chequeonHand);
+        // if (bal > 0) {
+        //   db.minusCashBal(UserData.id, widget.totAmt);
+        //   db.minustoCashLog(UserData.id, date1, CartData.totalAmount,
+        //       'CASH OUT', 'STOCK IN', RequestData.tranNo);
+        // }
+        // db.changeChequeStat(UserData.id, 'Used');
+        // db.minusChequeBal(
+        //     UserData.id, double.parse(chequeonHand).toStringAsFixed(2));
+        // db.addLoadBal(UserData.id, widget.totAmt);
+      }
     }
 
     ///ADDING SA LOAD LEDGER
@@ -162,6 +179,16 @@ class _LoadItemsState extends State<LoadItems> {
             .pushNamedAndRemoveUntil('/menu', (Route<dynamic> route) => false);
       } else {}
     }
+  }
+
+  getChequeAmt() async {
+    List _tmp = [];
+    var rsp = await db.checkSmBalance(UserData.id);
+    if (!mounted) return;
+    setState(() {
+      _tmp = json.decode(json.encode(rsp));
+      chequeonHand = _tmp[0]['cheque_amt'];
+    });
   }
 
   void handleUserInteraction([_]) {

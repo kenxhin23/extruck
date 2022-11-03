@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.6.db';
+  static const _dbName = 'EXTRUCK_TEST1.2.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -342,6 +342,17 @@ class DatabaseHelper {
         amount TEXT,
         status TEXT,
         image TEXT)''');
+
+    ///XTRUCK CHEQUE DATA
+    db.execute('''
+      CREATE TABLE xt_tran_cheque(
+        doc_no INTEGER PRIMARY KEY,
+        sm_code TEXT,
+        date TEXT,
+        tran_no TEXT,
+        cheque_no TEXT,
+        amount TEXT,
+        status TEXT)''');
 
     ///XTRUCK TRANSACTION HEAD
     db.execute('''
@@ -5419,8 +5430,8 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
-  Future checkLedger(code) async {
-    var url = Uri.parse('${UrlAddress.url}/checkledger');
+  Future checkLoadLedger(code) async {
+    var url = Uri.parse('${UrlAddress.url}/checkloadledger');
     final response = await http.post(url, headers: {
       "Accept": "Application/json"
     }, body: {
@@ -5430,8 +5441,31 @@ class DatabaseHelper {
     return convertedDatatoJson;
   }
 
-  Future updateLedger(code, List line) async {
-    var url = Uri.parse('${UrlAddress.url}/updateledger');
+  Future checkCashLedger(code) async {
+    var url = Uri.parse('${UrlAddress.url}/checkcashledger');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+    });
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future updateLoadLedger(code, List line) async {
+    var url = Uri.parse('${UrlAddress.url}/updateloadledger');
+    final response = await http.post(url, headers: {
+      "Accept": "Application/json"
+    }, body: {
+      'sm_code': encrypt(code),
+      'line': jsonEncode(line),
+    });
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future updateCashLedger(code, List line) async {
+    var url = Uri.parse('${UrlAddress.url}/updatecashledger');
     final response = await http.post(url, headers: {
       "Accept": "Application/json"
     }, body: {
@@ -5523,6 +5557,82 @@ class DatabaseHelper {
           'flag': encrypt(flag),
           'line1': jsonEncode(tlist),
           'line2': jsonEncode(llist),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future uploadChequeData(code, List line) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadchequedata');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(code),
+          'line': jsonEncode(line),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future uploadChequeData2(code, dtm, ordNo, accCode, bankName, accName, accNo,
+      cheqNo, cheqDate, cheqType, amt, stat) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadchequedata2');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(code),
+          'dtm': encrypt(dtm),
+          'order_no': encrypt(ordNo),
+          'account_code': encrypt(accCode),
+          'bank_name': encrypt(bankName),
+          'account_name': encrypt(accName),
+          'account_no': encrypt(accNo),
+          'cheque_no': encrypt(cheqNo),
+          'cheque_date': encrypt(cheqDate),
+          'cheque_type': encrypt(cheqType),
+          'amount': encrypt(amt),
+          'status': encrypt(stat),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future uploadSmBalance(
+      code, revfund, revbal, loadbal, cash, cheque, disc, bo, rmt) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadconversion');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(code),
+          'rev_fund': encrypt(revfund),
+          'rev_bal': encrypt(revbal),
+          'load_bal': encrypt(loadbal),
+          'cash_onhand': encrypt(cash),
+          'cheque_amt': encrypt(cheque),
+          'disc_amt': encrypt(disc),
+          'bo_amt': encrypt(bo),
+          'rmt_amt': encrypt(rmt),
+        }));
+    var convertedDatatoJson = jsonDecode(decrypt(response.body));
+    return convertedDatatoJson;
+  }
+
+  Future uploadxttrandetails(
+      smCode, date, tranNo, chequeNo, amount, status) async {
+    var url = Uri.parse('${UrlAddress.url}/uploadxttrancheque');
+    // var passwordF = md5.convert(utf8.encode(password));
+    final response = await retry(() => http.post(url, headers: {
+          "Accept": "Application/json"
+        }, body: {
+          'sm_code': encrypt(smCode),
+          'date': encrypt(date),
+          'tran_no': encrypt(tranNo),
+          'cheque_no': encrypt(chequeNo),
+          'amount': encrypt(amount),
+          'status': encrypt(status),
         }));
     var convertedDatatoJson = jsonDecode(decrypt(response.body));
     return convertedDatatoJson;
@@ -6020,6 +6130,13 @@ class DatabaseHelper {
         null);
   }
 
+  Future loadPendingCheque(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM xt_rmt_head WHERE sm_code ="$smcode" AND tran_type="ORDER" AND pmeth_type="Cheque" AND stat ="Pending" ORDER BY doc_no DESC',
+        null);
+  }
+
   Future loadPendingOrders(smcode) async {
     var client = await db;
     return client.rawQuery(
@@ -6161,11 +6278,19 @@ class DatabaseHelper {
         where: 'conv_no = ?', whereArgs: [convNo]);
   }
 
-  Future checkLedgerLocal(code) async {
+  Future checkLoadLedgerLocal(code) async {
     var client = await db;
 
     return client.rawQuery(
         'SELECT * FROM xt_load_ldg WHERE sm_code ="$code" ORDER BY doc_no ASC',
+        null);
+  }
+
+  Future checkCashLedgerLocal(code) async {
+    var client = await db;
+
+    return client.rawQuery(
+        'SELECT * FROM xt_cash_ldg WHERE sm_code ="$code" ORDER BY doc_no ASC',
         null);
   }
 
@@ -6371,7 +6496,7 @@ class DatabaseHelper {
       return client.update(
           'xt_sm_balance',
           {
-            'cheque_amt': (bal - double.parse(amt)).toString(),
+            'cheque_amt': (bal - double.parse(amt)).toStringAsFixed(2),
           },
           where: 'sm_code = ?',
           whereArgs: [smcode]);
@@ -6392,7 +6517,7 @@ class DatabaseHelper {
       return client.update(
           'xt_sm_balance',
           {
-            'disc_amt': (bal + double.parse(amt)).toString(),
+            'disc_amt': (bal + double.parse(amt)).toStringAsFixed(2),
           },
           where: 'sm_code = ?',
           whereArgs: [smcode]);
@@ -6413,7 +6538,7 @@ class DatabaseHelper {
       return client.update(
           'xt_sm_balance',
           {
-            'disc_amt': (bal - double.parse(amt)).toString(),
+            'disc_amt': (bal - double.parse(amt)).toStringAsFixed(2),
           },
           where: 'sm_code = ?',
           whereArgs: [smcode]);
@@ -6693,8 +6818,63 @@ class DatabaseHelper {
     }
   }
 
+  Future getPendingCheque(smcode) async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT *,false as mark FROM xt_cheque_data WHERE sm_code ="$smcode" AND status="Pending"',
+        null);
+  }
+
+  Future updateChequeStat(code, ordNo, chequeNo) async {
+    var client = await db;
+    return client.update(
+        'xt_cheque_data',
+        {
+          'status': 'Uploaded',
+        },
+        where: 'sm_code = ? AND order_no = ? AND cheque_no = ?',
+        whereArgs: [code, ordNo, chequeNo]);
+  }
+
+  Future changeRemittanceFlag(code, rmtNo, stat, flag) async {
+    var client = await db;
+    return client.update(
+        'xt_rmt',
+        {
+          'status': stat,
+          'flag': flag,
+        },
+        where: 'sm_code = ? AND rmt_no = ?',
+        whereArgs: [code, rmtNo]);
+  }
+
+  Future changeChequeStat(code, stat) async {
+    String status = 'Pending';
+    var client = await db;
+    return client.update(
+        'xt_cheque_data',
+        {
+          'status': stat,
+        },
+        where: 'sm_code = ? AND status = ?',
+        whereArgs: [code, status]);
+  }
+
+  Future savexttrandetails(
+      smCode, date, tranNo, chequeNo, amount, status) async {
+    var client = await db;
+    return client.insert('xt_tran_cheque', {
+      'sm_code': smCode,
+      'date': date,
+      'tran_no': tranNo,
+      'cheque_no': chequeNo,
+      'amount': amount,
+      'status': status,
+    });
+  }
+
   Future ofFetchSample() async {
     var client = await db;
-    return client.rawQuery('SELECT * FROM tb_principal_discount ', null);
+    return client.rawQuery('SELECT * FROM xt_conv_head ', null);
   }
 }

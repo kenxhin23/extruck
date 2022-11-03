@@ -44,6 +44,7 @@ class _PendingOrdersState extends State<PendingOrders> {
   List _bo = [];
   List _rmtNo = [];
   List _bal = [];
+  List _tmp = [];
 
   bool viewSpinkit = true;
   bool boRef = false;
@@ -64,6 +65,13 @@ class _PendingOrdersState extends State<PendingOrders> {
     loadPending();
     gettingLoadBalance();
     getSatWarehouseRequests();
+    loadPendingStockRequest();
+  }
+
+  loadPendingStockRequest() async {
+    var rsp = await db.getXTPendingRequests(UserData.id);
+    _tmp = json.decode(json.encode(rsp));
+    // print(tmp);
   }
 
   // update() async {
@@ -602,30 +610,30 @@ class _PendingOrdersState extends State<PendingOrders> {
                     // print('GRAND TOTAL:${totAmount}');
                     if (_list.isEmpty) {
                     } else {
-                      // if (cashChequeBal < ordAmt) {
-                      //   showGlobalSnackbar(
-                      //       'Information',
-                      //       'Insufficient cash/cheque balance.',
-                      //       Colors.grey,
-                      //       Colors.white);
-                      // } else {
-                      final action = await Dialogs.openDialog(
-                          context,
-                          'Confirmation',
-                          'You cannot cancel or modify after this. Are you sure you want to generate report?',
-                          false,
-                          'No',
-                          'Yes');
-                      if (action == DialogAction.yes) {
-                        // update();
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) =>
-                                const ProcessingBox('Generating Report'));
-                        generateReport();
-                      } else {}
-                      // }
+                      if (_tmp.isNotEmpty) {
+                        showGlobalSnackbar(
+                            'Information',
+                            'Please load pending stock requests to continue.',
+                            Colors.grey,
+                            Colors.white);
+                      } else {
+                        final action = await Dialogs.openDialog(
+                            context,
+                            'Confirmation',
+                            'You cannot cancel or modify after this. Are you sure you want to generate report?',
+                            false,
+                            'No',
+                            'Yes');
+                        if (action == DialogAction.yes) {
+                          // update();
+                          showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) =>
+                                  const ProcessingBox('Generating Report'));
+                          generateReport();
+                        } else {}
+                      }
                     }
                   },
                   child: const Text(

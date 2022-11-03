@@ -305,21 +305,29 @@ class _StockConversionState extends State<StockConversion> {
                                   Colors.grey,
                                   Colors.white);
                             } else {
-                              final action = await Dialogs.openDialog(
-                                  context,
-                                  'Confirmation',
-                                  'You cannot cancel or modify after this. Are you sure you want to convert items?',
-                                  false,
-                                  'No',
-                                  'Yes');
-                              if (action == DialogAction.yes) {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) => const ProcessingBox(
-                                        'Converting Items'));
-                                savingConversion();
-                              } else {}
+                              if (_convList.isEmpty) {
+                                showGlobalSnackbar(
+                                    'Information',
+                                    'Unable to convert empty list!',
+                                    Colors.grey,
+                                    Colors.white);
+                              } else {
+                                final action = await Dialogs.openDialog(
+                                    context,
+                                    'Confirmation',
+                                    'You cannot cancel or modify after this. Are you sure you want to convert items?',
+                                    false,
+                                    'No',
+                                    'Yes');
+                                if (action == DialogAction.yes) {
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) => const ProcessingBox(
+                                          'Converting Items'));
+                                  savingConversion();
+                                } else {}
+                              }
                             }
                           },
                           child: const Text(

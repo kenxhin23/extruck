@@ -74,11 +74,13 @@ class _HomePageState extends State<HomePage> {
                   stockLedgerCont(context),
                 ],
               ),
-              Row(
-                children: [
-                  // pendingRequestCont(context),
-                  balanceCont(context),
-                ],
+              Expanded(
+                child: Row(
+                  children: [
+                    // pendingRequestCont(context),
+                    balanceCont(context),
+                  ],
+                ),
               ),
             ],
           ),

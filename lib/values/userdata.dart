@@ -180,6 +180,7 @@ class GlobalVariables {
   static String syncEndDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
   static String revBal = '0.00';
   static String revFund = '0.00';
+  static List chequeList = [];
 }
 
 class GlobalTimer {

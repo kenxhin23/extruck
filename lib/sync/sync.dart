@@ -1,23 +1,27 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/dialogs/confirm_sync.dart';
 import 'package:extruck/dialogs/confirmupload.dart';
+// import 'package:extruck/home/spinkit.dart';
+import 'package:extruck/providers/caption_provider.dart';
 // import 'package:extruck/providers/sync_caption.dart';
-import 'package:extruck/providers/upload_count.dart';
+// import 'package:extruck/providers/upload_count.dart';
 import 'package:extruck/session/session_timer.dart';
-import 'package:extruck/spinkit/upload_spin.dart';
+import 'package:extruck/spinkit/load_spin.dart';
+// import 'package:extruck/spinkit/upload_spin.dart';
 import 'package:extruck/sync/sync_option.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
+// import 'package:extruck/widgets/dialogs.dart';
 import 'package:extruck/widgets/snackbar.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({Key? key}) : super(key: key);
@@ -49,10 +53,10 @@ class _SyncPageState extends State<SyncPage> {
   List _tranList = [];
   List _lineList = [];
 
-  List _upList = [];
+  // List _upList = [];
   List _inv = [];
   List _cash = [];
-  List _tempList = [];
+  // List _tempList = [];
 
   List _loadldgloc = [];
   List _loadldglive = [];
@@ -77,16 +81,20 @@ class _SyncPageState extends State<SyncPage> {
   checkStatus() async {
     loadForUpload();
 
-    if (GlobalVariables.upload == true) {
-      if (NetworkData.uploaded == false && uploading == false) {
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) => UploadingSpinkit());
-        await upload();
-        print('UPLOADING.........');
-      }
-    }
+    // if (GlobalVariables.upload == true) {
+    //   if (NetworkData.uploaded == false && uploading == false) {
+    //     // showDialog(
+    //     //     barrierDismissible: false,
+    //     //     context: context,
+    //     //     builder: (context) => UploadingSpinkit());
+    //     showDialog(
+    //         barrierDismissible: false,
+    //         context: context,
+    //         builder: (context) => const LoadingSpinkit());
+    //     await upload();
+    //     print('UPLOADING.........');
+    //   }
+    // }
   }
 
   loadForUpload() async {
@@ -114,53 +122,208 @@ class _SyncPageState extends State<SyncPage> {
 
   uploadButtonclicked() async {
     getInventoryLoad();
-    var rsp = await db.saveitemLoad(UserData.id, _inv);
-    print(rsp);
-
-    // if (NetworkData.connected == true) {
-    //   if (NetworkData.uploaded == false) {
-    //     showDialog(
-    //         context: context,
-    //         builder: (context) => const ConfirmUpload(
-    //               // iconn: 59137,
-    //               title: 'Confirmation!',
-    //               description1: 'Are you sure you want to upload transactions?',
-    //               description2: 'Please secure stable internet connection.',
-    //             ));
-    //   }
-    // } else {
-    //   showGlobalSnackbar('Connectivity', 'Please connect to internet.',
-    //       Colors.red.shade900, Colors.white);
-    // }
+    if (NetworkData.connected == true) {
+      // if (NetworkData.uploaded == false) {
+      showDialog(
+          context: context,
+          builder: (context) => const ConfirmUpload(
+                // iconn: 59137,
+                title: 'Confirmation!',
+                description1: 'Are you sure you want to upload transactions?',
+                description2: 'Please secure stable internet connection.',
+              )).then((value) async {
+        if (GlobalVariables.upload) {
+          showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => const LoadingSpinkit());
+          await updatingLoadItemsOnline();
+        }
+      });
+      // }
+      // final action = await Dialogs.openDialog(context, 'Confirmation',
+      //     'Are you sure you want to upload transactions?', false, 'No', 'Yes');
+      // if (action == DialogAction.yes) {
+      //   await upload();
+      // }
+    } else {
+      showGlobalSnackbar('Connectivity', 'Please connect to internet.',
+          Colors.red.shade900, Colors.white);
+    }
   }
 
   upload() async {
-    int x = 0;
-    Provider.of<UploadCount>(context, listen: false).setTotal(x);
-    if (NetworkData.errorMsgShow == false &&
-        uploading == false &&
-        !GlobalVariables.uploaded) {
-      NetworkData.uploaded = true;
-      uploading = true;
+    // int x = 0;
+    // Provider.of<UploadCount>(context, listen: false).setTotal(x);
+    // if (NetworkData.errorMsgShow == false &&
+    //     uploading == false &&
+    //     !GlobalVariables.uploaded) {
+    //   NetworkData.uploaded = true;
+    //   uploading = true;
 
-      // updatingLoadItemsOnline();
-      //updatesmbalance
-      //updateconversion
-      //updatecashledger
-      //updatestockledger
-      //saveremittance
-    }
+    //   await updatingLoadItemsOnline();
+
+    //updateconversion
+    //updatecashledger
+    //updatestockledger
+    //chequedata
+    //updatesmbalance
+    // saveRemittance();
+    // }
+    await updatingLoadItemsOnline();
+    // await saveRemittance();
   }
 
   updatingLoadItemsOnline() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Salesman Load...');
     var rsp = await db.saveitemLoad(UserData.id, _inv);
     print(rsp);
     if (rsp != '' || rsp != null) {
-      GlobalVariables.uploaded = true;
-      NetworkData.uploaded = false;
-      GlobalVariables.upload = false;
-      Navigator.pop(context);
+      print('NI UPDATE');
+      await updateStockLedger();
+    } else {
+      await updatingLoadItemsOnline();
     }
+  }
+
+  updateStockLedger() async {
+    List _ldgListloc = [];
+    List _ldgListlive = [];
+    var checkLedgerLocal = await db.checkLoadLedgerLocal(UserData.id);
+    _ldgListloc = json.decode(json.encode(checkLedgerLocal));
+    if (_ldgListloc.isNotEmpty) {
+      var checkLedgerOnline = await db.checkLoadLedger(UserData.id);
+      _ldgListlive = checkLedgerOnline;
+      if (_ldgListlive.length == _ldgListloc.length) {
+        print('EQUAL');
+        await updateCashLedger();
+      } else {
+        Provider.of<Caption>(context, listen: false)
+            .changeCap('Updating Stock Ledger...');
+        var rsp = await db.updateLoadLedger(UserData.id, _ldgListloc);
+        if (rsp != null) {
+          await updateCashLedger();
+        } else {
+          await updateStockLedger();
+        }
+      }
+    }
+  }
+
+  updateCashLedger() async {
+    List _ldgListloc = [];
+    List _ldgListlive = [];
+    var checkLedgerLocal = await db.checkCashLedgerLocal(UserData.id);
+    _ldgListloc = json.decode(json.encode(checkLedgerLocal));
+    if (_ldgListloc.isNotEmpty) {
+      var checkLedgerOnline = await db.checkCashLedger(UserData.id);
+      _ldgListlive = checkLedgerOnline;
+      if (_ldgListlive.length >= _ldgListloc.length) {
+        await updateChequeData();
+        // Navigator.pop(context);
+      } else {
+        Provider.of<Caption>(context, listen: false)
+            .changeCap('Updating Cash Ledger...');
+        var rsp = await db.updateCashLedger(UserData.id, _ldgListloc);
+        if (rsp != null) {
+          await updateChequeData();
+          // print('NIUPDATE');
+          // Navigator.pop(context);
+        } else {
+          await updateCashLedger();
+        }
+      }
+    }
+  }
+
+  updateChequeData() async {
+    List _list = [];
+    List res = [];
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Cheque Data...');
+    var resp = await db.getPendingCheque(UserData.id);
+    _list = json.decode(json.encode(resp));
+    if (_list.isNotEmpty) {
+      var rsp = await db.uploadChequeData(UserData.id, _list);
+      if (rsp != null) {
+        for (var element in _list) {
+          db.updateChequeStat(
+              element['sm_code'], element['order_no'], element['cheque_no']);
+        }
+        await updateConversion();
+      } else {
+        await updateChequeData();
+      }
+    } else {
+      await updateConversion();
+    }
+    // var rsp = await db.updatingChequeData();
+    // if (rsp != null) {
+    //   await updateConversion();
+    // } else {
+    //   await updateChequeData();
+    // }
+  }
+
+  updateConversion() async {
+    List _list = [];
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Conversion Records...');
+    var rsp = await db.getPendingConversion(UserData.id);
+
+    setState(() {
+      _list = json.decode(json.encode(rsp));
+      // print('CONVERSION LIST: ${_list}');
+    });
+    if (_list.isNotEmpty) {
+      for (var element in _list) {
+        var conLine = await db.loadConvertedItems(element['conv_no']);
+        // convLine = json.decode(json.encode(conLine));
+        var upConv = await db.uploadConversion(
+            element['sm_code'],
+            element['conv_no'],
+            element['conv_date'],
+            element['itmno'],
+            element['totAmt'],
+            element['item_qty'],
+            element['nitem_qty'],
+            conLine);
+        if (upConv != null || upConv != '') {
+          db.changeConvStat(upConv, 'Uploaded');
+        } else {
+          await updateConversion();
+        }
+      }
+      await updateSalesmanBalance();
+    } else {
+      await updateSalesmanBalance();
+    }
+  }
+
+  updateSalesmanBalance() async {
+    List _list = [];
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Updating Salesman Balance...');
+
+    var rsp = await db.checkSmBalance(UserData.id);
+    // setState(() {
+    _list = json.decode(json.encode(rsp));
+    print(_list);
+    for (var element in _list) {
+      await db.uploadSmBalance(
+          element['sm_code'],
+          element['rev_fund'],
+          element['rev_bal'],
+          element['load_bal'],
+          element['cash_onhand'],
+          element['cheque_amt'],
+          element['disc_amt'],
+          element['bo_amt'],
+          element['rmt_amt']);
+    }
+    // });
+    await saveRemittance();
   }
 
   getInventoryLoad() async {
@@ -180,66 +343,84 @@ class _SyncPageState extends State<SyncPage> {
     });
   }
 
-  updateLoadLedger() async {
-    var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
-    _loadldgloc = json.decode(json.encode(checkLedgerLocal));
-    if (_loadldgloc.isNotEmpty) {
-      var checkLedgerOnline = await db.checkLedger(UserData.id);
-      _loadldglive = checkLedgerOnline;
-      if (_loadldglive.length == _loadldgloc.length) {
-        if (kDebugMode) {
-          print('EQUAL');
-        }
-      } else {
-        if (kDebugMode) {
-          print('NOT EQUAL');
-        }
-        var rsp = await db.updateLedger(UserData.id, _loadldgloc);
-        if (kDebugMode) {
+  // updateLoadLedger() async {
+  //   var checkLedgerLocal = await db.checkLedgerLocal(UserData.id);
+  //   _loadldgloc = json.decode(json.encode(checkLedgerLocal));
+  //   if (_loadldgloc.isNotEmpty) {
+  //     var checkLedgerOnline = await db.checkLedger(UserData.id);
+  //     _loadldglive = checkLedgerOnline;
+  //     if (_loadldglive.length == _loadldgloc.length) {
+  //       if (kDebugMode) {
+  //         print('EQUAL');
+  //       }
+  //     } else {
+  //       if (kDebugMode) {
+  //         print('NOT EQUAL');
+  //       }
+  //       var rsp = await db.updateLedger(UserData.id, _loadldgloc);
+  //       if (kDebugMode) {
+  //         print(rsp);
+  //       }
+  //     }
+  //   }
+  // }
+
+  saveRemittance() async {
+    Provider.of<Caption>(context, listen: false)
+        .changeCap('Saving Remittance Reports...');
+    int x = 0;
+    for (var element in _list) {
+      await getRmtTranDetails(element['rmt_no']);
+      await getRmtLineDetails();
+      x++;
+      if (_tranList.isNotEmpty && x <= _list.length) {
+        var rsp = await db.saveRemittance(
+            UserData.id,
+            element['rmt_no'],
+            element['date'],
+            element['order_count'],
+            element['rev_bal'],
+            element['load_bal'],
+            element['bo_amt'],
+            element['tot_amt'],
+            element['tot_cash'],
+            element['tot_cheque'],
+            element['tot_disc'],
+            element['tot_satwh'],
+            element['tot_net'],
+            element['repl_amt'],
+            'Posted',
+            '1',
+            _tranList,
+            _lineList);
+        if (rsp != null) {
           print(rsp);
+          _lineList.clear();
+          var res =
+              await db.changeRemittanceFlag(UserData.id, rsp, 'Posted', '1');
+          if (res != null && _list.isEmpty) {
+            setState(() {
+              Navigator.pop(context);
+            });
+          }
         }
       }
     }
   }
 
-  saveRemittance() async {
-    int x = 0;
+  getRmtTranDetails(ordNo) async {
+    var tranH = await db.loadRmtHistoryHead(ordNo);
+    if (!mounted) return;
+    _tranList = json.decode(json.encode(tranH));
+  }
+
+  getRmtLineDetails() async {
     List tmp = [];
-    _list.forEach((element) async {
-      // print(element);
-      _tranList.clear();
-      _lineList.clear();
-      var tranH = await db.loadRmtHistoryHead(element['rmt_no']);
-      setState(() {
-        _tranList = json.decode(json.encode(tranH));
-        // print('TRAN LIST: ${_tranList}');
-        _tranList.forEach((a) async {
-          var tranL = await db.loadRemitItems(a['order_no']);
-          tmp = json.decode(json.encode(tranL));
-          _lineList.addAll(tmp);
-          print(_lineList.length);
-        });
-      });
-      var rsp = await db.saveRemittance(
-          UserData.id,
-          element['rmt_no'],
-          element['date'],
-          element['order_count'],
-          element['rev_bal'],
-          element['load_bal'],
-          element['bo_amt'],
-          element['tot_amt'],
-          element['tot_cash'],
-          element['tot_cheque'],
-          element['tot_disc'],
-          element['tot_satwh'],
-          element['tot_net'],
-          element['repl_amt'],
-          'Posted',
-          '1',
-          _tranList,
-          _lineList);
-    });
+    for (var element in _tranList) {
+      var tranL = await db.loadRemitItems(element['order_no']);
+      tmp = json.decode(json.encode(tranL));
+      _lineList.addAll(tmp);
+    }
   }
 
   void handleUserInteraction([_]) {
@@ -290,10 +471,12 @@ class _SyncPageState extends State<SyncPage> {
                 alignment: Alignment.bottomCenter,
                 child: FloatingActionButton(
                   onPressed: () {
-                    // if (_list.isNotEmpty) {
-                    //   uploadButtonclicked();
-                    // }
-                    saveRemittance();
+                    if (_list.isNotEmpty) {
+                      uploadButtonclicked();
+                    }
+                    // setState(() {
+                    //   loadRemittance();
+                    // });
                   },
                   tooltip: 'Upload',
                   child: const Icon(Icons.file_upload),

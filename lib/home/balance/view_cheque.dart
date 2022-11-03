@@ -32,20 +32,21 @@ class _ChequeViewState extends State<ChequeView> {
   }
 
   loadPending() async {
-    var rsp = await db.loadPending(UserData.id);
+    var rsp = await db.getPendingCheque(UserData.id);
     setState(() {
       pending = json.decode(json.encode(rsp));
       // print(pending);
       for (var element in pending) {
         String newDate = '';
-        DateTime s = DateTime.parse(element['date'].toString());
+        DateTime s = DateTime.parse(element['dtm'].toString());
         newDate =
             '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-        element['date'] = newDate.toString();
-        if (element['pmeth_type'] == 'Cheque' &&
-            element['tran_type'] == 'ORDER') {
-          _list.add(element);
-        }
+        element['dtm'] = newDate.toString();
+        // if (element['pmeth_type'] == 'Cheque' &&
+        //     element['tran_type'] == 'ORDER') {
+        //   _list.add(element);
+        // }
+        _list.add(element);
         viewSpinkit = false;
         // print(_list);
       }
@@ -171,7 +172,7 @@ class _ChequeViewState extends State<ChequeView> {
                                     fontSize: 12, fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                _list[index]['store_name'],
+                                _list[index]['account_name'],
                                 style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -181,13 +182,13 @@ class _ChequeViewState extends State<ChequeView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    'SI #: ',
+                                    'Bank: ',
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w400),
                                   ),
                                   Text(
-                                    _list[index]['si_no'],
+                                    _list[index]['bank_name'],
                                     style: const TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
@@ -196,7 +197,7 @@ class _ChequeViewState extends State<ChequeView> {
                                 ],
                               ),
                               Text(
-                                _list[index]['date'],
+                                _list[index]['dtm'],
                                 style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -214,8 +215,8 @@ class _ChequeViewState extends State<ChequeView> {
                                   fontSize: 12, fontWeight: FontWeight.w400),
                             ),
                             Text(
-                              formatCurrencyAmt.format(
-                                  double.parse(_list[index]['tot_amt'])),
+                              formatCurrencyAmt
+                                  .format(double.parse(_list[index]['amount'])),
                               style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,

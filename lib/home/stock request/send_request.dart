@@ -30,13 +30,16 @@ class _SendRequestState extends State<SendRequest> {
   String pmethod = 'None';
   String revFund = '0.00';
   String cashonHand = '0.00';
+  String chequeonHand = '0.00';
   List rfList = [];
   List cashList = [];
   bool viewRevFund = false;
   bool viewCash = false;
+  bool viewCheque = false;
   bool checking = false;
   bool fundShort = false;
   bool cashShort = false;
+  bool chequeAmtshort = false;
 
   double revolvingFund = 0.00;
 
@@ -86,10 +89,10 @@ class _SendRequestState extends State<SendRequest> {
         'Pending',
         OrderData.signature!,
         cart);
-    print(rsp);
+    // print(rsp);
     if (rsp != null || rsp != '') {
       if (kDebugMode) {
-        print(rsp);
+        // print(rsp);
       }
       GlobalVariables.tranNo = rsp;
       var getTranHead = await db.addRequestHead(
@@ -105,8 +108,53 @@ class _SendRequestState extends State<SendRequest> {
           '1');
       // print('ADD RSP:${getTranHead}');
       if (getTranHead != '' || getTranHead != null) {
+        final String date1 =
+            DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
         if (kDebugMode) {}
         addRequestLine();
+        if (CartData.pMeth == 'Cheque') {
+          List temp = [];
+          double balance = 0.00;
+          balance =
+              double.parse(CartData.totalAmount) - double.parse(chequeonHand);
+          for (var element in GlobalVariables.chequeList) {
+            print('NISUD');
+            // temp = element;
+            db.uploadChequeData2(
+                UserData.id,
+                element['dtm'],
+                element['order_no'],
+                element['account_code'],
+                element['bank_name'],
+                element['account_name'],
+                element['account_no'],
+                element['cheque_no'],
+                element['cheque_date'],
+                element['cheque_type'],
+                element['amount'],
+                'Uploaded');
+            db.savexttrandetails(
+                UserData.id,
+                element['dtm'],
+                GlobalVariables.tranNo,
+                element['cheque_no'],
+                element['amount'],
+                'Posted');
+            db.uploadxttrandetails(
+                UserData.id,
+                element['dtm'],
+                GlobalVariables.tranNo,
+                element['cheque_no'],
+                element['amount'],
+                'Posted');
+            db.updateChequeStat(
+                UserData.id, element['order_no'], element['cheque_no']);
+          }
+          db.minusChequeBal(UserData.id, chequeonHand);
+          db.minusCashBal(UserData.id, balance.toStringAsFixed(2));
+          db.minustoCashLog(UserData.id, date1, balance.toStringAsFixed(2),
+              'CASH OUT', 'STOCK IN', GlobalVariables.tranNo);
+        }
 
         // await db.updateRevBal(UserData.id,)
 
@@ -207,6 +255,37 @@ class _SendRequestState extends State<SendRequest> {
     });
   }
 
+  checkAvailableCheque() async {
+    double balance = 0.00;
+    chequeonHand = '0.00';
+    var rsp = await db.checkSmBalance(UserData.id);
+    if (!mounted) return;
+    setState(() {
+      cashList = json.decode(json.encode(rsp));
+      // print(ver);
+      // chequeonHand = cashList[0]['cheque_amt'];
+      cashonHand = cashList[0]['cash_onhand'];
+
+      for (var element in GlobalVariables.chequeList) {
+        chequeonHand =
+            (double.parse(chequeonHand) + double.parse(element['amount']))
+                .toStringAsFixed(2);
+      }
+      balance = double.parse(chequeonHand) + double.parse(cashonHand);
+      if (balance < double.parse(CartData.totalAmount)) {
+        cashShort = true;
+      } else {
+        cashShort = false;
+      }
+      if (double.parse(chequeonHand) > double.parse(CartData.totalAmount)) {
+        chequeAmtshort = true;
+      } else {
+        chequeAmtshort = false;
+      }
+      checking = false;
+    });
+  }
+
   void handleUserInteraction([_]) {
     SessionTimer sessionTimer = SessionTimer();
     sessionTimer.initializeTimer(context);
@@ -257,6 +336,10 @@ class _SendRequestState extends State<SendRequest> {
                         height: 20,
                       ),
                       buildPaymentCont(),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Visibility(visible: viewCheque, child: buildChequeCont()),
                       const SizedBox(
                         height: 5,
                       ),
@@ -341,6 +424,7 @@ class _SendRequestState extends State<SendRequest> {
             children: [
               GestureDetector(
                 onTap: () {
+                  GlobalVariables.chequeList.clear();
                   Navigator.push(
                           context,
                           PageTransition(
@@ -349,24 +433,49 @@ class _SendRequestState extends State<SendRequest> {
                               child: const WarehousePage()))
                       .then((value) {
                     setState(() {
+                      // print(GlobalVariables.chequeList);
                       warehouse = CartData.warehouse;
                       pmethod = CartData.pMeth;
-                      if (CartData.pMeth != 'Cash') {
+                      if (CartData.pMeth == 'RF') {
                         cashShort = false;
                         checkRevolving();
                         setState(() {
                           checking = true;
                           viewRevFund = true;
                           viewCash = false;
+                          viewCheque = false;
                         });
                       } else {
-                        fundShort = false;
-                        checkCashonhand();
-                        setState(() {
-                          checking = true;
-                          viewRevFund = false;
-                          viewCash = true;
-                        });
+                        if (CartData.pMeth == "") {
+                          fundShort = false;
+                          checkCashonhand();
+                          setState(() {
+                            checking = true;
+                            viewRevFund = false;
+                            viewCheque = false;
+                            viewCash = true;
+                          });
+                        }
+                        if (CartData.pMeth == 'Cash') {
+                          fundShort = false;
+                          checkCashonhand();
+                          setState(() {
+                            checking = true;
+                            viewRevFund = false;
+                            viewCheque = false;
+                            viewCash = true;
+                          });
+                        }
+                        if (CartData.pMeth == 'Cheque') {
+                          fundShort = false;
+                          checkAvailableCheque();
+                          setState(() {
+                            checking = true;
+                            viewRevFund = false;
+                            viewCheque = true;
+                            viewCash = true;
+                          });
+                        }
                       }
                     });
                   });
@@ -442,6 +551,47 @@ class _SendRequestState extends State<SendRequest> {
                 fontSize: 16,
                 fontWeight: FontWeight.w500),
           ),
+          const SizedBox(
+            width: 5,
+          ),
+          // const Icon(
+          //   Icons.chevron_right,
+          //   color: Colors.grey,
+          // )
+        ],
+      ),
+    );
+  }
+
+  Container buildChequeCont() {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.all(15),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Cheque Used',
+              style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500),
+            ),
+          ),
+          // ignore: prefer_const_constructors
+          checking
+              ? const SpinKitCircle(
+                  // controller: animationController,
+                  size: 24,
+                  color: Colors.green,
+                )
+              : Text(
+                  formatCurrencyAmt.format(double.parse(chequeonHand)),
+                  style: TextStyle(
+                      color: fundShort ? Colors.red : Colors.green,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500),
+                ),
           const SizedBox(
             width: 5,
           ),
@@ -736,32 +886,51 @@ class _SendRequestState extends State<SendRequest> {
                               Colors.red,
                               Colors.white);
                         } else {
-                          if (OrderData.signature == "") {
-                            {
-                              showGlobalSnackbar(
-                                  'Information',
-                                  'Please input signature',
-                                  Colors.blue,
-                                  Colors.white);
-                            }
+                          if (CartData.pMeth == 'Cheque' && chequeAmtshort) {
+                            showGlobalSnackbar(
+                                'Information',
+                                'Total Amount should be greater than cheque amount.',
+                                Colors.red,
+                                Colors.white);
                           } else {
-                            final action = await Dialogs.openDialog(
-                                context,
-                                'Confirmation',
-                                'You cannot cancel or modify after this. Are you sure you want to place this order?',
-                                false,
-                                'No',
-                                'Yes');
-                            if (action == DialogAction.yes) {
-                              // print(CartData.totalAmount.toString());
-                              showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => const ProcessingBox(
-                                      'Processing Request'));
+                            if (CartData.pMeth == 'Cheque' &&
+                                double.parse(chequeonHand) <= 0) {
+                              {
+                                showGlobalSnackbar(
+                                    'Information',
+                                    'Cheque Amount is Invalid. Select other option.',
+                                    Colors.blue,
+                                    Colors.white);
+                              }
+                            } else {
+                              if (OrderData.signature == "") {
+                                {
+                                  showGlobalSnackbar(
+                                      'Information',
+                                      'Please input signature',
+                                      Colors.blue,
+                                      Colors.white);
+                                }
+                              } else {
+                                final action = await Dialogs.openDialog(
+                                    context,
+                                    'Confirmation',
+                                    'You cannot cancel or modify after this. Are you sure you want to place this order?',
+                                    false,
+                                    'No',
+                                    'Yes');
+                                if (action == DialogAction.yes) {
+                                  // print(CartData.totalAmount.toString());
+                                  showDialog(
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) => const ProcessingBox(
+                                          'Processing Request'));
 
-                              uploadingRequest();
-                            } else {}
+                                  uploadingRequest();
+                                } else {}
+                              }
+                            }
                           }
                         }
                       }
