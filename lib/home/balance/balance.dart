@@ -45,7 +45,6 @@ class _BalancePageState extends State<BalancePage> {
   checkBalance() async {
     List tmp = [];
     var rsp = await db.checkSmBalance(UserData.id);
-
     setState(() {
       tmp = json.decode(json.encode(rsp));
       print(tmp);

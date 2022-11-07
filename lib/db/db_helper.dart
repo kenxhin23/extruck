@@ -21,7 +21,7 @@ class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
   //TEST VERSION
-  static const _dbName = 'EXTRUCK_TEST1.2.db';
+  static const _dbName = 'EXTRUCK_TEST1.3.db';
   //LIVE VERSION
   // static const _dbName = 'EXTRUCK1.0.db';
   static const _dbVersion = 1;
@@ -393,7 +393,7 @@ class DatabaseHelper {
         tot_amt TEXT,
         discounted_amount TEXT,
         item_cat TEXT,
-        item_principal,
+        item_principal TEXT,
         item_stat TEXT,
         sm_code TEXT,
         date_req TEXT,
@@ -408,7 +408,7 @@ class DatabaseHelper {
         item_code TEXT,
         item_desc TEXT,
         item_cat TEXT,
-        item_principal,
+        item_principal TEXT,
         item_uom TEXT,
         item_amt TEXT,
         item_qty TEXT,
@@ -496,6 +496,7 @@ class DatabaseHelper {
         item_stat TEXT,
         disc_flag TEXT,
         sm_code TEXT,
+        date TEXT,
         image TEXT)''');
 
     ///XTRUCK REMITTANCE REPORT
@@ -1323,6 +1324,12 @@ class DatabaseHelper {
     return client.rawQuery(
         'SELECT * FROM tb_updates_log WHERE type ="$type" ORDER BY doc_no DESC',
         null);
+  }
+
+  Future ofFetchUpdateLogAll() async {
+    var client = await db;
+    return client.rawQuery(
+        'SELECT * FROM tb_updates_log ORDER BY doc_no DESC', null);
   }
 
   // Future getAllProducts() async {
@@ -4474,104 +4481,270 @@ class DatabaseHelper {
           }));
       var convertedDatatoJson = jsonDecode(response.body);
       return convertedDatatoJson;
-      // if (response.statusCode == 200) {
-      //   var convertedDatatoJson = jsonDecode(response.body);
-      //   return convertedDatatoJson;
-      // } else if (response.statusCode >= 400 || response.statusCode <= 499) {
-      //   customModal(
-      //       context,
-      //       Icon(CupertinoIcons.exclamationmark_circle,
-      //           size: 50, color: Colors.red),
-      //       Text(
-      //           "Error: ${response.statusCode}. Your client has issued a malformed or illegal request.",
-      //           textAlign: TextAlign.center),
-      //       true,
-      //       Icon(
-      //         CupertinoIcons.checkmark_alt,
-      //         size: 25,
-      //         color: Colors.greenAccent,
-      //       ),
-      //       '',
-      //       () {});
-      // } else if (response.statusCode >= 500 || response.statusCode <= 599) {
-      //   customModal(
-      //       context,
-      //       Icon(CupertinoIcons.exclamationmark_circle,
-      //           size: 50, color: Colors.red),
-      //       Text("Error: ${response.statusCode}. Internal server error.",
-      //           textAlign: TextAlign.center),
-      //       true,
-      //       Icon(
-      //         CupertinoIcons.checkmark_alt,
-      //         size: 25,
-      //         color: Colors.greenAccent,
-      //       ),
-      //       '',
-      //       () {});
-      // }
     } on TimeoutException {
-      // customModal(
-      //     context,
-      //     Icon(CupertinoIcons.exclamationmark_circle,
-      //         size: 50, color: Colors.red),
-      //     Text(
-      //         "Connection timed out. Please check internet connection or proxy server configurations.",
-      //         textAlign: TextAlign.center),
-      //     true,
-      //     Icon(
-      //       CupertinoIcons.checkmark_alt,
-      //       size: 25,
-      //       color: Colors.greenAccent,
-      //     ),
-      //     'Okay',
-      //     () {});
     } on SocketException {
-      // customModal(
-      //     context,
-      //     Icon(CupertinoIcons.exclamationmark_circle,
-      //         size: 50, color: Colors.red),
-      //     Text(
-      //         "Connection timed out. Please check internet connection or proxy server configurations.",
-      //         textAlign: TextAlign.center),
-      //     true,
-      //     Icon(
-      //       CupertinoIcons.checkmark_alt,
-      //       size: 25,
-      //       color: Colors.greenAccent,
-      //     ),
-      //     'Okay',
-      //     () {});
     } on HttpException {
-      // customModal(
-      //     context,
-      //     Icon(CupertinoIcons.exclamationmark_circle,
-      //         size: 50, color: Colors.red),
-      //     Text("An HTTP error eccured. Please try again later.",
-      //         textAlign: TextAlign.center),
-      //     true,
-      //     Icon(
-      //       CupertinoIcons.checkmark_alt,
-      //       size: 25,
-      //       color: Colors.greenAccent,
-      //     ),
-      //     'Okay',
-      //     () {});
-    } on FormatException {
-      // customModal(
-      //     context,
-      //     Icon(CupertinoIcons.exclamationmark_circle,
-      //         size: 50, color: Colors.red),
-      //     Text("Format exception error occured. Please try again later.",
-      //         textAlign: TextAlign.center),
-      //     true,
-      //     Icon(
-      //       CupertinoIcons.checkmark_alt,
-      //       size: 25,
-      //       color: Colors.greenAccent,
-      //     ),
-      //     'Okay',
-      //     () {});
-    }
+    } on FormatException {}
+  }
+
+  Future getConversionLine(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getconversionline');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getConversionHead(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getconversionhead');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getLoadLedger(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getloadledger');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  // Future getRevolvingLedger(BuildContext context, code) async {
+  //   try {
+  //     var url = Uri.parse('${UrlAddress.url}/getrevolvingledger');
+  //     final response = await retry(() => http.post(url,
+  //         headers: {"Accept": "Application/json"},
+  //         body: {'sm_code': encrypt(code)}));
+  //     var convertedDatatoJson = jsonDecode(decrypt(response.body));
+  //     return convertedDatatoJson;
+  //   } on TimeoutException {
+  //   } on SocketException {
+  //   } on HttpException {
+  //   } on FormatException {}
+  // }
+
+  // Future getRevolvingFund(BuildContext context, code) async {
+  //   try {
+  //     var url = Uri.parse('${UrlAddress.url}/getrevolvingfund');
+  //     final response = await retry(() => http.post(url,
+  //         headers: {"Accept": "Application/json"},
+  //         body: {'sm_code': encrypt(code)}));
+  //     var convertedDatatoJson = jsonDecode(decrypt(response.body));
+  //     return convertedDatatoJson;
+  //   } on TimeoutException {
+  //   } on SocketException {
+  //   } on HttpException {
+  //   } on FormatException {}
+  // }
+
+  Future getCashLedgerOnline(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getcashledger');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getSmLoad(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getsmload');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getSmBalance(BuildContext context, code) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getsmbalance');
+      final response = await retry(() => http.post(url,
+          headers: {"Accept": "Application/json"},
+          body: {'sm_code': encrypt(code)}));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  //UPDATING TRANSACTIONS
+  Future getTranCheque(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/gettrancheque');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getXtTranLine(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getxttranline');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getXtTranHead(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getxttranhead');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getXtChequeData(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getxtchequedata');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getRmtLine(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getrmtline');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getRmtHead(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getrmthead');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
+  }
+
+  Future getRemittance(BuildContext context, code, type, date1, date2) async {
+    try {
+      var url = Uri.parse('${UrlAddress.url}/getremittance');
+      final response = await retry(() => http.post(
+            url,
+            headers: {"Accept": "Application/json"},
+            body: {
+              'sm_code': encrypt(code),
+              'type': encrypt(type),
+              'date1': encrypt(date1),
+              'date2': encrypt(date2),
+            },
+          ));
+      var convertedDatatoJson = jsonDecode(decrypt(response.body));
+      return convertedDatatoJson;
+    } on TimeoutException {
+    } on SocketException {
+    } on HttpException {
+    } on FormatException {}
   }
 
   // Future updateLineStat(String tranNo, String status, String qty, String totAmt,
@@ -5601,7 +5774,7 @@ class DatabaseHelper {
 
   Future uploadSmBalance(
       code, revfund, revbal, loadbal, cash, cheque, disc, bo, rmt) async {
-    var url = Uri.parse('${UrlAddress.url}/uploadconversion');
+    var url = Uri.parse('${UrlAddress.url}/updatesmbalance');
     // var passwordF = md5.convert(utf8.encode(password));
     final response = await retry(() => http.post(url, headers: {
           "Accept": "Application/json"
@@ -5903,6 +6076,7 @@ class DatabaseHelper {
       itmStat,
       discFlag,
       smCOde,
+      date,
       image) async {
     // int fqty = 0;
     // double ftotal = 0.00;
@@ -5929,6 +6103,7 @@ class DatabaseHelper {
         'item_stat': itmStat,
         'disc_flag': discFlag,
         'sm_code': smCOde,
+        'date': date,
         'image': image,
       });
     } else {
@@ -6694,7 +6869,7 @@ class DatabaseHelper {
   Future getForUploadRemit(smcode) async {
     var client = await db;
     return client.rawQuery(
-        'SELECT *, " " as newdate FROM xt_rmt WHERE sm_code ="$smcode" AND flag = "0" ORDER BY doc_no DESC',
+        'SELECT *, " " as newdate FROM xt_rmt WHERE sm_code ="$smcode" AND flag = "0" ORDER BY doc_no ASC',
         null);
   }
 

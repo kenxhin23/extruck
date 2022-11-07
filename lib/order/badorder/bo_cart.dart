@@ -93,8 +93,7 @@ class _BoCartState extends State<BoCart> {
   }
 
   savingBoRefund() async {
-    final String date1 =
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    String date1 = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     final String date2 = DateFormat("MMddyy").format(DateTime.now());
 
     var count = await db.checkCount(UserData.id, CustomerData.accountCode);
@@ -157,6 +156,7 @@ class _BoCartState extends State<BoCart> {
           'Served',
           'F',
           UserData.id,
+          date.toString(),
           element['rf_image']);
     }
     // if (CartData.pMeth == 'Cheque') {

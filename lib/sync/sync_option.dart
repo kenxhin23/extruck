@@ -57,7 +57,7 @@ class _SyncOptionState extends State<SyncOption> {
       setState(() {
         endDate = dt;
         etoday = DateFormat("MMM. dd, yyyy").format(dt);
-        GlobalVariables.syncStartDate = DateFormat("yyyy-MM-dd").format(dt);
+        GlobalVariables.syncEndDate = DateFormat("yyyy-MM-dd").format(dt);
       });
     }
   }

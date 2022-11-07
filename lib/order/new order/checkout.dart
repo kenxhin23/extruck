@@ -99,6 +99,7 @@ class _CheckoutState extends State<Checkout> {
           'Served',
           'F',
           UserData.id,
+          date.toString(),
           element['image']);
     }
     if (CartData.pMeth == 'Cheque') {

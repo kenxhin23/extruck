@@ -3,25 +3,18 @@ import 'dart:convert';
 import 'package:extruck/db/db_helper.dart';
 import 'package:extruck/dialogs/confirm_sync.dart';
 import 'package:extruck/dialogs/confirmupload.dart';
-// import 'package:extruck/home/spinkit.dart';
 import 'package:extruck/providers/caption_provider.dart';
-// import 'package:extruck/providers/sync_caption.dart';
-// import 'package:extruck/providers/upload_count.dart';
 import 'package:extruck/session/session_timer.dart';
 import 'package:extruck/spinkit/load_spin.dart';
-// import 'package:extruck/spinkit/upload_spin.dart';
 import 'package:extruck/sync/sync_option.dart';
 import 'package:extruck/values/colors.dart';
 import 'package:extruck/values/userdata.dart';
 import 'package:extruck/widgets/buttons.dart';
-// import 'package:extruck/widgets/dialogs.dart';
 import 'package:extruck/widgets/snackbar.dart';
-// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-// import 'package:provider/provider.dart';
 
 class SyncPage extends StatefulWidget {
   const SyncPage({Key? key}) : super(key: key);
@@ -55,11 +48,11 @@ class _SyncPageState extends State<SyncPage> {
 
   // List _upList = [];
   List _inv = [];
-  List _cash = [];
+  // List _cash = [];
   // List _tempList = [];
 
-  List _loadldgloc = [];
-  List _loadldglive = [];
+  // List _loadldgloc = [];
+  // List _loadldglive = [];
 
   final db = DatabaseHelper();
 
@@ -69,6 +62,8 @@ class _SyncPageState extends State<SyncPage> {
 
   final formatCurrencyTot =
       NumberFormat.currency(locale: "en_US", symbol: "Php ");
+
+  final String today = DateFormat("yyyy-MM-dd").format(new DateTime.now());
 
   @override
   void initState() {
@@ -80,6 +75,8 @@ class _SyncPageState extends State<SyncPage> {
 
   checkStatus() async {
     loadForUpload();
+    loadUpdateLog();
+    checkUpdates();
 
     // if (GlobalVariables.upload == true) {
     //   if (NetworkData.uploaded == false && uploading == false) {
@@ -95,6 +92,62 @@ class _SyncPageState extends State<SyncPage> {
     //     print('UPLOADING.........');
     //   }
     // }
+  }
+
+  loadUpdateLog() async {
+    // String updateType = 'Salesman';
+    // var rsp = await db.ofFetchUpdateLog(updateType);
+    var rsp = await db.ofFetchUpdateLogAll();
+    _updateLog = rsp;
+    // print(_updateLog);
+  }
+
+  checkUpdates() async {
+    List list = [];
+    String dtime = '';
+    var rsp = await db.ofFetchUpdatesTables();
+    list = rsp;
+    for (var element in list) {
+      DateTime a = DateTime.parse(element['date']);
+      dtime = DateFormat("yyyy-MM-dd").format(a);
+
+      if (element['tb_categ'] == 'TRANSACTIONS') {
+        if (dtime == today) {
+          upTrans = true;
+        } else {
+          upTrans = false;
+        }
+        DateTime x = DateTime.parse(element['date'].toString());
+        transLastUp = DateFormat("MMM. d, y").format(x);
+      }
+      if (element['tb_categ'] == 'ITEM') {
+        if (dtime == today) {
+          upItem = true;
+        } else {
+          upItem = false;
+        }
+        DateTime x = DateTime.parse(element['date'].toString());
+        itemLastUp = DateFormat("MMM. d, y").format(x);
+      }
+      if (element['tb_categ'] == 'CUSTOMER') {
+        if (dtime == today) {
+          upCust = true;
+        } else {
+          upCust = false;
+        }
+        DateTime x = DateTime.parse(element['date'].toString());
+        custLastUp = DateFormat("MMM. d, y").format(x);
+      }
+      if (element['tb_categ'] == 'BALANCE') {
+        if (dtime == today) {
+          upSm = true;
+        } else {
+          upSm = false;
+        }
+        DateTime x = DateTime.parse(element['date'].toString());
+        smLastUp = DateFormat("MMM. d, y").format(x);
+      }
+    }
   }
 
   loadForUpload() async {
@@ -237,6 +290,19 @@ class _SyncPageState extends State<SyncPage> {
     }
   }
 
+  // checkSpinkit() {
+  //   if (GlobalVariables.updateSpinkit == true) {
+  //     Navigator.pop(context);
+  //     GlobalVariables.updateSpinkit = false;
+
+  //     print('SUCCESSFULLY UPDATED!');
+  //     showDialog(
+  //         barrierDismissible: false,
+  //         context: context,
+  //         builder: (context) => UpdatedSuccessfully());
+  //   }
+  // }
+
   updateChequeData() async {
     List _list = [];
     List res = [];
@@ -335,10 +401,11 @@ class _SyncPageState extends State<SyncPage> {
   }
 
   getCashLedger() async {
+    List temp = [];
     var rsp = await db.getCashLedger(UserData.id);
     if (!mounted) return;
     setState(() {
-      _cash = json.decode(json.encode(rsp));
+      temp = json.decode(json.encode(rsp));
       // print(_cash);
     });
   }
@@ -398,10 +465,11 @@ class _SyncPageState extends State<SyncPage> {
           _lineList.clear();
           var res =
               await db.changeRemittanceFlag(UserData.id, rsp, 'Posted', '1');
-          if (res != null && _list.isEmpty) {
-            setState(() {
-              Navigator.pop(context);
-            });
+          if (res != null && x == _list.length) {
+            Navigator.pop(context);
+          } else {
+            print(res);
+            print('NNISUD');
           }
         }
       }
@@ -1337,15 +1405,14 @@ class _SyncPageState extends State<SyncPage> {
                                     onTap: () {
                                       if (!NetworkData.errorMsgShow) {
                                         //print('SALESMAN MASTERFILE CLICKED!');
-                                        GlobalVariables.updateType =
-                                            'Salesman Masterfile';
+                                        GlobalVariables.updateType = 'Balance';
                                         showDialog(
                                             context: context,
                                             builder: (context) =>
                                                 const ConfirmDialog(
                                                   title: 'Confirmation',
                                                   description:
-                                                      'Are you sure you want to update salesman masterfile?',
+                                                      'Are you sure you want to update balance?',
                                                   buttonText: 'Confirm',
                                                 ));
                                       } else {
@@ -1434,13 +1501,14 @@ class _SyncPageState extends State<SyncPage> {
                                                       MainAxisAlignment.start,
                                                   children: const <Widget>[
                                                     Icon(
-                                                      Icons.local_shipping,
+                                                      Icons
+                                                          .account_balance_wallet,
                                                       size: 50,
                                                       color: Colors.white,
                                                     ),
                                                     SizedBox(width: 10),
                                                     Text(
-                                                      'Salesman',
+                                                      'Balance',
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight:
@@ -1668,7 +1736,7 @@ class _SyncPageState extends State<SyncPage> {
                                     fontColor = Colors.green.shade300;
                                   }
                                   if (_updateLog[index]['tb_categ'] ==
-                                      'Salesman Masterfile') {
+                                      'Balance') {
                                     // contColor = Colors.purple[300];
                                     fontColor = Colors.purple.shade300;
                                   }
