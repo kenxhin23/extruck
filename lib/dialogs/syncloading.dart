@@ -575,6 +575,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
     Provider.of<SyncCaption>(context, listen: false)
         .changeCap('Updating Discounts...');
     var rsp = await db.getDiscountList(context);
+    print(rsp);
     list = rsp;
     if (list.isNotEmpty) {
       await db.deleteTable('tb_principal_discount');
@@ -973,62 +974,69 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
   loadingContent(BuildContext context) {
     return Stack(
       children: <Widget>[
+
         Container(
-            // width: MediaQuery.of(context).size.width,
-            padding:
-                const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
+          // width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
                 color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Colors.transparent,
-                    // blurRadius: 10.0,
-                    // offset: Offset(0.0, 10.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  // color: Colors.white,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.transparent,
-                          // blurRadius: 10.0,
-                          // offset: Offset(0.0, 10.0),
-                        ),
-                      ]),
-                  child: Column(
-                    children: [
-                      Text(
-                        context.watch<SyncCaption>().cap,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
+                // blurRadius: 10.0,
+                // offset: Offset(0.0, 10.0),
+              ),
+            ]
+          ),
+
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+
+              Container(
+                padding: const EdgeInsets.all(10),
+                // color: Colors.white,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.circular(10),
+                    // ignore: prefer_const_literals_to_create_immutables
+                    boxShadow: [
+                      const BoxShadow(
+                        color: Colors.transparent,
+                        // blurRadius: 10.0,
+                        // offset: Offset(0.0, 10.0),
                       ),
-                      const SizedBox(height: 10),
-                      const LinearProgressIndicator(),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
-                )
-                // SpinKitCircle(
-                //   controller: animationController,
-                //   color: Colors.yellowAccent,
-                // ),
-              ],
-            )),
+                    ]),
+                child: Column(
+                  children: [
+
+                    Text(
+                      context.watch<SyncCaption>().cap,
+                      style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black),
+                    ),
+                    const SizedBox(height: 10),
+                    const LinearProgressIndicator(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+
+              // SpinKitCircle(
+              //   controller: animationController,
+              //   color: Colors.yellowAccent,
+              // ),
+
+            ],
+          ),
+        ),
       ],
     );
   }

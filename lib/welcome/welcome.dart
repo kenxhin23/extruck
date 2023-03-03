@@ -26,6 +26,7 @@ import 'package:retry/retry.dart';
 import 'package:http/http.dart' as http;
 import '../db/db_helper.dart';
 import '../url/url.dart';
+import 'menu.dart';
 
 class WelcomePage extends StatefulWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -960,6 +961,7 @@ class _WelcomePageState extends State<WelcomePage> {
       // ignore: use_build_context_synchronously
       var resp = await db.getDiscountList(context);
       discountList = resp;
+      print(resp);
       int x = 1;
       // ignore: unused_local_variable
       for (var element in discountList) {

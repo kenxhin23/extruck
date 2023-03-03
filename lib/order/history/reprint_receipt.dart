@@ -50,10 +50,111 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
     String? isConnected = await BluetoothThermalPrinter.connectionStatus;
     if (isConnected == "true") {
       PrinterData.connected = true;
-      List<int> bytes = await getTicket();
-      final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      // List<int> bytes = await getTicket();
+      // final result = await BluetoothThermalPrinter.writeBytes(bytes);
+
+
+      String top =
+
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL130~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+          "^DFE:TEMPLATE.ZPL^FS"
+          "^CF0,23"
+          "^FO20,50^FDDATE : ^FS"
+          "^FO110,50^FN1^FS"
+          "^XZ"
+
+          "^XA"
+          "^XFE:TEMPLATE.ZPL^FS"
+          "^FN1^FD${nDate.toString()}^FS"
+          "^PQ1"
+          "^FO20,70^FDAccount Code :^FS"
+          "^FO200,70^FD${CustomerData.accountCode}^FS"
+          "^FO20,90^FDAccount Name : ^FS"
+          "^FO200,90^FD${CustomerData.accountName}^FS"
+          "^FO20,110^FDSalesman : ^FS"
+          "^FO200,110^FD${UserData.firstname} ${UserData.lastname}^FS"
+          "^XZ"
+      ;
+      await BluetoothThermalPrinter.writeText(top);
+
+      String desc =
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL50~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+          "^FO20,5^GB530,3,3^FS"
+          "^CF0,24"
+          "^FO20,15^FDDESCRIPTION^FS"
+          "^FO460,15^FDAMOUNT^FS"
+          "^FO20,40^GB530,3,3^FS"
+          "^XZ"
+      ;
+
+      await BluetoothThermalPrinter.writeText(desc);
+
+      for (var i = 0; i < widget.data.length; i++){
+        String items =
+
+            "~CT~~CD,~CC^~CT~"
+            "^XA^LL60~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+            "^XA"
+            "^CFA,14"
+            "^FO20,5^FB450,15,3,L^FD${widget.data[i]['item_desc']}^FS"
+            "^FO20,25^FB450,15,3,L^FD${widget.data[i]['qty']} ${widget.data[i]['uom']} @ ${widget.data[i]['amt']}^FS"
+            "^FO470,5^FD${widget.data[i]['tot_amt']}^FS"
+
+            "^XZ"
+        ;
+
+        await BluetoothThermalPrinter.writeText(items);
+      }
+
+      String bottom =
+
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL500~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+
+          "^FO20,5^GB530,3,3^FS"
+          "^CF0,20"
+          "^FO20,25^FDTotal :^FS"
+          "^FO470,25^FD${formatCurrencyAmt.format(double.parse(CartData.totalAmount))}^FS"
+          "^FO20,45^FDNo. of Items :^FS"
+          "^FO470,45^FD${CartData.itmNo}^FS"
+          "^FO20,65^FDNo. of Lines :^FS"
+          "^FO470,65^FD${CartData.itmLineNo}^FS"
+          "^FO20,85^FDVat Amount :^FS"
+          "^FO470,85^FD${formatCurrencyAmt.format(double.parse(vat))}^FS"
+          "^FO20,105^FDTotal Sales :^FS"
+          "^FO470,105^FD${formatCurrencyAmt.format(totalSales)}^FS"
+          "^FO20,125^FDTotal Discounted Amount :^FS"
+          "^FO470,125^FD${formatCurrencyAmt.format(double.parse(CartData.discAmt))}^FS"
+          "^FO20,145^FDTotal Amount Due :^FS"
+          "^FO470,145^FD${formatCurrencyAmt.format(double.parse(CartData.netAmount))}^FS"
+          "^FO20,165^FDSales Invoice # :^FS"
+          "^FO470,165^FD${ CartData.siNum}^FS"
+
+
+          "^FO20,185^GB530,3,3^FS"
+
+          "^CF0,19"
+          "^FO200,195^FDNO RETURNABLES/REFUND^FS"
+          "^FO20,240^FDReceived by:^FS"
+          "^FO150,255^GB350,2,2^FS"
+          "^FO200,260^FD(Signature over Printed Name)^FS"
+          "^FO220,245^BY4,2.0,60^BQN,2,7^FD${widget.ordNo}^FS"
+          "^FO210,460^FD${widget.ordNo}^FS"
+          "^XZ"
+      ;
+
+      await BluetoothThermalPrinter.writeText(bottom);
       if (kDebugMode) {
-        print("Print $result");
+        // print("Print $result");
       }
     } else {
       //Hadnle Not Connected Senario

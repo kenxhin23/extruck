@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import '../encrypt/enc.dart';
 import '../url/url.dart';
+// import 'package:package_info_plus/package_info_plus.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
@@ -5861,7 +5862,7 @@ class DatabaseHelper {
     String z = '0';
     var client = await db;
     return client.rawQuery(
-        'SELECT *, 0 as amt,false as discounted FROM xt_sm_load WHERE sm_code ="$code" AND item_qty!="$z" ORDER BY item_desc ASC',
+        'SELECT *, 0 as amt, false as discounted FROM xt_sm_load WHERE sm_code ="$code" AND item_qty!="$z" ORDER BY item_desc ASC',
         null);
   }
 

@@ -260,6 +260,7 @@ class _SyncOptionState extends State<SyncOption> {
                             viewDtpicker = true;
                           });
                         } else {
+
                           GlobalVariables.fullSync = false;
                           Navigator.pop(context);
                           if (!NetworkData.errorMsgShow) {

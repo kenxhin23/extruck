@@ -40,7 +40,7 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
 
   Future<void> getBluetooth() async {
     final List? bluetooths = await BluetoothThermalPrinter.getBluetooths;
-    // print("Print $bluetooths");
+    print("Print $bluetooths");
     setState(() {
       availableBluetoothDevices = bluetooths!;
     });
@@ -114,12 +114,15 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
           ),
           backgroundColor: ColorsTheme.mainColor,
         ),
+
+
         body: Container(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (PrinterData.connected)
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
@@ -136,7 +139,9 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                     )
                   ],
                 )
+
               else
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
@@ -153,13 +158,16 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                     )
                   ],
                 ),
+
               Expanded(
                 child: SizedBox(
                   // height: 200,
-                  child: ListView.builder(
-                    itemCount: availableBluetoothDevices.isNotEmpty
-                        ? availableBluetoothDevices.length
-                        : 0,
+                  child: RefreshIndicator(
+                    onRefresh: getBluetooth,
+                    child: ListView.builder(
+                  itemCount: availableBluetoothDevices.isNotEmpty
+                  ? availableBluetoothDevices.length
+                    : 0,
                     itemBuilder: (context, index) {
                       bool con = false;
                       if (PrinterData.mac == '') {}
@@ -176,14 +184,16 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                         title: Text('${availableBluetoothDevices[index]}'),
                         subtitle: !con
                             ? const Text('Click to connect')
-                            // ignore: dead_code
+                        // ignore: dead_code
                             : const Text(
-                                'Connected',
-                                style: TextStyle(color: Colors.green),
-                              ),
+                          'Connected',
+                          style: TextStyle(color: Colors.green),
+                        ),
                       );
                     },
                   ),
+                  )
+
                 ),
               ),
               Row(

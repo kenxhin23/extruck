@@ -205,33 +205,36 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                   Expanded(
                     child: SizedBox(
                       // height: 200,
-                      child: ListView.builder(
-                        itemCount: availableBluetoothDevices.isNotEmpty
-                            ? availableBluetoothDevices.length
-                            : 0,
-                        itemBuilder: (context, index) {
-                          bool con = false;
-                          if (PrinterData.mac == '') {}
-                          return ListTile(
-                            onTap: () {
-                              String select = availableBluetoothDevices[index];
-                              List list = select.split("#");
-                              // String name = list[0];
-                              String mac = list[1];
-                              // print(mac);
-                              setConnect(mac);
-                            },
-                            leading: const Icon(Icons.print),
-                            title: Text('${availableBluetoothDevices[index]}'),
-                            subtitle: !con
-                                ? const Text('Click to connect')
-                                // ignore: dead_code
-                                : const Text(
-                                    'Connected',
-                                    style: TextStyle(color: Colors.green),
-                                  ),
-                          );
-                        },
+                      child: RefreshIndicator(
+                        onRefresh: getBluetooth,
+                        child: ListView.builder(
+                          itemCount: availableBluetoothDevices.isNotEmpty
+                              ? availableBluetoothDevices.length
+                              : 0,
+                          itemBuilder: (context, index) {
+                            bool con = false;
+                            if (PrinterData.mac == '') {}
+                            return ListTile(
+                              onTap: () {
+                                String select = availableBluetoothDevices[index];
+                                List list = select.split("#");
+                                // String name = list[0];
+                                String mac = list[1];
+                                // print(mac);
+                                setConnect(mac);
+                              },
+                              leading: const Icon(Icons.print),
+                              title: Text('${availableBluetoothDevices[index]}'),
+                              subtitle: !con
+                                  ? const Text('Click to connect')
+                              // ignore: dead_code
+                                  : const Text(
+                                'Connected',
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),

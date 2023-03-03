@@ -454,7 +454,9 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                 ],
               ),
             );
-          })),
+          }
+        ),
+      ),
     );
   }
 }

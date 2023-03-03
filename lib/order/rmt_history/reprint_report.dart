@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-
+import 'dart:convert';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:extruck/session/session_timer.dart';
@@ -57,10 +57,129 @@ class _ReprintReportState extends State<ReprintReport> {
     String? isConnected = await BluetoothThermalPrinter.connectionStatus;
     if (isConnected == "true") {
       PrinterData.connected = true;
-      List<int> bytes = await getTicket();
-      final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      // List<int> bytes = await getTicket();
+      //
+      // final result = await BluetoothThermalPrinter.writeBytes(bytes);
+
+      String top =
+
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL110~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+          "^DFE:TEMPLATE.ZPL^FS"
+          "^CF0,23"
+          "^FO20,50^FDDATE : ^FS"
+          "^FO110,50^FN1^FS"
+          "^XZ"
+
+          "^XA"
+          "^XFE:TEMPLATE.ZPL^FS"
+          "^FN1^FD${nDate.toString()}^FS"
+          "^PQ1"
+          "^FO20,70^FDRemittance No. :^FS"
+          "^FO200,70^FD${widget.rmtNo}^FS"
+          "^FO20,90^FDSalesman         : ^FS"
+          "^FO200,90^FD${UserData.firstname} ${UserData.lastname}^FS"
+          "^XZ"
+      ;
+      await BluetoothThermalPrinter.writeText(top);
+
+      String desc =
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL50~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+          "^FO20,5^GB530,3,3^FS"
+          "^CF0,24"
+          "^FO20,15^FDDESCRIPTION^FS"
+          "^FO460,15^FDAMOUNT^FS"
+          "^FO20,40^GB530,3,3^FS"
+          "^XZ"
+      ;
+
+      await BluetoothThermalPrinter.writeText(desc);
+
+      for (var i = 0; i < widget.data.length; i++){
+        if (widget.data[i]['tran_type'] == 'BO') {
+          viewBo = true;
+          print('BO TRUE');
+          String items =
+
+              "~CT~~CD,~CC^~CT~"
+              "^XA^LL60~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+              "^XA"
+              "^CFA,14"
+              "^FO20,5^FB450,15,3,L^FDSI #${widget.data[i]['si_no']} - #${widget.data[i]['order_no']}^FS"
+              "^FO20,25^FB450,15,3,L^FD${widget.data[i]['store_name']} (Bo Refund) @ ${widget.data[i]['item_count']}^FS"
+              "^FO470,5^FD${widget.data[i]['net_amt']}^FS"
+
+              "^XZ"
+          ;
+
+          await BluetoothThermalPrinter.writeText(items);
+        } else {
+          viewBo = false;
+          print('BO FALSE');
+          String items =
+
+              "~CT~~CD,~CC^~CT~"
+              "^XA^LL60~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+              "^XA"
+              "^CFA,14"
+              "^FO20,5^FB450,15,3,L^FDSI #${widget.data[i]['si_no']} - #${widget.data[i]['order_no']}^FS"
+              "^FO20,25^FB450,15,3,L^FD${widget.data[i]['store_name']} (${widget.data[i]['pmeth_type']}) @ ${widget.data[i]['item_count']}^FS"
+              "^FO470,5^FD${widget.data[i]['net_amt']}^FS"
+
+              "^XZ"
+          ;
+
+          await BluetoothThermalPrinter.writeText(items);
+        }
+
+
+      }
+
+      String bottom =
+
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL500~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+
+          "^XA"
+
+          "^FO20,5^GB530,3,3^FS"
+          "^CF0,20"
+          "^FO20,25^FDOrder Amount Total :^FS"
+          "^FO470,25^FD${formatCurrencyAmt.format(double.parse(widget.totAmt))}^FS"
+          "^FO20,45^FDDiscount Total :^FS"
+          "^FO470,45^FD${formatCurrencyAmt.format(double.parse(widget.totDisc))}^FS"
+          "^FO20,65^FDBOAmount Total :^FS"
+          "^FO470,65^FD${formatCurrencyAmt.format(double.parse(widget.boAmt))}^FS"
+          "^FO20,85^FDSatellite Warehouse Request :^FS"
+          "^FO470,85^FD${formatCurrencyAmt.format(double.parse(widget.satWh))}^FS"
+          "^FO20,105^FDNo. of Orders :^FS"
+          "^FO470,105^FD${widget.ordCount}^FS"
+          "^FO20,125^FDTotal Sales Amount :^FS"
+          "^FO470,125^FD${formatCurrencyAmt.format(netAmount)}^FS"
+          "^FO20,150^GB530,3,3^FS"
+
+          "^CF0,19"
+          "^FO200,165^FDNO RETURNABLES/REFUND^FS"
+          "^FO20,220^FDReceived by:^FS"
+          "^FO150,235^GB350,2,2^FS"
+          "^FO200,245^FD(Signature over Printed Name)^FS"
+          "^FO220,245^BY4,2.0,60^BQN,2,7^FD${widget.rmtNo}^FS"
+          "^FO210,460^FD${widget.rmtNo}^FS"
+          "^XZ"
+      ;
+
+      await BluetoothThermalPrinter.writeText(bottom);
+
+
       if (kDebugMode) {
-        print("Print $result");
+        // print("Print $result");
       }
     } else {
       //Hadnle Not Connected Senario
@@ -79,8 +198,8 @@ class _ReprintReportState extends State<ReprintReport> {
     final Uint8List byt = data.buffer.asUint8List();
     final Image? image = decodeImage(byt);
 
-    // bytes += generator.image(image!);
     bytes += generator.image(image!);
+    // bytes += generator.image(image!);
     // bytes += generator.text('DATE: $date',
     //     styles: const PosStyles(align: PosAlign.right));
     bytes += generator.row([
@@ -129,10 +248,10 @@ class _ReprintReportState extends State<ReprintReport> {
     for (var i = 0; i < widget.data.length; i++) {
       if (widget.data[i]['tran_type'] == 'BO') {
         viewBo = true;
-        // print('BO TRUE');
+        print('BO TRUE');
       } else {
         viewBo = false;
-        // print('BO FALSE');
+        print('BO FALSE');
       }
       bytes += generator.text(
           'SI #${widget.data[i]['si_no']} - #${widget.data[i]['order_no']}',
@@ -285,6 +404,9 @@ class _ReprintReportState extends State<ReprintReport> {
         styles: const PosStyles(align: PosAlign.right));
     bytes += generator.hr(ch: ' ', linesAfter: 1);
     bytes += generator.cut();
+
+
+    print(widget.rmtNo);
     return bytes;
   }
 
