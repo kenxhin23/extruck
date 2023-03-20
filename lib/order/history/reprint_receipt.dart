@@ -116,7 +116,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
       String bottom =
 
           "~CT~~CD,~CC^~CT~"
-          "^XA^LL500~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+          "^XA^LL550~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
 
           "^XA"
 
@@ -147,8 +147,8 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
           "^FO20,240^FDReceived by:^FS"
           "^FO150,255^GB350,2,2^FS"
           "^FO200,260^FD(Signature over Printed Name)^FS"
-          "^FO220,245^BY4,2.0,60^BQN,2,7^FD${widget.ordNo}^FS"
-          "^FO210,460^FD${widget.ordNo}^FS"
+          "^FO210,245^BY4,2.0,60^BQN,2,7^FDQA,${widget.ordNo}^FS"
+          "^FO210,490^FD${widget.ordNo}^FS"
           "^XZ"
       ;
 

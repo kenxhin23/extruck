@@ -5870,7 +5870,7 @@ class DatabaseHelper {
     String z = '0';
     var client = await db;
     return client.rawQuery(
-        'SELECT * FROM xt_sm_load WHERE sm_code ="$code" AND item_qty!="$z" AND conv_qty!="1" ORDER BY item_desc ASC',
+        'SELECT * FROM xt_sm_load WHERE sm_code ="$code" AND item_qty != "$z" AND conv_qty != "1" ORDER BY item_desc ASC',
         null);
   }
 

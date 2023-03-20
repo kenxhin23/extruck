@@ -239,7 +239,7 @@ class _StockConversionState extends State<StockConversion> {
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Text(
-                'Stock Conversion',
+                'Stock Conversions',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
