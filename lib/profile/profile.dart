@@ -45,14 +45,14 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          handleUserInteraction();
-        },
-        onPanDown: (details) {
-          handleUserInteraction();
-        },
-        child: Scaffold(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        handleUserInteraction();
+      },
+      onPanDown: (details) {
+        handleUserInteraction();
+      },
+      child: Scaffold(
           appBar: AppBar(
             // toolbarHeight: 85,
             toolbarHeight: ScreenData.scrHeight * .19,
@@ -63,13 +63,13 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               // mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  "Profile",
+                const Text("Profile",
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 45,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.white,
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 // SizedBox(height: 5),
                 Row(
@@ -94,8 +94,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             avatarType: AvatarType.CIRCLE,
                             backgroundColor: Colors.black,
                             imagePath: NetworkData.connected
-                                ? UrlAddress.userImg + UserData.img!
-                                : UserData.imgPath!,
+                              ? UrlAddress.userImg + UserData.img!
+                              : UserData.imgPath!,
                             placeHolder: const Icon(
                               Icons.person,
                               size: 50,
@@ -111,15 +111,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "${UserData.firstname!} ${UserData.lastname!}",
+                              Text("${UserData.firstname!} ${UserData.lastname!}",
                               ),
-                              Text(
-                                UserData.position!,
+                              Text(UserData.position!,
                                 style: const TextStyle(fontSize: 12),
                               )
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -127,22 +125,23 @@ class _ProfilePageState extends State<ProfilePage> {
                       onTap: () {
                         if (NetworkData.connected == true) {
                           showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) => const ProfileInfo());
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => const ProfileInfo(),
+                          );
                         } else {
                           showGlobalSnackbar(
-                              'Connectivity',
-                              'Please connect to internet.',
-                              Colors.red.shade900,
-                              Colors.white);
+                            'Connectivity',
+                            'Please connect to internet.',
+                            Colors.red.shade900,
+                            Colors.white,
+                          );
                         }
                       },
                       child: Column(
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          const Text(
-                            'Edit',
+                          const Text('Edit',
                             style: TextStyle(fontSize: 10),
                           ),
                           const Icon(
@@ -151,7 +150,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 )
               ],
@@ -165,13 +164,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: MediaQuery.of(context).size.height,
                   width: MediaQuery.of(context).size.width,
                   padding: const EdgeInsets.only(
-                      left: 0, right: 0, top: 0, bottom: 0),
+                    left: 0, right: 0, top: 0, bottom: 0),
                   decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(30),
-                        topRight: Radius.circular(30),
-                      )),
+                    color: Colors.grey[100],
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
                   child: Column(
                     children: [
                       const SizedBox(
@@ -192,8 +192,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       const SizedBox(height: 30),
                       buildVersionUp(context),
                       Visibility(
-                          visible: !AppData.appUptodate,
-                          child: buildUpdateButton(context)),
+                        visible: !AppData.appUptodate,
+                        child: buildUpdateButton(context)),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: SizedBox(
@@ -204,13 +204,12 @@ class _ProfilePageState extends State<ProfilePage> {
                               const SizedBox(
                                 height: 5,
                               ),
-                              Text(
-                                'E-COMMERCE(MY NETGOSYO APP)'
-                                ' COPYRIGHT 2020',
+                              Text('E-COMMERCE(MY NETGOSYO APP)'' COPYRIGHT 2020',
                                 style: TextStyle(
-                                    color: Colors.grey[700],
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold),
+                                  color: Colors.grey[700],
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           ),
@@ -222,7 +221,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-        ));
+        ),
+    );
   }
 
   Container buildChangePass(BuildContext context) {
@@ -235,12 +235,14 @@ class _ProfilePageState extends State<ProfilePage> {
         onTap: () async {
           if (NetworkData.connected == true) {
             showDialog(
-                barrierDismissible: false,
-                context: context,
-                builder: (context) => const InputPassDialog());
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => const InputPassDialog(),
+            );
           } else {
             showGlobalSnackbar('Connectivity', 'Please connect to internet.',
-                Colors.red.shade900, Colors.white);
+              Colors.red.shade900, Colors.white,
+            );
           }
         },
         child: Row(
@@ -254,8 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Expanded(
-              child: Text(
-                'Change Password',
+              child: Text('Change Password',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -265,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const Icon(
               Icons.chevron_right,
               color: Colors.grey,
-            )
+            ),
           ],
         ),
       ),
@@ -284,10 +285,12 @@ class _ProfilePageState extends State<ProfilePage> {
           //   return ViewNotice();
           // }));
           Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const ViewNotice()));
+            context,
+            PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: const ViewNotice(),
+            ),
+          );
         },
         child: Row(
           children: [
@@ -300,8 +303,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Expanded(
-              child: Text(
-                'Privacy Notice',
+              child: Text('Privacy Notice',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -311,7 +313,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const Icon(
               Icons.chevron_right,
               color: Colors.grey,
-            )
+            ),
           ],
         ),
       ),
@@ -327,10 +329,10 @@ class _ProfilePageState extends State<ProfilePage> {
       child: InkWell(
         onTap: () async {
           Navigator.push(
-              context,
-              PageTransition(
-                  type: PageTransitionType.rightToLeft,
-                  child: const ViewSettings()));
+            context,
+            PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: const ViewSettings()));
         },
         child: Row(
           children: [
@@ -343,8 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             Expanded(
-              child: Text(
-                'Settings',
+              child: Text('Settings',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -369,24 +370,24 @@ class _ProfilePageState extends State<ProfilePage> {
       color: Colors.white,
       child: InkWell(
         onTap: () async {
-          final action = await Dialogs.openDialog(context, 'Confirmation',
-              'Are you sure you want to logout?', true, 'No', 'Yes');
+          final action = await Dialogs.openDialog(context, 'Confirmation', 'Are you sure you want to logout?', true, 'No', 'Yes');
           if (action == DialogAction.yes) {
             GlobalVariables.menuKey = 0;
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/splash', (Route<dynamic> route) => false);
+              '/splash', (Route<dynamic> route) => false,
+            );
           }
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'LOGOUT',
+            Text('LOGOUT',
               style: TextStyle(
-                  color: ColorsTheme.mainColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
+                color: ColorsTheme.mainColor,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ],
         ),
@@ -405,44 +406,40 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           Column(
             children: [
-              Text(
-                'Version: ${AppData.appVersion!}',
+              Text('Version: ${AppData.appVersion!}',
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 12,
                 ),
               ),
               checking
-                  ? Row(
-                      children: [
-                        Text(
-                          'Checking for new updates ',
-                          style: TextStyle(
-                            color: ColorsTheme.mainColor,
-                            fontSize: 12,
-                          ),
-                        ),
-                        SpinKitCircle(
-                          color: ColorsTheme.mainColor,
-                          size: 18,
-                        ),
-                      ],
-                    )
-                  : AppData.appUptodate
-                      ? Text(
-                          'You are on latest version',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 12,
-                          ),
-                        )
-                      : Text(
-                          'A new update is available',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                            fontSize: 12,
-                          ),
-                        )
+            ? Row(
+                children: [
+                  Text('Checking for new updates ',
+                    style: TextStyle(
+                      color: ColorsTheme.mainColor,
+                      fontSize: 12,
+                    ),
+                  ),
+                  SpinKitCircle(
+                    color: ColorsTheme.mainColor,
+                    size: 18,
+                  ),
+                ],
+              )
+            : AppData.appUptodate
+            ? Text('You are on latest version',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              )
+            : Text('A new update is available',
+                style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              ),
             ],
           ),
         ],
@@ -465,11 +462,10 @@ class _ProfilePageState extends State<ProfilePage> {
             onPressed: () {
               _launchURL(Uri.parse(UrlAddress.appLink));
             },
-            child: const Text(
-              'Update',
+            child: const Text('Update',
               style: TextStyle(fontSize: 12),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -36,8 +36,7 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
   // BluetoothPrint bluetoothPrint = BluetoothPrint.instance;
   // List<BluetoothDevice> _devices = [];
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
-  final formatCurrencyTot =
-      NumberFormat.currency(locale: "en_US", symbol: "Php ");
+  final formatCurrencyTot = NumberFormat.currency(locale: "en_US", symbol: "Php ");
 
   @override
   void initState() {
@@ -120,16 +119,14 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                   const Expanded(
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Select Printer',
+                      child: Text('Select Printer',
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () async {
-                      String msg =
-                          'Are you sure you want to skip printing report?';
+                      String msg = 'Are you sure you want to skip printing report?';
                       // ignore: use_build_context_synchronously
                       final action = await WarningDialogs.openDialog(
                         context,
@@ -147,15 +144,15 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                     child: Row(
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        const Text(
-                          'SKIP',
+                        const Text('SKIP',
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 14),
+                            fontWeight: FontWeight.w500, fontSize: 14,
+                          ),
                         ),
                         const Icon(
                           Icons.skip_next,
                           color: Colors.white,
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -173,16 +170,16 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        const Text(
-                          'Connected',
+                        const Text('Connected',
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.green),
+                            fontWeight: FontWeight.w500, color: Colors.green,
+                          ),
                         ),
                         const SizedBox(width: 10),
                         const Icon(
                           Icons.check_circle_outline_outlined,
                           color: Colors.green,
-                        )
+                        ),
                       ],
                     )
                   else
@@ -190,10 +187,10 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       // ignore: prefer_const_literals_to_create_immutables
                       children: [
-                        const Text(
-                          'No Printer Connected',
+                        const Text('No Printer Connected',
                           style: TextStyle(
-                              fontWeight: FontWeight.w500, color: Colors.red),
+                            fontWeight: FontWeight.w500, color: Colors.red,
+                          ),
                         ),
                         const SizedBox(width: 10),
                         const Icon(
@@ -226,9 +223,9 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                               leading: const Icon(Icons.print),
                               title: Text('${availableBluetoothDevices[index]}'),
                               subtitle: !con
-                                  ? const Text('Click to connect')
+                                ? const Text('Click to connect')
                               // ignore: dead_code
-                                  : const Text(
+                                : const Text(
                                 'Connected',
                                 style: TextStyle(color: Colors.green),
                               ),
@@ -250,22 +247,25 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                             onPressed: () async {
                               if (PrinterData.connected) {
                                 Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.rightToLeft,
-                                        child: PrintReport(
-                                            widget.data,
-                                            widget.ord,
-                                            widget.bo,
-                                            widget.ordTot,
-                                            widget.boTot,
-                                            widget.rmtNo,
-                                            widget.ordCount,
-                                            widget.totAmt,
-                                            widget.totDisc,
-                                            widget.satWh,
-                                            widget.totNet,
-                                            true)));
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: PrintReport(
+                                      widget.data,
+                                      widget.ord,
+                                      widget.bo,
+                                      widget.ordTot,
+                                      widget.boTot,
+                                      widget.rmtNo,
+                                      widget.ordCount,
+                                      widget.totAmt,
+                                      widget.totDisc,
+                                      widget.satWh,
+                                      widget.totNet,
+                                      true,
+                                    ),
+                                  ),
+                                );
                               }
                             },
                             child: Row(
@@ -273,8 +273,7 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                               mainAxisSize: MainAxisSize.min,
                               // ignore: prefer_const_literals_to_create_immutables
                               children: [
-                                const Text(
-                                  "CONTINUE TO PREVIEW",
+                                const Text("CONTINUE TO PREVIEW",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,

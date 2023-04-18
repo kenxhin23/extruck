@@ -60,10 +60,8 @@ class _AddDialogState extends State<AddDialog> {
 
   totalchanged() {
     CartData.totalAmount =
-        (double.parse(CartData.totalAmount) + double.parse(CartData.itmTotal))
-            .toStringAsFixed(2);
-    CartData.itmNo =
-        (int.parse(CartData.itmNo) + int.parse(CartData.itmQty)).toString();
+        (double.parse(CartData.totalAmount) + double.parse(CartData.itmTotal)).toStringAsFixed(2);
+    CartData.itmNo = (int.parse(CartData.itmNo) + int.parse(CartData.itmQty)).toString();
   }
 
   @override
@@ -117,21 +115,21 @@ class _AddDialogState extends State<AddDialog> {
           children: <Widget>[
             Container(
               // color: Colors.grey,
-              padding:
-                  const EdgeInsets.only(top: 60, bottom: 16, right: 5, left: 5),
+              padding: const EdgeInsets.only(top: 60, bottom: 16, right: 5, left: 5),
               margin: const EdgeInsets.only(top: 100),
               decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(20),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  boxShadow: [
-                    const BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 10.0,
-                      offset: Offset(0.0, 10.0),
-                    ),
-                  ]),
+                color: Colors.grey[50],
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.circular(20),
+                // ignore: prefer_const_literals_to_create_immutables
+                boxShadow: [
+                  const BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 10.0,
+                    offset: Offset(0.0, 10.0),
+                  ),
+                ],
+              ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -153,8 +151,8 @@ class _AddDialogState extends State<AddDialog> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: GlobalVariables.outofStock
-                                  ? Colors.grey
-                                  : Colors.black,
+                                ? Colors.grey
+                                : Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -169,9 +167,7 @@ class _AddDialogState extends State<AddDialog> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(
-                                formatCurrencyAmt
-                                    .format(double.parse(CartData.itmAmt!)),
+                              Text(formatCurrencyAmt.format(double.parse(CartData.itmAmt!)),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -184,15 +180,15 @@ class _AddDialogState extends State<AddDialog> {
                               ),
                               Text(
                                 CartData.itmUom.toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 14),
-                              )
+                                style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                              ),
                             ],
                           ),
                         ),
                         const SizedBox(
                           height: 5,
                         ),
+
                         // Container(
                         //   margin: const EdgeInsets.only(left: 20, right: 20),
                         //   width: MediaQuery.of(context).size.width / 2,
@@ -230,11 +226,11 @@ class _AddDialogState extends State<AddDialog> {
                         const SizedBox(
                           height: 10,
                         ),
+
                         Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
                           width: MediaQuery.of(context).size.width / 2,
-                          child: const Text(
-                            'Quantity',
+                          child: const Text('Quantity',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -260,10 +256,7 @@ class _AddDialogState extends State<AddDialog> {
                                       int i = 0;
                                       i = int.parse(CartData.itmQty) - 1;
                                       CartData.itmQty = i.toString();
-                                      CartData.itmTotal =
-                                          (double.parse(CartData.itmAmt!) *
-                                                  double.parse(CartData.itmQty))
-                                              .toString();
+                                      CartData.itmTotal = (double.parse(CartData.itmAmt!) * double.parse(CartData.itmQty)).toString();
                                       // print(CartData.itmTotal);
                                       qtyController.text = CartData.itmQty;
                                     }
@@ -294,18 +287,14 @@ class _AddDialogState extends State<AddDialog> {
                                         qtyController.text = '100';
                                         CartData.itmQty = '100';
                                       }
-                                      CartData.itmTotal =
-                                          (double.parse(CartData.itmAmt!) *
-                                                  double.parse(CartData.itmQty))
-                                              .toStringAsFixed(2);
+                                      CartData.itmTotal = (double.parse(CartData.itmAmt!) * double.parse(CartData.itmQty)).toStringAsFixed(2);
                                       // print(CartData.itmTotal);
                                     });
                                   },
-                                  onTap: () => qtyController.selection =
-                                      TextSelection(
-                                          baseOffset: 0,
-                                          extentOffset:
-                                              qtyController.value.text.length),
+                                  onTap: () => qtyController.selection = TextSelection(
+                                    baseOffset: 0,
+                                    extentOffset: qtyController.value.text.length,
+                                  ),
                                 ),
                                 // child: Text(
                                 //   CartData.itmQty,
@@ -327,29 +316,26 @@ class _AddDialogState extends State<AddDialog> {
                                       qtyController.text = '100';
                                       CartData.itmQty = '100';
                                     } else {
-                                      if (int.parse(CartData.itmQty) >=
-                                          int.parse(widget.qty)) {
+                                      if (int.parse(CartData.itmQty) >= int.parse(widget.qty)) {
                                         showGlobalSnackbar(
-                                            'Information',
-                                            'Unable to add greater than requested.',
-                                            Colors.blue,
-                                            Colors.white);
+                                          'Information',
+                                          'Unable to add greater than requested.',
+                                          Colors.blue,
+                                          Colors.white,
+                                        );
                                       } else {
-                                        if (int.parse(CartData.itmQty) >=
-                                            int.parse(CartData.availableQty)) {
+                                        if (int.parse(CartData.itmQty) >= int.parse(CartData.availableQty)) {
                                           showGlobalSnackbar(
-                                              'Information',
-                                              'Limited stocks available.',
-                                              Colors.blue,
-                                              Colors.white);
+                                            'Information',
+                                            'Limited stocks available.',
+                                            Colors.blue,
+                                            Colors.white,
+                                          );
                                         } else {
                                           int i = 0;
                                           i = int.parse(CartData.itmQty) + 1;
                                           CartData.itmQty = i.toString();
-                                          CartData.itmTotal = (double.parse(
-                                                      CartData.itmAmt!) *
-                                                  int.parse(CartData.itmQty))
-                                              .toString();
+                                          CartData.itmTotal = (double.parse(CartData.itmAmt!) * int.parse(CartData.itmQty)).toString();
                                           qtyController.text = CartData.itmQty;
                                         }
                                       }
@@ -368,9 +354,11 @@ class _AddDialogState extends State<AddDialog> {
                       ],
                     ),
                   ),
+
                   const SizedBox(
                     height: 10,
                   ),
+
                   Container(
                     color: Colors.transparent,
                     // color: Colors.grey,
@@ -387,18 +375,20 @@ class _AddDialogState extends State<AddDialog> {
                                   int.parse(CartData.availableQty)) {
                                 // ignore: unused_local_variable
                                 final action = await WarningDialogs.openDialog(
-                                    context,
-                                    'Information',
-                                    'Stock not enough. Please adjust quantity.',
-                                    false,
-                                    'OK');
+                                  context,
+                                  'Information',
+                                  'Stock not enough. Please adjust quantity.',
+                                  false,
+                                  'OK',
+                                );
                               } else {
                                 if (int.parse(CartData.itmQty) <= 0) {
                                   showGlobalSnackbar(
-                                      'Information',
-                                      'Unable to add empty quantity!',
-                                      Colors.blue,
-                                      Colors.white);
+                                    'Information',
+                                    'Unable to add empty quantity!',
+                                    Colors.blue,
+                                    Colors.white,
+                                  );
                                 } else {
                                   // db.addOrdertoCart(
                                   //     UserData.id,
@@ -434,19 +424,21 @@ class _AddDialogState extends State<AddDialog> {
                                   }
 
                                   db.minusInventory(
-                                      UserData.id,
-                                      CartData.itmCode,
-                                      CartData.itmDesc,
-                                      CartData.itmUom,
-                                      CartData.itmQty);
+                                    UserData.id,
+                                    CartData.itmCode,
+                                    CartData.itmDesc,
+                                    CartData.itmUom,
+                                    CartData.itmQty,
+                                  );
 
                                   final action =
-                                      await WarningDialogs.openDialog(
-                                          context,
-                                          'Information',
-                                          'Item added to cart.',
-                                          false,
-                                          'OK');
+                                    await WarningDialogs.openDialog(
+                                      context,
+                                      'Information',
+                                      'Item added to cart.',
+                                      false,
+                                      'OK',
+                                    );
                                   if (action == DialogAction.yes) {
                                     // if (CartData.allProd == true) {
                                     //   setState(() {
@@ -466,8 +458,7 @@ class _AddDialogState extends State<AddDialog> {
                                 }
                               }
                             },
-                            child: const Text(
-                              'ADD TO CART',
+                            child: const Text('ADD TO CART',
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
@@ -484,26 +475,26 @@ class _AddDialogState extends State<AddDialog> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            if (GlobalVariables.viewImg)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: ColorsTheme.mainColor, width: 2),
-                ),
-                width: 180,
-                height: 150,
-                child: Image.file(File(imgPath! + CartData.imgpath!)),
-              )
-            else if (!GlobalVariables.viewImg)
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: ColorsTheme.mainColor, width: 2),
-                ),
-                width: 180,
-                height: 150,
-                child: Image(image: AssetsValues.noImageImg),
-              )
+          if (GlobalVariables.viewImg)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: ColorsTheme.mainColor, width: 2),
+              ),
+              width: 180,
+              height: 150,
+              child: Image.file(File(imgPath! + CartData.imgpath!)),
+            )
+          else if (!GlobalVariables.viewImg)
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: ColorsTheme.mainColor, width: 2),
+              ),
+              width: 180,
+              height: 150,
+              child: Image(image: AssetsValues.noImageImg),
+            ),
           ],
         ),
       ],

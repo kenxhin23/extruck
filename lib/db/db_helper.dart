@@ -1548,6 +1548,7 @@ class DatabaseHelper {
   //       null);
   //   return res;
   // }
+
   Future salesmanLogin(username, password) async {
     var client = await db;
     var emp = '';
@@ -5589,17 +5590,18 @@ class DatabaseHelper {
     var url = Uri.parse('${UrlAddress.url}/uploadconversion');
     // var passwordF = md5.convert(utf8.encode(password));
     final response = await retry(() => http.post(url, headers: {
-          "Accept": "Application/json"
-        }, body: {
-          'sm_code': encrypt(code),
-          'conv_no': encrypt(convNo),
-          'conv_date': encrypt(date),
-          'itmno': encrypt(itmNo),
-          'totAmt': encrypt(totAmt),
-          'item_qty': encrypt(itmQty),
-          'nitem_qty': encrypt(nitmQty),
-          'line': jsonEncode(list),
-        }));
+        "Accept": "Application/json"
+      }, body: {
+        'sm_code': encrypt(code),
+        'conv_no': encrypt(convNo),
+        'conv_date': encrypt(date),
+        'itmno': encrypt(itmNo),
+        'totAmt': encrypt(totAmt),
+        'item_qty': encrypt(itmQty),
+        'nitem_qty': encrypt(nitmQty),
+        'line': jsonEncode(list),
+      }
+    ));
     var convertedDatatoJson = jsonDecode(decrypt(response.body));
     return convertedDatatoJson;
   }

@@ -78,12 +78,13 @@ class _StockPageState extends State<StockPage> {
             showGlobalSnackbar('Connectivity', 'Please connect to internet.',
                 Colors.black, Colors.white);
           } else {
-            Navigator.push(
-                context,
-                PageTransition(
-                    // duration: const Duration(milliseconds: 100),
-                    type: PageTransitionType.rightToLeft,
-                    child: const StockRequest()));
+            Navigator.push(context,
+              PageTransition(
+                // duration: const Duration(milliseconds: 100),
+                type: PageTransitionType.rightToLeft,
+                child: const StockRequest(),
+              ),
+            );
           }
         },
         child: Container(
@@ -105,12 +106,12 @@ class _StockPageState extends State<StockPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Create new request',
+                    Text('Create new request',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -122,7 +123,7 @@ class _StockPageState extends State<StockPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -135,12 +136,13 @@ class _StockPageState extends State<StockPage> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const PendingRequests()));
+          Navigator.push(context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const PendingRequests(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -161,12 +163,12 @@ class _StockPageState extends State<StockPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Pending Requests',
+                    Text('Pending Requests',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -175,10 +177,7 @@ class _StockPageState extends State<StockPage> {
               const SizedBox(
                 width: 5,
               ),
-              (int.parse(Provider.of<PendingCounter>(context)
-                          .reqNo
-                          .toString()) ==
-                      0)
+              (int.parse(Provider.of<PendingCounter>(context).reqNo.toString()) == 0)
                   ? const SizedBox()
                   : Container(
                       // margin: EdgeInsets.only(top: 2),
@@ -192,9 +191,10 @@ class _StockPageState extends State<StockPage> {
                         // '2',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500),
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
               const Icon(
@@ -214,11 +214,13 @@ class _StockPageState extends State<StockPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const RequestHistory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const RequestHistory(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -239,12 +241,12 @@ class _StockPageState extends State<StockPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Request History',
+                    Text('Request History',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -256,7 +258,7 @@ class _StockPageState extends State<StockPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -270,11 +272,13 @@ class _StockPageState extends State<StockPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const OrderHistory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const OrderHistory(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -295,12 +299,12 @@ class _StockPageState extends State<StockPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Transfer',
+                    Text('Transfer',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -340,12 +344,12 @@ class _StockPageState extends State<StockPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 15),
-                Text(
-                  'View BO Reports',
+                Text('View BO Reports',
                   style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 15),
               ],

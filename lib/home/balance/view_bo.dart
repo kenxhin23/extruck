@@ -41,8 +41,7 @@ class _BoViewState extends State<BoView> {
       for (var element in pending) {
         String newDate = '';
         DateTime s = DateTime.parse(element['date'].toString());
-        newDate =
-            '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        newDate = '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
         element['date'] = newDate.toString();
         if (element['tran_type'] == 'BO') {
           _list.add(element);
@@ -70,8 +69,7 @@ class _BoViewState extends State<BoView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Pending BO Refund',
+          title: const Text('Pending BO Refund',
             style: TextStyle(fontSize: 16),
           ),
         ),

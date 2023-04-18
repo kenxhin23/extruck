@@ -259,13 +259,10 @@ class _StockConversionState extends State<StockConversion> {
             child: FloatingActionButton(
               onPressed: () {
                 //PADUNG SA ITEM LIST
-                Navigator.push(
-                        context,
-                        PageTransition(
-                            // duration: const Duration(milliseconds: 100),
-                            type: PageTransitionType.rightToLeft,
-                            child: const ConversionList()))
-                    .then((value) {
+                Navigator.push(context, PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: const ConversionList())).then((value) {
                   setState(() {
                     refreshList();
                   });
@@ -278,66 +275,70 @@ class _StockConversionState extends State<StockConversion> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(width: 0.2, color: Colors.black),
-                ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(width: 0.2, color: Colors.black),
               ),
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: ElevatedButton(
-                          style: _convList.isEmpty
-                              ? raisedButtonStyleGrey
-                              : raisedButtonStyleGreen,
-                          onPressed: () async {
-                            checkConversion();
-                            if (stopConvert) {
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                        style: _convList.isEmpty ? raisedButtonStyleGrey : raisedButtonStyleGreen,
+                        onPressed: () async {
+                          checkConversion();
+                          if (stopConvert) {
+                            showGlobalSnackbar(
+                              'Information',
+                              'Unable to convert. Conversion amount does not match!',
+                              Colors.grey,
+                              Colors.white,
+                            );
+                          } else {
+                            if (_convList.isEmpty) {
                               showGlobalSnackbar(
-                                  'Information',
-                                  'Unable to convert. Conversion amount does not match!',
-                                  Colors.grey,
-                                  Colors.white);
+                                'Information',
+                                'Unable to convert empty list!',
+                                Colors.grey,
+                                Colors.white,
+                              );
                             } else {
-                              if (_convList.isEmpty) {
-                                showGlobalSnackbar(
-                                    'Information',
-                                    'Unable to convert empty list!',
-                                    Colors.grey,
-                                    Colors.white);
+                              final action = await Dialogs.openDialog(
+                                context,
+                                'Confirmation',
+                                'You cannot cancel or modify after this. Are you sure you want to convert items?',
+                                false,
+                                'No',
+                                'Yes',
+                              );
+                              if (action == DialogAction.yes) {
+                                showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) => const ProcessingBox('Converting Items'));
+                                savingConversion();
                               } else {
-                                final action = await Dialogs.openDialog(
-                                    context,
-                                    'Confirmation',
-                                    'You cannot cancel or modify after this. Are you sure you want to convert items?',
-                                    false,
-                                    'No',
-                                    'Yes');
-                                if (action == DialogAction.yes) {
-                                  showDialog(
-                                      barrierDismissible: false,
-                                      context: context,
-                                      builder: (context) => const ProcessingBox(
-                                          'Converting Items'));
-                                  savingConversion();
-                                } else {}
+
                               }
                             }
-                          },
-                          child: const Text(
-                            'CONVERT ITEMS',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  )
-                ],
-              )),
+                          }
+                        },
+                        child: const Text(
+                          'CONVERT ITEMS',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -357,15 +358,11 @@ class _StockConversionState extends State<StockConversion> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'List is Empty. Press the add button below to add items.',
+            Text('List is Empty. Press the add button below to add items.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[500],
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -375,297 +372,269 @@ class _StockConversionState extends State<StockConversion> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _convList.length,
-          itemBuilder: (context, index) {
-            int convQty = 0;
-            double convTot = 0;
-            bool unmatch_amt = false;
-            if (_convList[index]['image'] == '') {
-              noImage = true;
-            } else {
-              noImage = false;
-            }
-            convQty = int.parse(_convList[index]['item_qty']) *
-                int.parse(_convList[index]['conv_qty']);
-            convTot = int.parse(_convList[index]['conv_qty']) *
-                double.parse(_convList[index]['conv_amt']);
-            if (double.parse(_convList[index]['item_amt']) !=
-                double.parse(convTot.toStringAsFixed(2))) {
-              unmatch_amt = true;
-            } else {
-              unmatch_amt = false;
-            }
-            final item = _convList[index].toString();
-            return Container(
-              margin: const EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  boxShadow: [
-                    BoxShadow(
-                      color: unmatch_amt
-                          ? Colors.red.shade700
-                          : Colors.grey.shade100,
-                    ),
-                  ]),
-              child: Dismissible(
-                background: Container(
-                  alignment: AlignmentDirectional.centerEnd,
-                  color: ColorsTheme.mainColor,
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 36,
-                  ),
+        itemCount: _convList.length,
+        itemBuilder: (context, index) {
+          int convQty = 0;
+          double convTot = 0;
+          bool unmatch_amt = false;
+          if (_convList[index]['image'] == '') {
+            noImage = true;
+          } else {
+            noImage = false;
+          }
+          convQty = int.parse(_convList[index]['item_qty']) * int.parse(_convList[index]['conv_qty']);
+          convTot = int.parse(_convList[index]['conv_qty']) * double.parse(_convList[index]['conv_amt']);
+
+          if (double.parse(_convList[index]['item_amt']) != double.parse(convTot.toStringAsFixed(2))) {
+            unmatch_amt = true;
+          } else {
+            unmatch_amt = false;
+          }
+          final item = _convList[index].toString();
+          return Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10),
+              // ignore: prefer_const_literals_to_create_immutables
+              boxShadow: [
+                BoxShadow(color: unmatch_amt ? Colors.red.shade700 : Colors.grey.shade100,
                 ),
-                direction: DismissDirection.endToStart,
-                key: Key(item),
-                onDismissed: (direction) {
-                  if (!mounted) return;
-                  setState(() {
-                    var itmcode = _convList[index]['item_code'].toString();
-                    var itmdesc = _convList[index]['item_desc'].toString();
-                    var itmuom = _convList[index]['item_uom'].toString();
-                    var itmamt = _convList[index]['item_amt'].toString();
-                    var itmqty = _convList[index]['item_qty'].toString();
-                    var itmtot = _convList[index]['item_total'].toString();
-                    var itmcat = _convList[index]['item_cat'].toString();
-                    var itmImg = _convList[index]['image'].toString();
-                    db.addInventory(
-                        UserData.id,
-                        _convList[index]['item_code'],
-                        _convList[index]['item_desc'],
-                        _convList[index]['item_uom'],
-                        _convList[index]['item_qty']);
-                    db.deleteConvItem(
-                        UserData.id,
-                        _convList[index]['item_code'].toString(),
-                        _convList[index]['item_uom'].toString());
-                    _convList.removeAt(index);
-
-                    // refreshList();
-                    if (_convList.isEmpty) {
-                      setState(() {
-                        // print('TRUE');
-                        refreshList();
-                        // totalChange();
-                      });
-                    } else {
-                      setState(() {
-                        refreshList();
-                        // totalChange();
-                      });
-                    }
-
-                    showSnackBar(context, itmcode, itmdesc, itmuom, itmamt,
-                        itmqty, itmtot, itmcat, itmImg);
-
-                    // print(cartList);
-                  });
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 5),
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      height: 70,
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 5,
-                            height: 70,
-                            color: ColorsTheme.mainColor,
-                          ),
-                          if (GlobalVariables.viewImg)
-                            Container(
-                              width: 75,
-                              color: Colors.white,
-                              child: noImage
-                                  ? Image(image: AssetsValues.noImageImg)
-                                  : Image.file(File(
-                                      imgPath + _convList[index]['image'])),
-                            )
-                          else if (!GlobalVariables.viewImg)
-                            Container(
-                                margin: const EdgeInsets.only(left: 3, top: 3),
-                                width: 75,
-                                color: Colors.white,
-                                child: Image(image: AssetsValues.noImageImg)),
-                          Expanded(
-                              child: Container(
-                            margin: const EdgeInsets.only(left: 5),
-                            // color: Colors.grey,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _convList[index]['item_desc'],
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: outofStock
-                                          ? Colors.grey
-                                          : Colors.black),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      _convList[index]['item_uom'],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          color: Colors.deepOrange,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      formatCurrencyAmt.format(double.parse(
-                                          _convList[index]['item_amt'])),
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )),
-                          Container(
-                            color: Colors.transparent,
-                            width: 80,
-                            // color: Colors.grey,
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                const Expanded(
-                                    child: SizedBox(
-                                  width: 50,
-                                )),
-                                Text(
-                                  _convList[index]['item_qty'],
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    //////CONVERT CONTAINER
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      height: 70,
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.subdirectory_arrow_right_outlined,
-                            color: Colors.grey,
-                            size: 36,
-                          ),
-                          Container(
-                              margin: const EdgeInsets.only(left: 3, top: 3),
-                              // width: 75,
-                              color: Colors.white,
-                              child: Icon(
-                                Icons.image_not_supported_outlined,
-                                color: ColorsTheme.mainColor,
-                                size: 36,
-                              )),
-                          Expanded(
-                              child: Container(
-                            margin: const EdgeInsets.only(left: 5),
-                            // color: Colors.grey,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _convList[index]['item_desc'],
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                      color: outofStock
-                                          ? Colors.grey
-                                          : Colors.black),
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      _convList[index]['conv_uom'],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          color: Colors.deepOrange,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      formatCurrencyAmt.format(double.parse(
-                                          _convList[index]['conv_amt'])),
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          )),
-                          Container(
-                            color: Colors.transparent,
-                            width: 80,
-                            // color: Colors.grey,
-                            child: Column(
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                const Expanded(
-                                    child: SizedBox(
-                                  width: 50,
-                                )),
-                                Text(
-                                  convQty.toString(),
-                                  // _convList[index]['conv_qty'],
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                  ],
+              ],
+            ),
+            child: Dismissible(
+              background: Container(
+                alignment: AlignmentDirectional.centerEnd,
+                color: ColorsTheme.mainColor,
+                child: const Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                  size: 36,
                 ),
               ),
-            );
-          }),
+              direction: DismissDirection.endToStart,
+              key: Key(item),
+              onDismissed: (direction) {
+                if (!mounted) return;
+                setState(() {
+                  var itmcode = _convList[index]['item_code'].toString();
+                  var itmdesc = _convList[index]['item_desc'].toString();
+                  var itmuom = _convList[index]['item_uom'].toString();
+                  var itmamt = _convList[index]['item_amt'].toString();
+                  var itmqty = _convList[index]['item_qty'].toString();
+                  var itmtot = _convList[index]['item_total'].toString();
+                  var itmcat = _convList[index]['item_cat'].toString();
+                  var itmImg = _convList[index]['image'].toString();
+                  db.addInventory(
+                      UserData.id,
+                    _convList[index]['item_code'],
+                    _convList[index]['item_desc'],
+                    _convList[index]['item_uom'],
+                    _convList[index]['item_qty'],
+                  );
+                  db.deleteConvItem(
+                      UserData.id,
+                    _convList[index]['item_code'].toString(),
+                    _convList[index]['item_uom'].toString(),
+                  );
+                  _convList.removeAt(index);
+
+                  // refreshList();
+                  if (_convList.isEmpty) {
+                    setState(() {
+                      // print('TRUE');
+                      refreshList();
+                      // totalChange();
+                    });
+                  } else {
+                    setState(() {
+                      refreshList();
+                      // totalChange();
+                    });
+                  }
+
+                  showSnackBar(context, itmcode, itmdesc, itmuom, itmamt,
+                      itmqty, itmtot, itmcat, itmImg);
+
+                  // print(cartList);
+                });
+              },
+              child: Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 5),
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                    height: 70,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 5,
+                          height: 70,
+                          color: ColorsTheme.mainColor,
+                        ),
+                        if (GlobalVariables.viewImg)
+                          Container(
+                            width: 75,
+                            color: Colors.white,
+                            child: noImage
+                              ? Image(image: AssetsValues.noImageImg)
+                              : Image.file(File(imgPath + _convList[index]['image']),
+                            ),
+                          )
+                        else if (!GlobalVariables.viewImg)
+                          Container(
+                            margin: const EdgeInsets.only(left: 3, top: 3),
+                            width: 75,
+                            color: Colors.white,
+                            child: Image(image: AssetsValues.noImageImg),
+                          ),
+                        Expanded(
+                          child: Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          // color: Colors.grey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_convList[index]['item_desc'],
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,
+                                  color: outofStock
+                                  ? Colors.grey
+                                  : Colors.black,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(_convList[index]['item_uom'],
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(color: Colors.deepOrange, fontSize: 11, fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(formatCurrencyAmt.format(double.parse(_convList[index]['item_amt'])),
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                        Container(
+                          color: Colors.transparent,
+                          width: 80,
+                          // color: Colors.grey,
+                          child: Column(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Expanded(
+                                child: SizedBox(
+                                  width: 50,
+                                ),
+                              ),
+                              Text(_convList[index]['item_qty'],
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  //////CONVERT CONTAINER
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white,
+                    height: 70,
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.subdirectory_arrow_right_outlined,
+                          color: Colors.grey,
+                          size: 36,
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 3, top: 3),
+                          // width: 75,
+                          color: Colors.white,
+                          child: Icon(
+                            Icons.image_not_supported_outlined,
+                            color: ColorsTheme.mainColor,
+                            size: 36,
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          // color: Colors.grey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_convList[index]['item_desc'],
+                                textAlign: TextAlign.left,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold,
+                                  color: outofStock
+                                  ? Colors.grey
+                                  : Colors.black,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(_convList[index]['conv_uom'],
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(color: Colors.deepOrange, fontSize: 11, fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(formatCurrencyAmt.format(double.parse(_convList[index]['conv_amt'])),
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                        Container(
+                          color: Colors.transparent,
+                          width: 80,
+                          // color: Colors.grey,
+                          child: Column(
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Expanded(
+                                  child: SizedBox(
+                                width: 50,
+                              )),
+                              Text(convQty.toString(),
+                                // _convList[index]['conv_qty'],
+                                textAlign: TextAlign.right,
+                                style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }

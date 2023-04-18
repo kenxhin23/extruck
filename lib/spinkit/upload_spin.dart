@@ -30,44 +30,42 @@ class _UploadingSpinkitState extends State<UploadingSpinkit> {
     return Stack(
       children: <Widget>[
         Container(
-            // width: MediaQuery.of(context).size.width,
-            padding: EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
+          // width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
                 color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.transparent,
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  context.watch<SyncCaption>().cap,
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(context.watch<SyncCaption>().cap,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
                 ),
-                Text(
-                  '(' +
-                      context.watch<UploadCount>().itmNo.toString() +
-                      '/' +
-                      GlobalVariables.uploadLength.toString() +
-                      ')',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white),
+              ),
+              Text('(' + context.watch<UploadCount>().itmNo.toString() + '/' + GlobalVariables.uploadLength.toString() + ')',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
                 ),
-                SpinKitCircle(
-                  color: Colors.green,
-                ),
-              ],
-            )),
+              ),
+              SpinKitCircle(
+                color: Colors.green,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

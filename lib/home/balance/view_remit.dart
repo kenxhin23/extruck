@@ -79,8 +79,7 @@ class _RemitViewState extends State<RemitView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Pending Remittance',
+          title: const Text('Pending Remittance',
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -109,15 +108,14 @@ class _RemitViewState extends State<RemitView> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No remittance reports found.',
+            Text('No remittance reports found.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -126,94 +124,80 @@ class _RemitViewState extends State<RemitView> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: ((context, index) {
-            if (_list[index]['order_count'] == null ||
-                _list[index]['order_count'] == 'null') {
-              _list[index]['order_count'] = '0';
-            }
+        itemCount: _list.length,
+        itemBuilder: ((context, index) {
+          if (_list[index]['order_count'] == null ||
+              _list[index]['order_count'] == 'null') {
+            _list[index]['order_count'] = '0';
+          }
 
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        // duration: const Duration(milliseconds: 100),
-                        type: PageTransitionType.rightToLeft,
-                        child: ReportsHistoryLine(
-                            _list[index]['rmt_no'],
-                            _list[index]['order_count'],
-                            _list[index]['tot_amt'])));
-              },
-              child: Container(
-                // width: MediaQuery.of(context).size.width,
-                color: Colors.white,
-                // height: 70,
-                margin: const EdgeInsets.all(8),
-                padding: const EdgeInsets.all(8),
-                child: Row(
-                  // ignore: prefer_const_literals_to_create_immutables
-                  children: [
-                    const Icon(
-                      Icons.assignment_outlined,
-                      color: Colors.deepOrange,
-                      size: 36,
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _list[index]['rmt_no'],
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w500),
-                          ),
-                          Text(
-                            'No. of Orders: ${_list[index]['order_count']}',
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey),
-                          ),
-                          Text(
-                            _list[index]['date'],
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Column(
-                      // ignore: prefer_const_literals_to_create_immutables
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      // duration: const Duration(milliseconds: 100),
+                      type: PageTransitionType.rightToLeft,
+                      child: ReportsHistoryLine(
+                          _list[index]['rmt_no'],
+                          _list[index]['order_count'],
+                          _list[index]['tot_amt'])));
+            },
+            child: Container(
+              // width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              // height: 70,
+              margin: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                // ignore: prefer_const_literals_to_create_immutables
+                children: [
+                  const Icon(
+                    Icons.assignment_outlined,
+                    color: Colors.deepOrange,
+                    size: 36,
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Total Amount',
-                          style: TextStyle(
-                              fontSize: 12, fontWeight: FontWeight.w400),
+                        Text(_list[index]['rmt_no'],
+                          style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500),
+                        ),
+                        Text('No. of Orders: ${_list[index]['order_count']}',
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey),
                         ),
                         Text(
-                          formatCurrencyAmt
-                              .format(double.parse(_list[index]['tot_amt'])),
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.green),
+                          _list[index]['date'],
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.black),
                         ),
                       ],
                     ),
-                    // Icon(
-                    //   Icons.file_upload,
-                    //   color: uploaded ? Colors.green : Colors.grey,
-                    //   size: ScreenData.scrWidth * .06,
-                    // ),
-                  ],
-                ),
+                  ),
+                  Column(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Text('Total Amount',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                      ),
+                      Text(formatCurrencyAmt.format(double.parse(_list[index]['tot_amt'])),
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.green),
+                      ),
+                    ],
+                  ),
+                  // Icon(
+                  //   Icons.file_upload,
+                  //   color: uploaded ? Colors.green : Colors.grey,
+                  //   size: ScreenData.scrWidth * .06,
+                  // ),
+                ],
               ),
-            );
-          })),
+            ),
+          );
+        }),
+      ),
     );
   }
 }

@@ -32,59 +32,60 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          handleUserInteraction();
-        },
-        onPanDown: (details) {
-          handleUserInteraction();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 85,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Home",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      color: ColorsTheme.mainColor,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          body: Column(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        handleUserInteraction();
+      },
+      onPanDown: (details) {
+        handleUserInteraction();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 85,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  inventoryCont(context),
-                  stockPageCont(context),
-                ],
-              ),
-              Row(
-                children: [
-                  // pendingRequestCont(context),
-                  convertStockCont(context),
-                  stockLedgerCont(context),
-                ],
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    // pendingRequestCont(context),
-                    balanceCont(context),
-                  ],
+              Text("Home",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: ColorsTheme.mainColor,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-        ));
+        ),
+        body: Column(
+          children: [
+            Row(
+              children: [
+                inventoryCont(context),
+                stockPageCont(context),
+              ],
+            ),
+            Row(
+              children: [
+                // pendingRequestCont(context),
+                convertStockCont(context),
+                stockLedgerCont(context),
+              ],
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  // pendingRequestCont(context),
+                  balanceCont(context),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Expanded balanceCont(BuildContext context) {
@@ -92,11 +93,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const BalancePage()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const BalancePage(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -111,8 +114,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepOrange,
                 size: 48,
               ),
-              const Text(
-                'Balance',
+              const Text('Balance',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -127,11 +129,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const StockLedger()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const StockLedger(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -146,8 +150,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepOrange,
                 size: 48,
               ),
-              const Text(
-                'Stock Ledger',
+              const Text('Stock Ledger',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -162,11 +165,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const PendingRequests()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const PendingRequests(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -176,15 +181,12 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              (int.parse(Provider.of<PendingCounter>(context)
-                          .reqNo
-                          .toString()) ==
-                      0)
+              (int.parse(Provider.of<PendingCounter>(context).reqNo.toString()) == 0)
                   ? const Icon(
-                      Icons.history,
-                      color: Colors.deepOrange,
-                      size: 48,
-                    )
+                    Icons.history,
+                    color: Colors.deepOrange,
+                    size: 48,
+                  )
                   : Container(
                       width: 60,
                       // height: 50,
@@ -192,7 +194,8 @@ class _HomePageState extends State<HomePage> {
                       child: Stack(
                         children: [
                           const Icon(Icons.history,
-                              color: Colors.deepOrange, size: 48),
+                            color: Colors.deepOrange, size: 48,
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 30),
                             child: Align(
@@ -203,18 +206,17 @@ class _HomePageState extends State<HomePage> {
                                 width: 40,
                                 height: 20,
                                 decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.green),
-                                child: Text(
-                                  Provider.of<PendingCounter>(context)
-                                      .reqNo
-                                      .toString(),
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                                child: Text(Provider.of<PendingCounter>(context).reqNo.toString(),
                                   // '2',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500),
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ),
@@ -222,8 +224,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-              const Text(
-                'Pending Requests',
+              const Text('Pending Requests',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -238,11 +239,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const Conversion()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const Conversion(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -257,8 +260,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepOrange,
                 size: 48,
               ),
-              const Text(
-                'Stock Conversion',
+              const Text('Stock Conversion',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -273,11 +275,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const StockPage()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const StockPage(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -292,8 +296,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepOrange,
                 size: 48,
               ),
-              const Text(
-                'Stocks',
+              const Text('Stocks',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -308,11 +311,13 @@ class _HomePageState extends State<HomePage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const StockInvetory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const StockInvetory(),
+            ),
+          );
         },
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -327,8 +332,7 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.deepOrange,
                 size: 48,
               ),
-              const Text(
-                'View Inventory',
+              const Text('View Inventory',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],

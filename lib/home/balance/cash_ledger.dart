@@ -68,8 +68,7 @@ class _CashLedgerState extends State<CashLedger> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Cash Ledger',
+              const Text('Cash Ledger',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -102,11 +101,8 @@ class _CashLedgerState extends State<CashLedger> {
             decoration:
                 BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
             child: const Center(
-              child: Text(
-                'Date',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+              child: Text('Date',
+                style: TextStyle(fontSize: 12),
               ),
             ),
           ),
@@ -115,12 +111,10 @@ class _CashLedgerState extends State<CashLedger> {
               padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
               // color: Colors.white,
               decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey)),
+                border: Border.all(width: 1, color: Colors.grey)),
               child: const Center(
-                child: Text(
-                  'Ref. #',
-                  style: TextStyle(
-                    fontSize: 12,
+                child: Text('Ref. #',
+                  style: TextStyle(fontSize: 12,
                   ),
                 ),
               ),
@@ -133,10 +127,8 @@ class _CashLedgerState extends State<CashLedger> {
             decoration:
                 BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
             child: const Center(
-              child: Text(
-                'Description',
-                style: TextStyle(
-                  fontSize: 12,
+              child: Text('Description',
+                style: TextStyle(fontSize: 12,
                 ),
               ),
             ),
@@ -148,10 +140,8 @@ class _CashLedgerState extends State<CashLedger> {
             decoration:
                 BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
             child: const Center(
-              child: Text(
-                'IN',
-                style: TextStyle(
-                  fontSize: 12,
+              child: Text('IN',
+                style: TextStyle(fontSize: 12,
                 ),
               ),
             ),
@@ -163,11 +153,8 @@ class _CashLedgerState extends State<CashLedger> {
             decoration:
                 BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
             child: const Center(
-              child: Text(
-                'OUT',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+              child: Text('OUT',
+                style: TextStyle(fontSize: 12),
               ),
             ),
           ),
@@ -178,11 +165,8 @@ class _CashLedgerState extends State<CashLedger> {
             decoration:
                 BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
             child: const Center(
-              child: Text(
-                'BAL',
-                style: TextStyle(
-                  fontSize: 12,
-                ),
+              child: Text('BAL',
+                style: TextStyle(fontSize: 12),
               ),
             ),
           ),
@@ -197,119 +181,98 @@ class _CashLedgerState extends State<CashLedger> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _ledger.length,
-          itemBuilder: ((context, index) {
-            if (_ledger[index]['type'] == 'CASH IN') {
-              varColor = Colors.green;
-            }
-            if (_ledger[index]['type'] == 'CASH OUT' &&
-                _ledger[index]['details'] == 'REMIT') {
-              varColor = Colors.grey.shade600;
-            }
-            if (_ledger[index]['type'] == 'CASH OUT' &&
-                _ledger[index]['details'] == 'STOCK IN') {
-              varColor = Colors.orange.shade900;
-            }
-            return Column(
-              children: [
-                Container(
-                  // padding: const EdgeInsets.only(top: 10),
-                  height: 50,
-                  color: varColor,
-                  child: Row(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Text(
-                        _ledger[index]['date'],
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white),
+        itemCount: _ledger.length,
+        itemBuilder: ((context, index) {
+          if (_ledger[index]['type'] == 'CASH IN') {
+            varColor = Colors.green;
+          }
+          if (_ledger[index]['type'] == 'CASH OUT' &&
+              _ledger[index]['details'] == 'REMIT') {
+            varColor = Colors.grey.shade600;
+          }
+          if (_ledger[index]['type'] == 'CASH OUT' &&
+              _ledger[index]['details'] == 'STOCK IN') {
+            varColor = Colors.orange.shade900;
+          }
+          return Column(
+            children: [
+              Container(
+                // padding: const EdgeInsets.only(top: 10),
+                height: 50,
+                color: varColor,
+                child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Text(_ledger[index]['date'],
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      height: 50,
+                      // thickness: 10,
+                      indent: 10,
+                    ),
+                    Expanded(
+                      child: Text(_ledger[index]['ref_no'],
+                        style: const TextStyle(fontSize: 9, color: Colors.white, fontWeight: FontWeight.w500),
                       ),
-                      const Divider(
-                        color: Colors.white,
-                        height: 50,
-                        // thickness: 10,
-                        indent: 10,
-                      ),
-                      Expanded(
-                        child: Text(
-                          _ledger[index]['ref_no'],
-                          style: const TextStyle(
-                              fontSize: 9,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 80,
+                      child: Center(
+                        child: Text(_ledger[index]['type'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      Container(
-                        color: varColor,
-                        width: 80,
-                        child: Center(
-                          child: Text(
-                            _ledger[index]['type'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500),
-                          ),
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['qty_in'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['qty_in'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
-                          ),
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['qty_out'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['qty_out'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
-                          ),
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['bal'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['bal'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      )
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    )
+                  ],
                 ),
-                const SizedBox(height: 10),
-              ],
-            );
-          })),
+              ),
+              const SizedBox(height: 10),
+            ],
+          );
+        }),
+      ),
     );
   }
 
@@ -325,32 +288,20 @@ class _CashLedgerState extends State<CashLedger> {
         children: [
           Container(width: 10, height: 10, color: Colors.green),
           const SizedBox(width: 5),
-          const Text(
-            'Cash in(Order)',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
+          const Text('Cash in(Order)',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: 10),
           Container(width: 10, height: 10, color: Colors.grey[600]),
           const SizedBox(width: 5),
-          const Text(
-            'Cash out(Remittance)',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
+          const Text('Cash out(Remittance)',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: 10),
           Container(width: 10, height: 10, color: Colors.deepOrange[600]),
           const SizedBox(width: 5),
-          const Text(
-            'Cash out(Stock Request)',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
+          const Text('Cash out(Stock Request)',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
           ),
         ],
       ),

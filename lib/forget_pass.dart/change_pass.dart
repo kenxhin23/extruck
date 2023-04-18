@@ -130,12 +130,8 @@ class _ChangePassState extends State<ChangePass> {
                     //     ),
                     //   ),
                     // ),
-                    Text(
-                      "Change Password",
-                      style: TextStyle(
-                          color: ColorsTheme.mainColor,
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold),
+                    Text("Change Password",
+                      style: TextStyle(color: ColorsTheme.mainColor, fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
@@ -162,15 +158,11 @@ class _ChangePassState extends State<ChangePass> {
                 width: MediaQuery.of(context).size.width,
                 // height: 30,
                 // color: Colors.grey,
-                child: Text(
-                  '${'E-COMMERCE(EXTRUCK APP) V1.${GlobalVariables.appVersion}'} COPYRIGHT 2020',
-                  style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold),
+                child: Text('${'E-COMMERCE(EXTRUCK APP) V1.${GlobalVariables.appVersion}'} COPYRIGHT 2020',
+                  style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -340,95 +332,96 @@ class _ChangePassState extends State<ChangePass> {
     final node = FocusScope.of(context);
     return Column(children: [
       Form(
-          key: _formKey,
-          child: Column(children: <Widget>[
-            TextFormField(
-              textInputAction: TextInputAction.next,
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(RegExp(r'[ ]')),
-              ],
-              // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-              onEditingComplete: () => node.nextFocus(),
-              // onEditingComplete: () {
-              //   if (_formKey.currentState.validate()) {}
-              // },
-              obscureText: _obscureText,
-              controller: newPassController,
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    _toggle();
-                  },
-                ),
-                hintText: 'Enter new password',
+        key: _formKey,
+        child: Column(children: <Widget>[
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'[ ]')),
+            ],
+            // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+            onEditingComplete: () => node.nextFocus(),
+            // onEditingComplete: () {
+            //   if (_formKey.currentState.validate()) {}
+            // },
+            obscureText: _obscureText,
+            controller: newPassController,
+            decoration: InputDecoration(
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Field cannot be empty';
-                }
-                passReq = isPasswordCompliant(value);
-                if (!passReq) {
-                  return 'Invalid Password';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            TextFormField(
-              textInputAction: TextInputAction.done,
-              // onFieldSubmitted: (_) => node.unfocus(),
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(RegExp(r'[ ]')),
-              ],
-              obscureText: _obscureText2,
-              controller: confPassController,
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _obscureText2 ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
-                    size: 30,
-                  ),
-                  onPressed: () {
-                    _toggle2();
-                  },
-                ),
-                hintText: 'Confirm password',
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black87),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Field cannot be empty';
-                }
-                if (value != newPassController.text) {
-                  return "Password does not match";
-                }
-                return null;
-              },
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                  size: 30,
+                ),
+                onPressed: () {
+                  _toggle();
+                },
+              ),
+              hintText: 'Enter new password',
             ),
-          ]))
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Field cannot be empty';
+              }
+              passReq = isPasswordCompliant(value);
+              if (!passReq) {
+                return 'Invalid Password';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          TextFormField(
+            textInputAction: TextInputAction.done,
+            // onFieldSubmitted: (_) => node.unfocus(),
+            inputFormatters: [
+              FilteringTextInputFormatter.deny(RegExp(r'[ ]')),
+            ],
+            obscureText: _obscureText2,
+            controller: confPassController,
+            decoration: InputDecoration(
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureText2 ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                  size: 30,
+                ),
+                onPressed: () {
+                  _toggle2();
+                },
+              ),
+              hintText: 'Confirm password',
+            ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Field cannot be empty';
+              }
+              if (value != newPassController.text) {
+                return "Password does not match";
+              }
+              return null;
+            },
+          ),
+        ]),
+      )
     ]);
   }
 
@@ -438,46 +431,25 @@ class _ChangePassState extends State<ChangePass> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '* Must have a minimum of 8 characters',
-            style: TextStyle(
-              fontSize: 12,
-              // color: ColorsTheme.mainColor,
-              color: hasMinLength ? Colors.green : ColorsTheme.mainColor,
+          Text('* Must have a minimum of 8 characters',
+            style: TextStyle(fontSize: 12, color: hasMinLength ? Colors.green : ColorsTheme.mainColor,
             ),
           ),
-          Text(
-            '* Must include at least 1 uppercase',
-            style: TextStyle(
-              fontSize: 12,
-              // color: ColorsTheme.mainColor,
-              color: hasUppercase ? Colors.green : ColorsTheme.mainColor,
+          Text('* Must include at least 1 uppercase',
+            style: TextStyle(fontSize: 12, color: hasUppercase ? Colors.green : ColorsTheme.mainColor,
             ),
           ),
-          Text(
-            '* Must include at least 1 lowercase',
-            style: TextStyle(
-              fontSize: 12,
-              // color: ColorsTheme.mainColor,
-              color: hasLowercase ? Colors.green : ColorsTheme.mainColor,
+          Text('* Must include at least 1 lowercase',
+            style: TextStyle(fontSize: 12, color: hasLowercase ? Colors.green : ColorsTheme.mainColor,
             ),
           ),
-          Text(
-            '* Must include at least 1 digit ',
-            style: TextStyle(
-              fontSize: 12,
-              // color: ColorsTheme.mainColor,
-              color: hasDigits ? Colors.green : ColorsTheme.mainColor,
+          Text('* Must include at least 1 digit ',
+            style: TextStyle(fontSize: 12, color: hasDigits ? Colors.green : ColorsTheme.mainColor,
             ),
             // textAlign: TextAlign.left,
           ),
-          Text(
-            '* Must include at least 1 special character: ! @ # % ^ & * ( ) , . ? : { } | < > ]',
-            style: TextStyle(
-              fontSize: 12,
-              // color: ColorsTheme.mainColor,
-              color:
-                  hasSpecialCharacters ? Colors.green : ColorsTheme.mainColor,
+          Text('* Must include at least 1 special character: ! @ # % ^ & * ( ) , . ? : { } | < > ]',
+            style: TextStyle(fontSize: 12, color: hasSpecialCharacters ? Colors.green : ColorsTheme.mainColor,
             ),
             // textAlign: TextAlign.left,
           ),
@@ -486,21 +458,12 @@ class _ChangePassState extends State<ChangePass> {
             visible: GlobalVariables.passExp,
             child: Container(
               padding: const EdgeInsets.only(top: 15),
-              child: Text(
-                'Your password already expired. Please change to a new password to continue.',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                  // color: ColorsTheme.mainColor,
-                  color: hasSpecialCharacters
-                      ? Colors.green
-                      : ColorsTheme.mainColor,
+              child: Text('Your password already expired. Please change to a new password to continue.',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: hasSpecialCharacters ? Colors.green : ColorsTheme.mainColor,
                 ),
-                // textAlign: TextAlign.left,
               ),
             ),
           ),
-
           // Text(message),
         ],
       ),
@@ -534,37 +497,38 @@ class _LoadingSpinkitState extends State<LoadingSpinkit> {
     return Stack(
       children: <Widget>[
         Container(
-            // width: MediaQuery.of(context).size.width,
-            padding:
-                const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.transparent,
-                    // blurRadius: 10.0,
-                    // offset: Offset(0.0, 10.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  // 'Checking username...',
-                  widget.description.toString(),
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white),
+          // width: MediaQuery.of(context).size.width,
+          padding:
+              const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.transparent,
+                  // blurRadius: 10.0,
+                  // offset: Offset(0.0, 10.0),
                 ),
-                SpinKitCircle(
-                  color: ColorsTheme.mainColor,
-                ),
-              ],
-            )),
+              ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                // 'Checking username...',
+                widget.description.toString(),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.white),
+              ),
+              SpinKitCircle(
+                color: ColorsTheme.mainColor,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

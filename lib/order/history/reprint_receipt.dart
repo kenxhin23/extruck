@@ -27,12 +27,10 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
   String vat = '';
   double totalSales = 0.00;
 
-  final date =
-      DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
+  final date = DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "");
-  final formatCurrencyTot =
-      NumberFormat.currency(locale: "en_US", symbol: "Php ");
+  final formatCurrencyTot = NumberFormat.currency(locale: "en_US", symbol: "Php ");
 
   @override
   void initState() {
@@ -55,42 +53,41 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
 
 
       String top =
+        "~CT~~CD,~CC^~CT~"
+        "^XA^LL130~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
 
-          "~CT~~CD,~CC^~CT~"
-          "^XA^LL130~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+        "^XA"
+        "^DFE:TEMPLATE.ZPL^FS"
+        "^CF0,23"
+        "^FO20,50^FDDATE : ^FS"
+        "^FO110,50^FN1^FS"
+        "^XZ"
 
-          "^XA"
-          "^DFE:TEMPLATE.ZPL^FS"
-          "^CF0,23"
-          "^FO20,50^FDDATE : ^FS"
-          "^FO110,50^FN1^FS"
-          "^XZ"
-
-          "^XA"
-          "^XFE:TEMPLATE.ZPL^FS"
-          "^FN1^FD${nDate.toString()}^FS"
-          "^PQ1"
-          "^FO20,70^FDAccount Code :^FS"
-          "^FO200,70^FD${CustomerData.accountCode}^FS"
-          "^FO20,90^FDAccount Name : ^FS"
-          "^FO200,90^FD${CustomerData.accountName}^FS"
-          "^FO20,110^FDSalesman : ^FS"
-          "^FO200,110^FD${UserData.firstname} ${UserData.lastname}^FS"
-          "^XZ"
+        "^XA"
+        "^XFE:TEMPLATE.ZPL^FS"
+        "^FN1^FD${nDate.toString()}^FS"
+        "^PQ1"
+        "^FO20,70^FDAccount Code :^FS"
+        "^FO200,70^FD${CustomerData.accountCode}^FS"
+        "^FO20,90^FDAccount Name : ^FS"
+        "^FO200,90^FD${CustomerData.accountName}^FS"
+        "^FO20,110^FDSalesman : ^FS"
+        "^FO200,110^FD${UserData.firstname} ${UserData.lastname}^FS"
+        "^XZ"
       ;
       await BluetoothThermalPrinter.writeText(top);
 
       String desc =
-          "~CT~~CD,~CC^~CT~"
-          "^XA^LL50~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+        "~CT~~CD,~CC^~CT~"
+        "^XA^LL50~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
 
-          "^XA"
-          "^FO20,5^GB530,3,3^FS"
-          "^CF0,24"
-          "^FO20,15^FDDESCRIPTION^FS"
-          "^FO460,15^FDAMOUNT^FS"
-          "^FO20,40^GB530,3,3^FS"
-          "^XZ"
+        "^XA"
+        "^FO20,5^GB530,3,3^FS"
+        "^CF0,24"
+        "^FO20,15^FDDESCRIPTION^FS"
+        "^FO460,15^FDAMOUNT^FS"
+        "^FO20,40^GB530,3,3^FS"
+        "^XZ"
       ;
 
       await BluetoothThermalPrinter.writeText(desc);
@@ -98,16 +95,16 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
       for (var i = 0; i < widget.data.length; i++){
         String items =
 
-            "~CT~~CD,~CC^~CT~"
-            "^XA^LL60~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+          "~CT~~CD,~CC^~CT~"
+          "^XA^LL60~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
 
-            "^XA"
-            "^CFA,14"
-            "^FO20,5^FB450,15,3,L^FD${widget.data[i]['item_desc']}^FS"
-            "^FO20,25^FB450,15,3,L^FD${widget.data[i]['qty']} ${widget.data[i]['uom']} @ ${widget.data[i]['amt']}^FS"
-            "^FO470,5^FD${widget.data[i]['tot_amt']}^FS"
+          "^XA"
+          "^CFA,14"
+          "^FO20,5^FB450,15,3,L^FD${widget.data[i]['item_desc']}^FS"
+          "^FO20,25^FB450,15,3,L^FD${widget.data[i]['qty']} ${widget.data[i]['uom']} @ ${widget.data[i]['amt']}^FS"
+          "^FO470,5^FD${widget.data[i]['tot_amt']}^FS"
 
-            "^XZ"
+          "^XZ"
         ;
 
         await BluetoothThermalPrinter.writeText(items);
@@ -115,41 +112,41 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
 
       String bottom =
 
-          "~CT~~CD,~CC^~CT~"
-          "^XA^LL550~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
+        "~CT~~CD,~CC^~CT~"
+        "^XA^LL550~TA000~JSN^LT0^MNN^MTD^POI^PMN^LH0,0^JMA^PR4,4~SD13^JUS^LRN^CI0^XZ"
 
-          "^XA"
+        "^XA"
 
-          "^FO20,5^GB530,3,3^FS"
-          "^CF0,20"
-          "^FO20,25^FDTotal :^FS"
-          "^FO470,25^FD${formatCurrencyAmt.format(double.parse(CartData.totalAmount))}^FS"
-          "^FO20,45^FDNo. of Items :^FS"
-          "^FO470,45^FD${CartData.itmNo}^FS"
-          "^FO20,65^FDNo. of Lines :^FS"
-          "^FO470,65^FD${CartData.itmLineNo}^FS"
-          "^FO20,85^FDVat Amount :^FS"
-          "^FO470,85^FD${formatCurrencyAmt.format(double.parse(vat))}^FS"
-          "^FO20,105^FDTotal Sales :^FS"
-          "^FO470,105^FD${formatCurrencyAmt.format(totalSales)}^FS"
-          "^FO20,125^FDTotal Discounted Amount :^FS"
-          "^FO470,125^FD${formatCurrencyAmt.format(double.parse(CartData.discAmt))}^FS"
-          "^FO20,145^FDTotal Amount Due :^FS"
-          "^FO470,145^FD${formatCurrencyAmt.format(double.parse(CartData.netAmount))}^FS"
-          "^FO20,165^FDSales Invoice # :^FS"
-          "^FO470,165^FD${ CartData.siNum}^FS"
+        "^FO20,5^GB530,3,3^FS"
+        "^CF0,20"
+        "^FO20,25^FDTotal :^FS"
+        "^FO470,25^FD${formatCurrencyAmt.format(double.parse(CartData.totalAmount))}^FS"
+        "^FO20,45^FDNo. of Items :^FS"
+        "^FO470,45^FD${CartData.itmNo}^FS"
+        "^FO20,65^FDNo. of Lines :^FS"
+        "^FO470,65^FD${CartData.itmLineNo}^FS"
+        "^FO20,85^FDVat Amount :^FS"
+        "^FO470,85^FD${formatCurrencyAmt.format(double.parse(vat))}^FS"
+        "^FO20,105^FDTotal Sales :^FS"
+        "^FO470,105^FD${formatCurrencyAmt.format(totalSales)}^FS"
+        "^FO20,125^FDTotal Discounted Amount :^FS"
+        "^FO470,125^FD${formatCurrencyAmt.format(double.parse(CartData.discAmt))}^FS"
+        "^FO20,145^FDTotal Amount Due :^FS"
+        "^FO470,145^FD${formatCurrencyAmt.format(double.parse(CartData.netAmount))}^FS"
+        "^FO20,165^FDSales Invoice # :^FS"
+        "^FO470,165^FD${ CartData.siNum}^FS"
 
 
-          "^FO20,185^GB530,3,3^FS"
+        "^FO20,185^GB530,3,3^FS"
 
-          "^CF0,19"
-          "^FO200,195^FDNO RETURNABLES/REFUND^FS"
-          "^FO20,240^FDReceived by:^FS"
-          "^FO150,255^GB350,2,2^FS"
-          "^FO200,260^FD(Signature over Printed Name)^FS"
-          "^FO210,245^BY4,2.0,60^BQN,2,7^FDQA,${widget.ordNo}^FS"
-          "^FO210,490^FD${widget.ordNo}^FS"
-          "^XZ"
+        "^CF0,19"
+        "^FO200,195^FDNO RETURNABLES/REFUND^FS"
+        "^FO20,240^FDReceived by:^FS"
+        "^FO150,255^GB350,2,2^FS"
+        "^FO200,260^FD(Signature over Printed Name)^FS"
+        "^FO210,245^BY4,2.0,60^BQN,2,7^FDQA,${widget.ordNo}^FS"
+        "^FO210,490^FD${widget.ordNo}^FS"
+        "^XZ"
       ;
 
       await BluetoothThermalPrinter.writeText(bottom);
@@ -179,163 +176,192 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
     //     styles: const PosStyles(align: PosAlign.right));
     bytes += generator.row([
       PosColumn(
-          text: '',
-          width: 5,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
+        text: '',
+        width: 5,
+        styles: const PosStyles(align: PosAlign.right, bold: true),
+      ),
       PosColumn(
-          text: 'DATE:',
-          width: 2,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
+        text: 'DATE:',
+        width: 2,
+        styles: const PosStyles(align: PosAlign.right, bold: true),
+      ),
       PosColumn(
-          text: nDate.toString(),
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: nDate.toString(),
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
 
     bytes += generator.hr(ch: ' ');
     bytes += generator.text('Account Code : ${CustomerData.accountCode}',
-        styles: const PosStyles(align: PosAlign.left));
+      styles: const PosStyles(align: PosAlign.left),
+    );
     bytes += generator.text('Account Name : ${CustomerData.accountName}',
-        styles: const PosStyles(align: PosAlign.left));
+      styles: const PosStyles(align: PosAlign.left),
+    );
     bytes += generator.text(
-        'Salesman   : ${UserData.firstname} ${UserData.lastname}',
-        styles: const PosStyles(align: PosAlign.left));
+      'Salesman   : ${UserData.firstname} ${UserData.lastname}',
+      styles: const PosStyles(align: PosAlign.left),
+    );
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: '',
-          width: 1,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: '',
+        width: 1,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: 'DESCRIPTION',
-          width: 7,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: 'DESCRIPTION',
+        width: 7,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: '',
-          width: 1,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: '',
+        width: 1,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: 'AMOUNT',
-          width: 3,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: 'AMOUNT',
+        width: 3,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
     ]);
 
     for (var i = 0; i < widget.data.length; i++) {
       bytes += generator.text('${widget.data[i]['item_desc']}',
-          styles: const PosStyles(align: PosAlign.left));
+        styles: const PosStyles(align: PosAlign.left),
+      );
       bytes += generator.row([
         // PosColumn(text: ' ', width: 1),
         PosColumn(
-            text: '${widget.data[i]['qty']}',
-            width: 1,
-            styles: const PosStyles(
-              align: PosAlign.left,
-            )),
+          text: '${widget.data[i]['qty']}',
+          width: 1,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          ),
+        ),
         PosColumn(
-            text: '${widget.data[i]['uom']}',
-            width: 2,
-            styles: const PosStyles(
-              align: PosAlign.left,
-            )),
+          text: '${widget.data[i]['uom']}',
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          ),
+        ),
         PosColumn(
-            text: '@',
-            width: 1,
-            styles: const PosStyles(
-              align: PosAlign.center,
-            )),
+          text: '@',
+          width: 1,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ),
         PosColumn(
-            text: '${widget.data[i]['amt']}',
-            width: 2,
-            styles: const PosStyles(
-              align: PosAlign.center,
-            )),
+          text: '${widget.data[i]['amt']}',
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ),
         PosColumn(
-            text: ' ',
-            width: 3,
-            styles: const PosStyles(align: PosAlign.center)),
+          text: ' ',
+          width: 3,
+          styles: const PosStyles(align: PosAlign.center),
+        ),
         PosColumn(
-            text: '${widget.data[i]['tot_amt']}',
-            width: 3,
-            styles: const PosStyles(align: PosAlign.right)),
+          text: '${widget.data[i]['tot_amt']}',
+          width: 3,
+          styles: const PosStyles(align: PosAlign.right),
+        ),
       ]);
     }
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: 'TOTAL',
-          width: 3,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'TOTAL',
+        width: 3,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(CartData.totalAmount)),
-          width: 9,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(CartData.totalAmount)),
+        width: 9,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.hr(ch: ' ');
     bytes += generator.text('  No. of Items   :      ${CartData.itmNo}',
-        styles: const PosStyles(align: PosAlign.left));
+      styles: const PosStyles(align: PosAlign.left),
+    );
     bytes += generator.text('  No. of Lines   :      ${widget.data.length}',
-        styles: const PosStyles(align: PosAlign.left));
+      styles: const PosStyles(align: PosAlign.left),
+    );
     bytes += generator.row([
       PosColumn(
-          text: 'Vat Amount',
-          width: 3,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Vat Amount',
+        width: 3,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(vat)),
-          width: 9,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(vat)),
+        width: 9,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Total Sales',
-          width: 3,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Total Sales',
+        width: 3,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(totalSales),
-          width: 9,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(totalSales),
+        width: 9,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Total Discounted Amount',
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Total Discounted Amount',
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(CartData.discAmt)),
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(CartData.discAmt)),
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Total Amount Due',
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Total Amount Due',
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(CartData.netAmount)),
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(CartData.netAmount)),
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
 
     bytes += generator.hr(ch: ' ', linesAfter: 1);
@@ -344,39 +370,44 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Sales Invoice #',
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.center,
-          )),
+        text: 'Sales Invoice #',
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.center,
+        ),
+      ),
       PosColumn(
-          text: CartData.siNum,
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: CartData.siNum,
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.hr(ch: ' ', linesAfter: 1);
     bytes += generator.text('NO RETURNABLES/REFUND',
-        styles: const PosStyles(align: PosAlign.center, bold: true),
-        linesAfter: 1);
+      styles: const PosStyles(align: PosAlign.center, bold: true),
+      linesAfter: 1);
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: 'Received by: ',
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Received by: ',
+        width: 4,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: '_______________________________',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: '_______________________________',
+        width: 8,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.text('(Signature over Printed Name)',
-        styles: const PosStyles(align: PosAlign.right));
+      styles: const PosStyles(align: PosAlign.right),
+    );
     bytes += generator.hr(ch: ' ', linesAfter: 1);
     bytes += generator.cut();
     return bytes;
@@ -404,15 +435,16 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
           ),
           backgroundColor: Colors.white,
           foregroundColor: Colors.white,
-          title: Text(
-            'Print Preview',
-            style:
-                TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
+          title: Text('Print Preview',
+            style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
           ),
           centerTitle: false,
         ),
         body: Column(
-            children: [Expanded(child: bodyCont(context)), printCont(context)]),
+          children: [
+            Expanded(child: bodyCont(context)), printCont(context),
+          ],
+        ),
       ),
     );
   }
@@ -424,18 +456,18 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
       child: Column(
         children: [
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: const Icon(
-                Icons.local_grocery_store_outlined,
-                color: Colors.black,
-                size: 60,
-              )),
+            width: MediaQuery.of(context).size.width,
+            child: const Icon(
+              Icons.local_grocery_store_outlined,
+              color: Colors.black,
+              size: 60,
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'DATE :',
+              const Text('DATE :',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(nDate.toString())
@@ -451,9 +483,9 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
                   const Text('Account Code  :  '),
                   Text(
                     CustomerData.accountCode.toString(),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
           Column(
@@ -465,7 +497,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
                     child: Text(
                       CustomerData.accountName.toString(),
                     ),
-                  )
+                  ),
                 ],
               )
             ],
@@ -479,7 +511,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
                     child: Text(
                       '${UserData.firstname} ${UserData.lastname}',
                     ),
-                  )
+                  ),
                 ],
               )
             ],
@@ -493,57 +525,59 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             children: [
               const Expanded(
                 child: Center(
-                  child: Text(
-                    'DESCRIPTION',
+                  child: Text('DESCRIPTION',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-              const Text(
-                'AMOUNT',
+              const Text('AMOUNT',
                 style: TextStyle(fontWeight: FontWeight.bold),
-              )
+              ),
             ],
           ),
           Expanded(
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: ListView.builder(
-                  itemCount: widget.data.length,
-                  itemBuilder: ((context, index) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('${widget.data[index]['item_desc']}'),
-                        Row(
-                          children: [
-                            const SizedBox(width: 10),
-                            Text('${widget.data[index]['qty']}'),
-                            const SizedBox(width: 10),
-                            Text('${widget.data[index]['uom']}'),
-                            const SizedBox(width: 10),
-                            const Text('@'),
-                            const SizedBox(width: 10),
-                            Expanded(
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child:
-                                        Text('${widget.data[index]['amt']}'))),
-                            Text('${widget.data[index]['tot_amt']}'),
-                          ],
-                        )
-                      ],
-                    );
-                  })),
+                itemCount: widget.data.length,
+                itemBuilder: ((context, index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${widget.data[index]['item_desc']}'),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          Text('${widget.data[index]['qty']}'),
+                          const SizedBox(width: 10),
+                          Text('${widget.data[index]['uom']}'),
+                          const SizedBox(width: 10),
+                          const Text('@'),
+                          const SizedBox(width: 10),
+                          Expanded(
+                              child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child:
+                                      Text('${widget.data[index]['amt']}'))),
+                          Text('${widget.data[index]['tot_amt']}'),
+                        ],
+                      )
+                    ],
+                  );
+                }),
+              ),
             ),
           ),
           Row(
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft, child: Text('TOTAL'))),
-              Text(formatCurrencyAmt.format(double.parse(CartData.totalAmount)))
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('TOTAL'),
+                ),
+              ),
+              Text(formatCurrencyAmt.format(double.parse(CartData.totalAmount))),
             ],
           ),
           const SizedBox(height: 15),
@@ -571,9 +605,11 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Vat Amount'))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Vat Amount'),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(vat)))
             ],
           ),
@@ -581,9 +617,11 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Total Sales'))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Total Sales'),
+                ),
+              ),
               Text(formatCurrencyAmt.format(totalSales))
             ],
           ),
@@ -592,9 +630,11 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Total Discounted Amount'))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Total Discounted Amount'),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(CartData.discAmt)))
             ],
           ),
@@ -602,9 +642,11 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Total Amount Due'))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Total Amount Due'),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(CartData.netAmount)))
             ],
           ),
@@ -612,7 +654,7 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             mainAxisAlignment: MainAxisAlignment.center,
             // ignore: prefer_const_constructors
             children: const [Icon(Icons.qr_code)],
-          )
+          ),
         ],
       ),
     );
@@ -635,25 +677,25 @@ class _ReprintReceiptState extends State<ReprintReceipt> {
             child: Container(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  style: raisedButtonStyleGreen,
-                  onPressed: () async {
-                    printTicket();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Icon(
-                        Icons.print,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'PRINT',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  )),
+                style: raisedButtonStyleGreen,
+                onPressed: () async {
+                  printTicket();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Icon(
+                      Icons.print,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text('PRINT',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

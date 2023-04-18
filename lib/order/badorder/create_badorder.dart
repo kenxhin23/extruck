@@ -66,8 +66,7 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Expanded(
-                child: Text(
-                  'Select order to refund',
+                child: Text('Select order to refund',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -82,15 +81,14 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text(
-                      'Scan',
+                    const Text('Scan',
                       style: TextStyle(fontSize: 16, color: Colors.white),
                     ),
                     const Icon(
                       Icons.qr_code_scanner_outlined,
                       color: Colors.white,
                       size: 36,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -136,17 +134,18 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
                         });
                       },
                       decoration: const InputDecoration(
-                          contentPadding:
-                              EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87),
-                            borderRadius: BorderRadius.all(Radius.circular(16)),
-                          ),
-                          hintText: 'Search Order #'),
+                        hintText: 'Search Order #',
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                          borderRadius: BorderRadius.all(Radius.circular(16)),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -173,15 +172,14 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No order found.',
+            Text('No order found.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -190,122 +188,120 @@ class _BadOrderRefundState extends State<BadOrderRefund> {
         width: MediaQuery.of(context).size.width,
         color: Colors.transparent,
         child: ListView.builder(
-            itemCount: _list.length,
-            itemBuilder: ((context, index) {
-              bool cash = false;
-              if (_list[index]['pmeth_type'] == 'Cash') {
-                cash = true;
-              } else {
-                cash = false;
-              }
-              return GestureDetector(
-                onTap: () {
-                  if (_list[index]['rmt_no'] != null) {
-                    rmtNo = _list[index]['rmt_no'];
-                  }
-                  setState(() {
-                    CustomerData.accountCode = _list[index]['account_code'];
-                    CustomerData.accountName = _list[index]['store_name'];
-                    CartData.itmNo = _list[index]['item_count'];
-                    CartData.totalAmount = _list[index]['tot_amt'];
-                    CartData.siNum = _list[index]['si_no'];
-                    CartData.pMeth = _list[index]['pmeth_type'];
-                  });
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: BoOrderItems(
-                            _list[index]['order_no'],
-                            _list[index]['si_no'],
-                            _list[index]['store_name'],
-                            _list[index]['item_count'],
-                            _list[index]['pmeth_type'],
-                            _list[index]['tran_type'],
-                            _list[index]['tot_amt'],
-                            rmtNo,
-                          )));
-                },
-                child: Container(
-                  color: Colors.white,
-                  margin: const EdgeInsets.all(8),
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Icon(
-                        cash ? Icons.money_rounded : Icons.fact_check_outlined,
-                        color: cash ? Colors.green : Colors.deepOrange,
-                        size: 36,
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _list[index]['order_no'],
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              _list[index]['store_name'],
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'SI #: ',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  _list[index]['si_no'],
-                                  style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              _list[index]['date'],
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        // ignore: prefer_const_literals_to_create_immutables
+          itemCount: _list.length,
+          itemBuilder: ((context, index) {
+            bool cash = false;
+            if (_list[index]['pmeth_type'] == 'Cash') {
+              cash = true;
+            } else {
+              cash = false;
+            }
+            return GestureDetector(
+              onTap: () {
+                if (_list[index]['rmt_no'] != null) {
+                  rmtNo = _list[index]['rmt_no'];
+                }
+                setState(() {
+                  CustomerData.accountCode = _list[index]['account_code'];
+                  CustomerData.accountName = _list[index]['store_name'];
+                  CartData.itmNo = _list[index]['item_count'];
+                  CartData.totalAmount = _list[index]['tot_amt'];
+                  CartData.siNum = _list[index]['si_no'];
+                  CartData.pMeth = _list[index]['pmeth_type'];
+                });
+                Navigator.push(context,
+                  PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    child: BoOrderItems(
+                      _list[index]['order_no'],
+                      _list[index]['si_no'],
+                      _list[index]['store_name'],
+                      _list[index]['item_count'],
+                      _list[index]['pmeth_type'],
+                      _list[index]['tran_type'],
+                      _list[index]['tot_amt'],
+                      rmtNo,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                color: Colors.white,
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Icon(
+                      cash ? Icons.money_rounded : Icons.fact_check_outlined,
+                      color: cash ? Colors.green : Colors.deepOrange,
+                      size: 36,
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Total Amount',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w400),
-                          ),
-                          Text(
-                            formatCurrencyAmt
-                                .format(double.parse(_list[index]['tot_amt'])),
+                          Text(_list[index]['order_no'],
                             style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.green),
+                                fontSize: 12, fontWeight: FontWeight.w500),
+                          ),
+                          Text(_list[index]['store_name'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('SI #: ',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(_list[index]['si_no'],
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(_list[index]['date'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
                           ),
                         ],
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                    Column(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        const Text('Total Amount',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                        ),
+                        Text(formatCurrencyAmt.format(double.parse(_list[index]['tot_amt'])),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
-              );
-            })),
+              ),
+            );
+          }),
+        ),
       );
     }
   }

@@ -165,35 +165,33 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                   child: RefreshIndicator(
                     onRefresh: getBluetooth,
                     child: ListView.builder(
-                  itemCount: availableBluetoothDevices.isNotEmpty
-                  ? availableBluetoothDevices.length
-                    : 0,
-                    itemBuilder: (context, index) {
-                      bool con = false;
-                      if (PrinterData.mac == '') {}
-                      return ListTile(
-                        onTap: () {
-                          String select = availableBluetoothDevices[index];
-                          List list = select.split("#");
-                          // String name = list[0];
-                          String mac = list[1];
-                          // print(mac);
-                          setConnect(mac);
-                        },
-                        leading: const Icon(Icons.print),
-                        title: Text('${availableBluetoothDevices[index]}'),
-                        subtitle: !con
-                            ? const Text('Click to connect')
-                        // ignore: dead_code
-                            : const Text(
-                          'Connected',
-                          style: TextStyle(color: Colors.green),
-                        ),
-                      );
-                    },
+                      itemCount: availableBluetoothDevices.isNotEmpty
+                      ? availableBluetoothDevices.length
+                      : 0,
+                      itemBuilder: (context, index) {
+                        bool con = false;
+                        if (PrinterData.mac == '') {}
+                        return ListTile(
+                          onTap: () {
+                            String select = availableBluetoothDevices[index];
+                            List list = select.split("#");
+                            // String name = list[0];
+                            String mac = list[1];
+                            // print(mac);
+                            setConnect(mac);
+                          },
+                          leading: const Icon(Icons.print),
+                          title: Text('${availableBluetoothDevices[index]}'),
+                          subtitle: !con
+                              ? const Text('Click to connect')
+                          // ignore: dead_code
+                              : const Text('Connected',
+                            style: TextStyle(color: Colors.green),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                  )
-
                 ),
               ),
               Row(
@@ -203,23 +201,26 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                       padding: const EdgeInsets.all(10),
                       child: ElevatedButton(
                         style: PrinterData.connected
-                            ? raisedButtonStyleOrange
-                            : raisedButtonStyleGrey,
+                          ? raisedButtonStyleOrange
+                          : raisedButtonStyleGrey,
                         onPressed: () async {
                           if (PrinterData.connected) {
                             Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: ReprintReport(
-                                        widget.data,
-                                        widget.rmtNo,
-                                        widget.boAmt,
-                                        widget.ordCount,
-                                        widget.totAmt,
-                                        widget.totDisc,
-                                        widget.satWh,
-                                        widget.totNet)));
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: ReprintReport(
+                                  widget.data,
+                                  widget.rmtNo,
+                                  widget.boAmt,
+                                  widget.ordCount,
+                                  widget.totAmt,
+                                  widget.totDisc,
+                                  widget.satWh,
+                                  widget.totNet,
+                                ),
+                              ),
+                            );
                           }
                         },
                         child: Row(
@@ -227,8 +228,7 @@ class _ConnectPrinterState extends State<ConnectPrinter> {
                           mainAxisSize: MainAxisSize.min,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text(
-                              "CONTINUE TO PREVIEW",
+                            const Text("CONTINUE TO PREVIEW",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

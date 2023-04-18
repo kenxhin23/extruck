@@ -78,9 +78,7 @@ class _StockRequestState extends State<StockRequest> {
           setState(() {
             sum = sum + double.parse(element['item_total']);
             CartData.totalAmount = sum.toStringAsFixed(2);
-            CartData.itmNo =
-                (int.parse(CartData.itmNo) + int.parse(element['item_qty']))
-                    .toString();
+            CartData.itmNo = (int.parse(CartData.itmNo) + int.parse(element['item_qty'])).toString();
           });
         }
       } else {
@@ -91,10 +89,8 @@ class _StockRequestState extends State<StockRequest> {
       }
       CartData.itmLineNo = cartList.length.toString();
     });
-    Provider.of<CartItemCounter>(context, listen: false)
-        .setTotal(int.parse(CartData.itmNo));
-    Provider.of<CartTotalCounter>(context, listen: false)
-        .setTotal(double.parse(CartData.totalAmount));
+    Provider.of<CartItemCounter>(context, listen: false).setTotal(int.parse(CartData.itmNo));
+    Provider.of<CartTotalCounter>(context, listen: false).setTotal(double.parse(CartData.totalAmount));
   }
 
   loadforUpload() async {
@@ -123,29 +119,25 @@ class _StockRequestState extends State<StockRequest> {
     }
   }
 
-  showSnackBar(context, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-      setCateg, itmPrcpl, itmImg) {
+  showSnackBar(context, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmPrcpl, itmImg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: const Text(
-            '1 Item Deleted',
-          ),
-          action: SnackBarAction(
-              label: "UNDO",
-              onPressed: () {
-                setState(() {
-                  unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-                      setCateg, itmPrcpl, itmImg);
-                });
-              })),
+        content: const Text('1 Item Deleted',),
+        action: SnackBarAction(
+          label: "UNDO",
+          onPressed: () {
+            setState(() {
+              unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmPrcpl, itmImg);
+            });
+          },
+        ),
+      ),
     );
   }
 
-  unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg,
-      itmPrcpl, itmImg) {
+  unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmPrcpl, itmImg) {
     setState(() {
-      db.addItemtoCart(UserData.id, itmCode, itmDesc, itmUom, itmAmt, itmQty,
-          itmTotal, setCateg, itmPrcpl, itmImg);
+      db.addItemtoCart(UserData.id, itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal, setCateg, itmPrcpl, itmImg);
       refreshList();
     });
   }
@@ -168,62 +160,62 @@ class _StockRequestState extends State<StockRequest> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          handleUserInteraction();
-        },
-        onPanDown: (details) {
-          handleUserInteraction();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // ignore: prefer_const_literals_to_create_immutables
-              children: [
-                const Text(
-                  'Stock Request',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                ),
-              ],
-            ),
-          ),
-          backgroundColor: Colors.grey[100],
-          body: Column(
-            children: [Expanded(child: listViewCont())],
-          ),
-          floatingActionButton: Container(
-            padding: const EdgeInsets.only(left: 20),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: FloatingActionButton(
-                onPressed: () {
-                  //PADUNG SA ITEM LIST
-                  Navigator.push(
-                          context,
-                          PageTransition(
-                              // duration: const Duration(milliseconds: 100),
-                              type: PageTransitionType.rightToLeft,
-                              child: const ItemList()))
-                      .then((value) {
-                    refreshList();
-                  });
-                },
-                backgroundColor: ColorsTheme.mainColor,
-                child: const Icon(Icons.add),
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        handleUserInteraction();
+      },
+      onPanDown: (details) {
+        handleUserInteraction();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // ignore: prefer_const_literals_to_create_immutables
+            children: [
+              const Text('Stock Request',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.grey[100],
+        body: Column(
+          children: [Expanded(child: listViewCont())],
+        ),
+        floatingActionButton: Container(
+          padding: const EdgeInsets.only(left: 20),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: FloatingActionButton(
+              onPressed: () {
+                //PADUNG SA ITEM LIST
+                Navigator.push(context,
+                  PageTransition(
+                    // duration: const Duration(milliseconds: 100),
+                    type: PageTransitionType.rightToLeft,
+                    child: const ItemList(),
+                  ),
+                ).then((value) {
+                  refreshList();
+                });
+              },
+              backgroundColor: ColorsTheme.mainColor,
+              child: const Icon(Icons.add),
             ),
           ),
-          bottomNavigationBar: BottomAppBar(
-            child: Container(
-              padding: const EdgeInsets.all(5),
-              color: Colors.white,
-              width: MediaQuery.of(context).size.width,
-              height: 140,
-              child: bottomAppBar(),
-            ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            color: Colors.white,
+            width: MediaQuery.of(context).size.width,
+            height: 140,
+            child: bottomAppBar(),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Container listViewCont() {
@@ -240,15 +232,14 @@ class _StockRequestState extends State<StockRequest> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'Cart is Empty. Press the add button below to add items.',
+            Text('Cart is Empty. Press the add button below to add items.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -272,10 +263,7 @@ class _StockRequestState extends State<StockRequest> {
           } else {
             noImage = false;
           }
-          cartList[index]['item_total'] =
-              (double.parse(cartList[index]['item_amt']) *
-                      double.parse(cartList[index]['item_qty']))
-                  .toStringAsFixed(2);
+          cartList[index]['item_total'] = (double.parse(cartList[index]['item_amt']) * double.parse(cartList[index]['item_qty'])).toStringAsFixed(2);
           final item = cartList[index].toString();
           return SingleChildScrollView(
             child: Dismissible(
@@ -305,9 +293,10 @@ class _StockRequestState extends State<StockRequest> {
                   var itmImg = cartList[index]['image'].toString();
 
                   db.deleteRequestItem(
-                      UserData.id,
-                      cartList[index]['item_code'].toString(),
-                      cartList[index]['item_uom'].toString());
+                    UserData.id,
+                    cartList[index]['item_code'].toString(),
+                    cartList[index]['item_uom'].toString(),
+                  );
                   cartList.removeAt(index);
                   computeTotal();
                   // refreshList();
@@ -329,8 +318,7 @@ class _StockRequestState extends State<StockRequest> {
                     // color: Colors.white,
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(
-                            width: 1.0, color: ColorsTheme.mainColor),
+                        top: BorderSide(width: 1.0, color: ColorsTheme.mainColor),
                       ),
                       color: Colors.white,
                     ),
@@ -351,17 +339,19 @@ class _StockRequestState extends State<StockRequest> {
                                 width: 75,
                                 color: Colors.white,
                                 child: noImage
-                                    ? Image(image: AssetsValues.noImageImg)
-                                    : Image.file(File(
-                                        imgPath + cartList[index]['image'])),
+                                  ? Image(image: AssetsValues.noImageImg)
+                                  : Image.file(File(
+                                    imgPath + cartList[index]['image'],
+                                  ),
+                                ),
                               )
                             else if (!GlobalVariables.viewImg)
-                              Container(
-                                margin: const EdgeInsets.only(left: 3, top: 3),
-                                width: 75,
-                                color: Colors.white,
-                                child: Image(image: AssetsValues.noImageImg),
-                              )
+                            Container(
+                              margin: const EdgeInsets.only(left: 3, top: 3),
+                              width: 75,
+                              color: Colors.white,
+                              child: Image(image: AssetsValues.noImageImg),
+                            ),
                           ],
                         ),
                         Row(
@@ -376,14 +366,13 @@ class _StockRequestState extends State<StockRequest> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width - 230,
-                                    child: Text(
-                                      cartList[index]['item_desc'],
+                                    width: MediaQuery.of(context).size.width - 230,
+                                    child: Text(cartList[index]['item_desc'],
                                       textAlign: TextAlign.left,
                                       style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -393,30 +382,23 @@ class _StockRequestState extends State<StockRequest> {
                                     children: <Widget>[
                                       SizedBox(
                                         width: 45,
-                                        child: Text(
-                                          cartList[index]['item_uom'],
+                                        child: Text(cartList[index]['item_uom'],
                                           textAlign: TextAlign.left,
-                                          style: const TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500),
+                                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500),
                                         ),
                                       ),
                                       const SizedBox(
                                         width: 2,
                                       ),
                                       SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                    6 -
-                                                15,
-                                        child: Text(
-                                          formatCurrencyAmt.format(double.parse(
-                                              cartList[index]['item_amt'])),
+                                        width: MediaQuery.of(context).size.width / 6 - 15,
+                                        child: Text(formatCurrencyAmt.format(double.parse(cartList[index]['item_amt'])),
                                           textAlign: TextAlign.right,
                                           style: const TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.w500),
+                                            color: Colors.green,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -438,68 +420,44 @@ class _StockRequestState extends State<StockRequest> {
                                   const SizedBox(
                                     height: 40,
                                   ),
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                  Row(crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       InkWell(
                                         onTap: () {
                                           setState(() {
-                                            if (int.parse(cartList[index]
-                                                    ['item_qty']) ==
-                                                1) {
+                                            if (int.parse(cartList[index]['item_qty']) == 1) {
                                               // itmCat = "";
                                               // categ = false;
                                               showGlobalSnackbar(
-                                                  'Information',
-                                                  'Swipe to remove item.',
-                                                  Colors.blue,
-                                                  Colors.white);
+                                                'Information',
+                                                'Swipe to remove item.',
+                                                Colors.blue,
+                                                Colors.white);
                                             } else {
-                                              if (int.parse(cartList[index]
-                                                      ['item_qty']) >
-                                                  1) {
+                                              if (int.parse(cartList[index]['item_qty']) > 1) {
                                                 setState(() {
-                                                  var i = int.parse(
-                                                          cartList[index]
-                                                              ['item_qty']) -
-                                                      1;
-                                                  cartList[index]['item_qty'] =
-                                                      i.toString();
+                                                  var i = int.parse(cartList[index]['item_qty']) - 1;
+                                                  cartList[index]['item_qty'] = i.toString();
 
-                                                  cartList[index]
-                                                      ['item_total'] = (double
-                                                              .parse(cartList[
-                                                                      index][
-                                                                  'item_amt']) *
-                                                          double.parse(
-                                                              cartList[index]
-                                                                  ['item_qty']))
-                                                      .toStringAsFixed(2);
+                                                  cartList[index]['item_total'] = (double.parse(cartList[index]['item_amt']) * double.parse(cartList[index]['item_qty'])).toStringAsFixed(2);
 
                                                   db.updateSmCart(
-                                                      UserData.id,
-                                                      cartList[index]
-                                                          ['item_code'],
-                                                      cartList[index]
-                                                          ['item_uom'],
-                                                      cartList[index]
-                                                          ['item_qty'],
-                                                      cartList[index]
-                                                          ['item_total']);
+                                                    UserData.id,
+                                                    cartList[index]['item_code'],
+                                                    cartList[index]['item_uom'],
+                                                    cartList[index]['item_qty'],
+                                                    cartList[index]['item_total'],
+                                                  );
                                                   computeTotal();
                                                 });
                                               } else {
                                                 setState(() {
                                                   db.deleteRequestItem(
-                                                      UserData.id,
-                                                      cartList[index]
-                                                              ['item_code']
-                                                          .toString(),
-                                                      cartList[index]
-                                                              ['item_uom']
-                                                          .toString());
+                                                    UserData.id,
+                                                    cartList[index]['item_code'].toString(),
+                                                    cartList[index]['item_uom'].toString(),
+                                                  );
 
                                                   cartList.removeAt(index);
                                                   computeTotal();
@@ -515,39 +473,28 @@ class _StockRequestState extends State<StockRequest> {
                                       ),
                                       SizedBox(
                                         width: 25,
-                                        child: Text(
-                                          cartList[index]['item_qty']
-                                              .toString(),
+                                        child: Text(cartList[index]['item_qty'].toString(),
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500),
+                                          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
                                         ),
                                       ),
                                       InkWell(
                                         onTap: () {
                                           setState(() {
-                                            var i = int.parse(cartList[index]
-                                                    ['item_qty']) +
-                                                1;
+                                            var i = int.parse(cartList[index]['item_qty']) + 1;
                                             // print(i);
-                                            cartList[index]['item_qty'] =
-                                                i.toString();
+                                            cartList[index]['item_qty'] = i.toString();
 
                                             cartList[index]['item_total'] =
-                                                (double.parse(cartList[index]
-                                                            ['item_amt']) *
-                                                        double.parse(
-                                                            cartList[index]
-                                                                ['item_qty']))
-                                                    .toStringAsFixed(2);
+                                              (double.parse(cartList[index]['item_amt']) * double.parse(cartList[index]['item_qty'])).toStringAsFixed(2);
                                             computeTotal();
                                             db.updateSmCart(
-                                                UserData.id,
-                                                cartList[index]['item_code'],
-                                                cartList[index]['item_uom'],
-                                                cartList[index]['item_qty'],
-                                                cartList[index]['item_total']);
+                                              UserData.id,
+                                              cartList[index]['item_code'],
+                                              cartList[index]['item_uom'],
+                                              cartList[index]['item_qty'],
+                                              cartList[index]['item_total'],
+                                            );
                                           });
                                         },
                                         child: Icon(
@@ -559,15 +506,14 @@ class _StockRequestState extends State<StockRequest> {
                                         width: 70,
                                         padding:
                                             const EdgeInsets.only(right: 5),
-                                        child: Text(
-                                          formatCurrencyAmt.format(double.parse(
-                                              cartList[index]['item_total'])),
+                                        child: Text(formatCurrencyAmt.format(double.parse(cartList[index]['item_total'])),
                                           textAlign: TextAlign.right,
                                           style: const TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              fontStyle: FontStyle.italic),
+                                            color: Colors.green,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            fontStyle: FontStyle.italic,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -594,64 +540,58 @@ class _StockRequestState extends State<StockRequest> {
       children: [
         Row(
           children: const [
-            Text(
-              'Order Summary',
+            Text('Order Summary',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-            )
+            ),
           ],
         ),
         // const SizedBox(height: 5),
         Row(
           children: const [
             Expanded(
-                child: Text(
-              'Request No.',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-            )),
-            Text(
-              '0',
+              child: Text('Request No.',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              ),
+            ),
+            Text('0',
               style: TextStyle(fontSize: 12),
-            )
+            ),
           ],
         ),
         Row(
           children: [
             const Expanded(
-              child: Text(
-                'Total Qty',
+              child: Text('Total Qty',
                 style: TextStyle(fontSize: 12),
               ),
             ),
             Text(
               CartData.itmNo,
               style: const TextStyle(fontSize: 12),
-            )
+            ),
           ],
         ),
         Row(
           children: const [
             Expanded(
-                child: Text(
-              'Total Discount',
+              child: Text('Total Discount',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
+            Text('0.00',
               style: TextStyle(fontSize: 12),
-            )),
-            Text(
-              '0.00',
-              style: TextStyle(fontSize: 12),
-            )
+            ),
           ],
         ),
         Row(
           // ignore: prefer_const_literals_to_create_immutables
           children: [
             const Expanded(
-              child: Text(
-                'Total Amount',
+              child: Text('Total Amount',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
             ),
-            Text(
-              formatCurrencyTot.format(double.parse(CartData.totalAmount)),
+            Text(formatCurrencyTot.format(double.parse(CartData.totalAmount)),
               // formatCurrencyTot.format(double.parse(totalAmount)),
               // '',
               textAlign: TextAlign.left,
@@ -671,15 +611,15 @@ class _StockRequestState extends State<StockRequest> {
               style: raisedButtonStyleGreen,
               onPressed: () async {
                 if (cartList.isEmpty) {
-                  showGlobalSnackbar('Information',
-                      'Unable to send empty cart.', Colors.blue, Colors.white);
+                  showGlobalSnackbar('Information', 'Unable to send empty cart.', Colors.blue, Colors.white);
                 } else {
                   CartData.list = cartList;
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: const SendRequest()));
+                  Navigator.push(context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: const SendRequest(),
+                    ),
+                  );
                 }
               },
               child: Row(
@@ -687,12 +627,8 @@ class _StockRequestState extends State<StockRequest> {
                 mainAxisSize: MainAxisSize.min,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                  const Text(
-                    "Send Request",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
+                  const Text("Send Request",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ],
               ),
@@ -715,8 +651,7 @@ class _StockRequestState extends State<StockRequest> {
           const Icon(Icons.remove_red_eye_outlined, color: Colors.deepOrange),
           const SizedBox(width: 5),
           const Expanded(
-            child: Text(
-              'View Pending Requests',
+            child: Text('View Pending Requests',
               style: TextStyle(fontSize: 14),
             ),
           ),
@@ -741,15 +676,14 @@ class _StockRequestState extends State<StockRequest> {
           const Icon(Icons.add_circle_outline_outlined, color: Colors.green),
           const SizedBox(width: 5),
           const Expanded(
-            child: Text(
-              'Add New Request',
+            child: Text('Add New Request',
               style: TextStyle(fontSize: 14),
             ),
           ),
           const Icon(
             Icons.chevron_right,
             color: Colors.black,
-          )
+          ),
         ],
       ),
     );

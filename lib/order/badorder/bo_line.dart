@@ -131,153 +131,156 @@ class _BoOrderItemsState extends State<BoOrderItems> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: (context, index) {
-            bool mark;
-            if (_list[index]['mark'] == 0) {
-              mark = false;
-            } else {
-              mark = true;
-            }
-            if (_list[index]['image'] == '') {
-              noImage = true;
-            } else {
-              noImage = false;
-            }
-            // ignore: unused_local_variable
-            final item = _list[index].toString();
-            return Container(
-              margin: const EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100,
-                    ),
-                  ]),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    height: 70,
-                    child: Row(
-                      children: [
-                        Checkbox(
-                            checkColor: Colors.white,
-                            fillColor:
-                                MaterialStateProperty.resolveWith(getColor),
-                            value: mark,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                mark = value!;
-                                if (mark) {
-                                  _list[index]['mark'] = 1;
-                                } else {
-                                  _list[index]['mark'] = 0;
-                                }
-                              });
-                            }),
-                        if (GlobalVariables.viewImg)
-                          Container(
-                            width: 75,
-                            color: Colors.white,
-                            child: noImage
-                                ? Image(image: AssetsValues.noImageImg)
-                                : Image.file(
-                                    File(imgPath + _list[index]['image'])),
-                          )
-                        else if (!GlobalVariables.viewImg)
-                          Container(
-                              margin: const EdgeInsets.only(left: 3, top: 3),
-                              width: 75,
-                              color: Colors.white,
-                              child: Image(image: AssetsValues.noImageImg)),
-                        Expanded(
-                            child: Container(
+        itemCount: _list.length,
+        itemBuilder: (context, index) {
+          bool mark;
+          if (_list[index]['mark'] == 0) {
+            mark = false;
+          } else {
+            mark = true;
+          }
+          if (_list[index]['image'] == '') {
+            noImage = true;
+          } else {
+            noImage = false;
+          }
+          // ignore: unused_local_variable
+          final item = _list[index].toString();
+          return Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10),
+              // ignore: prefer_const_literals_to_create_immutables
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  height: 70,
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        checkColor: Colors.white,
+                        fillColor: MaterialStateProperty.resolveWith(getColor),
+                        value: mark,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            mark = value!;
+                            if (mark) {
+                              _list[index]['mark'] = 1;
+                            } else {
+                              _list[index]['mark'] = 0;
+                            }
+                          });
+                        },
+                      ),
+                      if (GlobalVariables.viewImg)
+                        Container(
+                          width: 75,
+                          color: Colors.white,
+                          child: noImage
+                            ? Image(image: AssetsValues.noImageImg)
+                            : Image.file(File(imgPath + _list[index]['image'])),
+                        )
+                      else if (!GlobalVariables.viewImg)
+                        Container(
+                          margin: const EdgeInsets.only(left: 3, top: 3),
+                          width: 75,
+                          color: Colors.white,
+                          child: Image(image: AssetsValues.noImageImg),
+                        ),
+                      Expanded(
+                        child: Container(
                           margin: const EdgeInsets.only(left: 5),
                           // color: Colors.grey,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                _list[index]['item_desc'],
+                              Text(_list[index]['item_desc'],
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
                               ),
                               Row(
                                 children: [
-                                  Text(
-                                    _list[index]['uom'],
+                                  Text(_list[index]['uom'],
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(
-                                        color: Colors.deepOrange,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500),
+                                      color: Colors.deepOrange,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                   const SizedBox(width: 10),
-                                  Text(
-                                    formatCurrencyAmt.format(
-                                        double.parse(_list[index]['amt'])),
+                                  Text(formatCurrencyAmt.format(double.parse(_list[index]['amt'])),
                                     textAlign: TextAlign.right,
                                     style: const TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                      color: Colors.green,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        )),
-                        const SizedBox(width: 10),
-                        Text(
-                          _list[index]['qty'],
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
                         ),
-                        const SizedBox(width: 20),
-                        Container(
-                          color: Colors.transparent,
-                          // width: 80,
-                          // color: Colors.grey,
-                          child: Row(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              Text(
-                                formatCurrencyAmt.format(
-                                    double.parse(_list[index]['tot_amt'])),
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      Text(_list[index]['qty'],
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 20),
+                      Container(
+                        color: Colors.transparent,
+                        // width: 80,
+                        // color: Colors.grey,
+                        child: Row(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Text(formatCurrencyAmt.format(double.parse(_list[index]['tot_amt'])),
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
-                ],
-              ),
-            );
-          }),
+                ),
+                const SizedBox(height: 5),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -288,19 +291,18 @@ class _BoOrderItemsState extends State<BoOrderItems> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Summary',
+          Text('Summary',
             style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+              color: Colors.grey[800],
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text('${_list.length} lines, ${widget.itmCount} items'),
           Row(
             children: [
               const Expanded(child: Text('Goods')),
-              Text(
-                formatCurrencyAmt.format(double.parse(widget.totAmt)),
+              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
               ),
             ],
           ),
@@ -314,20 +316,20 @@ class _BoOrderItemsState extends State<BoOrderItems> {
           Row(
             children: [
               Expanded(
-                child: Text(
-                  'Total',
+                child: Text('Total',
                   style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              Text(
-                formatCurrencyTot.format(double.parse(widget.totAmt)),
-                style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 20,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Text(formatCurrencyTot.format(double.parse(widget.totAmt)),
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -346,14 +348,15 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                     }
                     if (!empty) {
                       RefundData.tmplist.clear();
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: BoCart(
-                                _list,
-                                widget.ordNo,
-                              ))).then((value) {
+                      Navigator.push(context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: BoCart(
+                            _list,
+                            widget.ordNo,
+                          ),
+                        ),
+                      ).then((value) {
                         if (RefundData.tmplist.isNotEmpty) {
                           // print('NOT EMPTY');
 
@@ -364,30 +367,33 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                             } else {
                               noItms = false;
                               db.addInventory(
-                                  UserData.id,
-                                  element['rf_itmcode'],
-                                  element['rf_itemdesc'],
-                                  element['rf_uom'],
-                                  element['rf_qty']);
+                                UserData.id,
+                                element['rf_itmcode'],
+                                element['rf_itemdesc'],
+                                element['rf_uom'],
+                                element['rf_qty'],
+                              );
                             }
                           }
 
                           // db.deleteAllConvItem(UserData.id);
                           if (!noItms) {
                             showGlobalSnackbar(
-                                'Information',
-                                'Items returned to inventory.',
-                                Colors.blue,
-                                Colors.white);
+                              'Information',
+                              'Items returned to inventory.',
+                              Colors.blue,
+                              Colors.white,
+                            );
                           }
                         }
                       });
                     } else {
                       showGlobalSnackbar(
-                          'Information',
-                          'Please select items to refund.',
-                          Colors.blue,
-                          Colors.white);
+                        'Information',
+                        'Please select items to refund.',
+                        Colors.blue,
+                        Colors.white,
+                      );
                     }
                   });
                 },
@@ -396,8 +402,7 @@ class _BoOrderItemsState extends State<BoOrderItems> {
                   mainAxisSize: MainAxisSize.min,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text(
-                      "Continue to refund",
+                    const Text("Continue to refund",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,

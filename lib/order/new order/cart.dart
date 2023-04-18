@@ -95,20 +95,16 @@ class _MyCartState extends State<MyCart> {
         tmp.forEach((element) {
           _disc.forEach((a) {
             if (element['item_principal'] == a['principal']) {
-              if (double.parse(element['total'].toString()) >=
-                      double.parse(a['range_from'].toString()) &&
-                  double.parse(element['total'].toString()) <=
-                      double.parse(a['range_to'].toString())) {
+              if (double.parse(element['total'].toString()) >= double.parse(a['range_from'].toString()) &&
+                  double.parse(element['total'].toString()) <= double.parse(a['range_to'].toString())) {
                 setState(() {
                   print(a['principal']);
                   print(element['total']);
                   print(a['discount']);
                   amt = 0.00;
-                  amt = double.parse(element['total'].toString()) *
-                      double.parse(a['discount'].toString());
+                  amt = double.parse(element['total'].toString()) * double.parse(a['discount'].toString());
 
-                  CartData.discAmt =
-                      (double.parse(CartData.discAmt) + amt).toStringAsFixed(2);
+                  CartData.discAmt = (double.parse(CartData.discAmt) + amt).toStringAsFixed(2);
                   print(CartData.discAmt);
                 });
               }

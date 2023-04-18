@@ -144,11 +144,13 @@ class _SplashState extends State<Splash> {
                 // height: 30,
                 // color: Colors.grey,
                 child: Text('E-COMMERCE COPYRIGHT 2020',
-                    style: TextStyle(
-                        color: ColorsTheme.mainColor,
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center),
+                  style: TextStyle(
+                    color: ColorsTheme.mainColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
             )
           ],
@@ -161,17 +163,19 @@ class _SplashState extends State<Splash> {
     // if (isRootedDevice == false) {
     dispose();
     Navigator.push(
-        context,
-        PageRouteBuilder(
-            transitionDuration: const Duration(seconds: 1),
-            transitionsBuilder: (context, animation, animationTimne, child) {
-              return FadeTransition(
-                opacity: animation,
-                child: child,
-              );
-            },
-            pageBuilder: (context, animation, animationTime) {
-              return const WelcomePage();
-            }));
+      context,
+      PageRouteBuilder(
+        transitionDuration: const Duration(seconds: 1),
+        transitionsBuilder: (context, animation, animationTimne, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        pageBuilder: (context, animation, animationTime) {
+          return const WelcomePage();
+        },
+      ),
+    );
   }
 }

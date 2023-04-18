@@ -81,8 +81,7 @@ class _AddItemState extends State<AddItem> {
 
   totalchanged() {
     CartData.totalAmount =
-        (double.parse(CartData.totalAmount) + double.parse(CartData.itmTotal))
-            .toStringAsFixed(2);
+        (double.parse(CartData.totalAmount) + double.parse(CartData.itmTotal)).toStringAsFixed(2);
     CartData.itmNo =
         (int.parse(CartData.itmNo) + int.parse(CartData.itmQty)).toString();
   }
@@ -138,8 +137,7 @@ class _AddItemState extends State<AddItem> {
           children: <Widget>[
             Container(
               // color: Colors.grey,
-              padding:
-                  const EdgeInsets.only(top: 60, bottom: 16, right: 5, left: 5),
+              padding: const EdgeInsets.only(top: 60, bottom: 16, right: 5, left: 5),
               margin: const EdgeInsets.only(top: 100),
               decoration: BoxDecoration(
                   color: Colors.grey[50],
@@ -171,8 +169,8 @@ class _AddItemState extends State<AddItem> {
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                               color: GlobalVariables.outofStock
-                                  ? Colors.grey
-                                  : Colors.black,
+                                ? Colors.grey
+                                : Colors.black,
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -187,24 +185,16 @@ class _AddItemState extends State<AddItem> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Text(
-                                formatCurrencyAmt
-                                    .format(double.parse(CartData.itmAmt!)),
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.green,
-                                ),
+                              Text(formatCurrencyAmt.format(double.parse(CartData.itmAmt!)),
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.green),
                                 textAlign: TextAlign.center,
                               ),
                               const SizedBox(
                                 width: 15,
                               ),
-                              Text(
-                                CartData.itmUom.toString(),
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 14),
-                              )
+                              Text(CartData.itmUom.toString(),
+                                style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14),
+                              ),
                             ],
                           ),
                         ),
@@ -214,13 +204,8 @@ class _AddItemState extends State<AddItem> {
                         Container(
                           margin: const EdgeInsets.only(left: 20, right: 20),
                           width: MediaQuery.of(context).size.width / 2,
-                          child: const Text(
-                            'Quantity',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
-                            ),
+                          child: const Text('Quantity',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Colors.black),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -242,9 +227,7 @@ class _AddItemState extends State<AddItem> {
                                       i = int.parse(CartData.itmQty) - 1;
                                       CartData.itmQty = i.toString();
                                       CartData.itmTotal =
-                                          (double.parse(CartData.itmAmt!) *
-                                                  double.parse(CartData.itmQty))
-                                              .toString();
+                                          (double.parse(CartData.itmAmt!) * double.parse(CartData.itmQty)).toString();
                                       // print(CartData.itmTotal);
                                       qtyController.text = CartData.itmQty;
                                     }
@@ -276,17 +259,11 @@ class _AddItemState extends State<AddItem> {
                                         CartData.itmQty = '100';
                                       }
                                       CartData.itmTotal =
-                                          (double.parse(CartData.itmAmt!) *
-                                                  double.parse(CartData.itmQty))
-                                              .toStringAsFixed(2);
+                                          (double.parse(CartData.itmAmt!) * double.parse(CartData.itmQty)).toStringAsFixed(2);
                                       // print(CartData.itmTotal);
                                     });
                                   },
-                                  onTap: () => qtyController.selection =
-                                      TextSelection(
-                                          baseOffset: 0,
-                                          extentOffset:
-                                              qtyController.value.text.length),
+                                  onTap: () => qtyController.selection = TextSelection(baseOffset: 0, extentOffset : qtyController.value.text.length),
                                 ),
                                 // child: Text(
                                 //   CartData.itmQty,
@@ -310,19 +287,14 @@ class _AddItemState extends State<AddItem> {
                                     } else {
                                       if (int.parse(CartData.itmQty) >=
                                           int.parse(CartData.availableQty)) {
-                                        showGlobalSnackbar(
-                                            'Information',
-                                            'Limited stocks available.',
+                                        showGlobalSnackbar('Information', 'Limited stocks available.',
                                             Colors.blue,
                                             Colors.white);
                                       } else {
                                         int i = 0;
                                         i = int.parse(CartData.itmQty) + 1;
                                         CartData.itmQty = i.toString();
-                                        CartData.itmTotal =
-                                            (double.parse(CartData.itmAmt!) *
-                                                    int.parse(CartData.itmQty))
-                                                .toString();
+                                        CartData.itmTotal = (double.parse(CartData.itmAmt!) * int.parse(CartData.itmQty)).toString();
                                         qtyController.text = CartData.itmQty;
                                       }
                                     }
@@ -359,18 +331,20 @@ class _AddItemState extends State<AddItem> {
                             onPressed: () async {
                               if (int.parse(CartData.itmQty) <= 0) {
                                 showGlobalSnackbar(
-                                    'Information',
-                                    'Unable to add less than or equal to zero.',
-                                    Colors.blue,
-                                    Colors.white);
+                                  'Information',
+                                  'Unable to add less than or equal to zero.',
+                                  Colors.blue,
+                                  Colors.white,
+                                );
                               } else {
                                 if (int.parse(CartData.itmQty) >
                                     int.parse(CartData.availableQty)) {
                                   showGlobalSnackbar(
-                                      'Information',
-                                      'Limited stocks available.',
-                                      Colors.blue,
-                                      Colors.white);
+                                    'Information',
+                                    'Limited stocks available.',
+                                    Colors.blue,
+                                    Colors.white,
+                                  );
                                 } else {
                                   db.addforConversion(
                                       UserData.id,
@@ -395,11 +369,12 @@ class _AddItemState extends State<AddItem> {
 
                                   final action =
                                       await WarningDialogs.openDialog(
-                                          context,
-                                          'Information',
-                                          'Item added successfully.',
-                                          false,
-                                          'OK');
+                                        context,
+                                        'Information',
+                                        'Item added successfully.',
+                                        false,
+                                        'OK',
+                                      );
                                   if (action == DialogAction.yes) {
                                     // ignore: use_build_context_synchronously
                                     Navigator.pop(context);
@@ -444,7 +419,7 @@ class _AddItemState extends State<AddItem> {
                 width: 180,
                 height: 150,
                 child: Image(image: AssetsValues.noImageImg),
-              )
+              ),
           ],
         ),
       ],

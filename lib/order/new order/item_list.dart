@@ -40,8 +40,7 @@ class _ItemListState extends State<ItemList> {
   final db = DatabaseHelper();
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
-  final formatCurrencyTot =
-      NumberFormat.currency(locale: "en_US", symbol: "Php ");
+  final formatCurrencyTot = NumberFormat.currency(locale: "en_US", symbol: "Php ");
 
   @override
   void initState() {
@@ -179,8 +178,7 @@ class _ItemListState extends State<ItemList> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No items found.',
+            Text('No items found.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
@@ -193,231 +191,227 @@ class _ItemListState extends State<ItemList> {
       );
     } else {
       return Container(
-          color: Colors.transparent,
-          width: MediaQuery.of(context).size.width,
-          child: ListView.builder(
-              padding: const EdgeInsets.only(top: 1),
-              itemCount: _itemlist.length,
-              itemBuilder: (context, index) {
-                bool lowStock = false;
-                bool discounted = false;
-                if (_itemlist[index]['discounted'] == 1) {
-                  discounted = true;
-                } else {
-                  discounted = false;
-                }
-                if (_itemlist[index]['image'] == '') {
-                  noImage = true;
-                } else {
-                  noImage = false;
-                }
-                if (int.parse(_itemlist[index]['item_qty']) < 5) {
-                  lowStock = true;
-                } else {
-                  lowStock = false;
-                }
-                // if (_itemlist[index]['status'] == '0') {
-                //   outofStock = true;
-                // } else {
-                //   outofStock = false;
-                // }
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          var tmp = await db.searchCustomerCart(
-                              UserData.id,
-                              CustomerData.accountCode,
-                              _itemlist[index]['item_code'],
-                              _itemlist[index]['item_uom']);
-                          _tmpitm = tmp;
-                          setState(() {
-                            CartData.itmCode = _itemlist[index]['item_code'];
-                            CartData.itmDesc = _itemlist[index]['item_desc'];
-                            CartData.itmUom = _itemlist[index]['item_uom'];
-                            CartData.itmAmt = _itemlist[index]['item_amt'];
-                            CartData.itmQty = '1';
-                            // CartData.setCateg = _itemlist[index]['item_cat'];
-                            CartData.principal =
-                                _itemlist[index]['item_principal'];
-                            CartData.imgpath = _itemlist[index]['image'];
-                            // print(CartData.imgpath);
-                            CartData.itmTotal =
-                                (double.parse(_itemlist[index]['item_amt']) *
-                                        double.parse(CartData.itmQty))
-                                    .toString();
-                            CartData.availableQty =
-                                _itemlist[index]['item_qty'];
-                            // if (_itemlist[index]['status'] == '0') {
-                            //   GlobalVariables.outofStock = true;
-                            // } else {
-                            //   GlobalVariables.outofStock = false;
-                            // }
-                          });
-                          if (_tmpitm.isNotEmpty) {
-                            String msg =
-                                "${_tmpitm[0]['item_desc']} is already added with ${_tmpitm[0]['item_qty']} quantity. Add anyway?";
-                            // ignore: use_build_context_synchronously
-                            final action = await Dialogs.openDialog(context,
-                                'Confirmation', msg, false, 'No', 'Yes');
-                            if (action == DialogAction.yes) {
-                              showDialog(
-                                      context: context,
-                                      builder: (context) => const AddDialog())
-                                  .then((value) {
-                                setState(() {
-                                  refreshList();
-                                  // loadProducts();
-                                });
-                              });
-                            } else {}
-                          } else {
-                            showDialog(
-                                    // barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) => const AddDialog())
-                                .then((value) {
-                              setState(() {
-                                refreshList();
-                                // print('REFRESH!');
-                              });
+        color: Colors.transparent,
+        width: MediaQuery.of(context).size.width,
+        child: ListView.builder(
+          padding: const EdgeInsets.only(top: 1),
+          itemCount: _itemlist.length,
+          itemBuilder: (context, index) {
+            bool lowStock = false;
+            bool discounted = false;
+            if (_itemlist[index]['discounted'] == 1) {
+              discounted = true;
+            } else {
+              discounted = false;
+            }
+            if (_itemlist[index]['image'] == '') {
+              noImage = true;
+            } else {
+              noImage = false;
+            }
+            if (int.parse(_itemlist[index]['item_qty']) < 5) {
+              lowStock = true;
+            } else {
+              lowStock = false;
+            }
+            // if (_itemlist[index]['status'] == '0') {
+            //   outofStock = true;
+            // } else {
+            //   outofStock = false;
+            // }
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      var tmp = await db.searchCustomerCart(
+                        UserData.id,
+                        CustomerData.accountCode,
+                        _itemlist[index]['item_code'],
+                        _itemlist[index]['item_uom'],
+                      );
+                      _tmpitm = tmp;
+                      setState(() {
+                        CartData.itmCode      = _itemlist[index]['item_code'];
+                        CartData.itmDesc      = _itemlist[index]['item_desc'];
+                        CartData.itmUom       = _itemlist[index]['item_uom'];
+                        CartData.itmAmt       = _itemlist[index]['item_amt'];
+                        CartData.itmQty       = '1';
+                        CartData.principal    = _itemlist[index]['item_principal'];
+                        CartData.imgpath      = _itemlist[index]['image'];
+                        CartData.itmTotal     = (double.parse(_itemlist[index]['item_amt']) * double.parse(CartData.itmQty)).toString();
+                        CartData.availableQty = _itemlist[index]['item_qty'];
+                        // CartData.setCateg = _itemlist[index]['item_cat'];
+
+                        // print(CartData.imgpath);
+                        // if (_itemlist[index]['status'] == '0') {
+                        //   GlobalVariables.outofStock = true;
+                        // } else {
+                        //   GlobalVariables.outofStock = false;
+                        // }
+                      });
+                      if (_tmpitm.isNotEmpty) {
+                        String msg = "${_tmpitm[0]['item_desc']} is already added with ${_tmpitm[0]['item_qty']} quantity. Add anyway?";
+                        // ignore: use_build_context_synchronously
+                        final action = await Dialogs.openDialog(context,
+                          'Confirmation', msg, false, 'No', 'Yes',
+                        );
+                        if (action == DialogAction.yes) {
+                          showDialog(
+                            context: context,
+                            builder: (context) => const AddDialog()).then((value) {
+                            setState(() {
+                              refreshList();
+                              // loadProducts();
                             });
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(
-                              bottom: 5, left: 5, right: 5),
-                          height: 70,
-                          // color: Colors.white,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.white,
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 5,
-                                height: 80,
-                                color: ColorsTheme.mainColor,
+                          });
+                        } else {}
+                      } else {
+                        showDialog(
+                          // barrierDismissible: false,
+                          context: context,
+                          builder: (context) => const AddDialog()).then((value) {
+                          setState(() {
+                            refreshList();
+                            // print('REFRESH!');
+                          });
+                        });
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 5, left: 5, right: 5),
+                      height: 70,
+                      // color: Colors.white,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 5,
+                            height: 80,
+                            color: ColorsTheme.mainColor,
+                          ),
+                          if (GlobalVariables.viewImg)
+                            Container(
+                              // margin: const EdgeInsets.only(
+                              //     left: 3, top: 3),
+                              width: 75,
+                              color: Colors.white,
+                              child: noImage
+                                ? Image(image: AssetsValues.noImageImg)
+                                // ? const Icon(
+                                //     Icons.no_photography_outlined,
+                                //     color: Colors.grey,
+                                //     size: 36,
+                                //   )
+                                // ? Image.file(File(
+                                //     "/data/data/com.example.salesman/app_flutter/images/906782_PCS.jpg"))
+                                : Image.file(File(
+                                    imgPath + _itemlist[index]['image'])),
+                              // child: Image(image: AssetsValues.noImageImg),
+                            )
+                          else if (!GlobalVariables.viewImg)
+                            Container(
+                              margin: const EdgeInsets.only(left: 3, top: 3),
+                              width: 75,
+                              color: Colors.white,
+                              child: Image(image: AssetsValues.noImageImg),
+                            ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(left: 5),
+                              // color: Colors.grey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_itemlist[index]['item_desc'],
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: outofStock
+                                      ? Colors.grey
+                                      : Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    _itemlist[index]['item_uom'],
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      color: Colors.deepOrange,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              if (GlobalVariables.viewImg)
-                                Container(
-                                  // margin: const EdgeInsets.only(
-                                  //     left: 3, top: 3),
-                                  width: 75,
-                                  color: Colors.white,
-                                  child: noImage
-                                      ? Image(image: AssetsValues.noImageImg)
-                                      // ? const Icon(
-                                      //     Icons.no_photography_outlined,
-                                      //     color: Colors.grey,
-                                      //     size: 36,
-                                      //   )
-                                      // ? Image.file(File(
-                                      //     "/data/data/com.example.salesman/app_flutter/images/906782_PCS.jpg"))
-                                      : Image.file(File(
-                                          imgPath + _itemlist[index]['image'])),
-                                  // child: Image(image: AssetsValues.noImageImg),
-                                )
-                              else if (!GlobalVariables.viewImg)
-                                Container(
-                                    margin:
-                                        const EdgeInsets.only(left: 3, top: 3),
-                                    width: 75,
-                                    color: Colors.white,
-                                    child:
-                                        Image(image: AssetsValues.noImageImg)),
-                              Expanded(
-                                  child: Container(
-                                margin: const EdgeInsets.only(left: 5),
-                                // color: Colors.grey,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _itemlist[index]['item_desc'],
-                                      textAlign: TextAlign.left,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: outofStock
-                                              ? Colors.grey
-                                              : Colors.black),
-                                    ),
-                                    Text(
-                                      _itemlist[index]['item_uom'],
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
-                                          color: Colors.deepOrange,
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                              )),
-                              Container(
-                                color: Colors.transparent,
-                                width: 90,
-                                // color: Colors.grey,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Visibility(
-                                      visible: discounted,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  DiscountDetails(
-                                                      _itemlist[index]
-                                                          ['item_principal']));
-                                        },
-                                        child: Container(
-                                          width: 50,
-                                          color: Colors.white,
-                                          height: 15,
-                                          child: Image(
-                                            // color: ColorsTheme.mainColor,
-                                            image: AssetsValues.discTag,
-                                          ),
+                            ),
+                          ),
+                          Container(
+                            color: Colors.transparent,
+                            width: 90,
+                            // color: Colors.grey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Visibility(
+                                  visible: discounted,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => DiscountDetails(_itemlist[index]
+                                          ['item_principal'],
                                         ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 50,
+                                      color: Colors.white,
+                                      height: 15,
+                                      child: Image(
+                                        // color: ColorsTheme.mainColor,
+                                        image: AssetsValues.discTag,
                                       ),
                                     ),
-                                    Text(
-                                      formatCurrencyAmt.format(double.parse(
-                                          _itemlist[index]['item_amt'])),
-                                      textAlign: TextAlign.right,
-                                      style: const TextStyle(
-                                          color: Colors.green,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // const SizedBox(
-                                    //   height: 20,
-                                    // ),
-                                    Text(
-                                      '${_itemlist[index]['item_qty']} item(s) available',
-                                      style: TextStyle(
-                                          fontSize: 8,
-                                          fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w500,
-                                          color: lowStock
-                                              ? Colors.red[800]
-                                              : Colors.black),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Text(formatCurrencyAmt.format(double.parse(_itemlist[index]['item_amt'])),
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                // const SizedBox(
+                                //   height: 20,
+                                // ),
+                                Text('${_itemlist[index]['item_qty']} item(s) available',
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.w500,
+                                    color: lowStock
+                                    ? Colors.red[800]
+                                    : Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              }));
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
+      );
     }
   }
 
@@ -433,8 +427,7 @@ class _ItemListState extends State<ItemList> {
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Expanded(
-                child: Text(
-                  'Total',
+                child: Text('Total',
                   style: TextStyle(fontWeight: FontWeight.w500),
                 ),
               ),
@@ -457,7 +450,8 @@ class _ItemListState extends State<ItemList> {
                   child: Text(
                     CartData.itmNo,
                     style: const TextStyle(
-                        fontSize: 12, fontWeight: FontWeight.w500),
+                      fontSize: 12, fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -466,16 +460,13 @@ class _ItemListState extends State<ItemList> {
                 width: 100,
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    formatCurrencyAmt.format(double.parse(
-                        Provider.of<CartTotalCounter>(context)
-                            .totalAmt
-                            .toString())),
+                  child: Text(formatCurrencyAmt.format(double.parse(Provider.of<CartTotalCounter>(context).totalAmt.toString())),
                     style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic),
+                      color: Colors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                 ),
               ),
@@ -500,18 +491,19 @@ class _ItemListState extends State<ItemList> {
                 });
               },
               decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.deepOrange),
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.redAccent),
-                    borderRadius: BorderRadius.all(Radius.circular(16)),
-                  ),
-                  hintText: 'Search Product'),
+                hintText: 'Search Product',
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.deepOrange),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.redAccent),
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+              ),
             ),
           ),
         ),

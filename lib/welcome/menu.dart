@@ -199,10 +199,11 @@ class _MenuState extends State<Menu> {
   viewPolicy() {
     if (GlobalVariables.viewPolicy == true) {
       showLoginSnackbar(
-          'Hello!',
-          'You are logged in as ${UserData.firstname} ${UserData.lastname}',
-          Colors.grey.shade800,
-          Colors.white);
+        'Hello!',
+        'You are logged in as ${UserData.firstname} ${UserData.lastname}',
+        Colors.grey.shade800,
+        Colors.white,
+      );
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -239,14 +240,12 @@ class _MenuState extends State<Menu> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text(
-                      "Close",
+                    child: Text("Close",
                       style: TextStyle(
-                          color:
-                              GlobalVariables.dataPrivacyNoticeScrollBottom ==
-                                      true
-                                  ? ColorsTheme.mainColor
-                                  : Colors.grey),
+                        color: GlobalVariables.dataPrivacyNoticeScrollBottom == true
+                        ? ColorsTheme.mainColor
+                        : Colors.grey,
+                      ),
                     ),
                     onPressed: () {
                       if (GlobalVariables.dataPrivacyNoticeScrollBottom ==
@@ -314,53 +313,50 @@ class _MenuState extends State<Menu> {
                 label: 'Home',
               ),
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.local_grocery_store), label: 'Order'),
+                icon: Icon(Icons.local_grocery_store),
+                label: 'Order',
+              ),
               // BottomNavigationBarItem(
               //     icon: new Icon(Icons.equalizer), title: new Text('Sales')),
-              const BottomNavigationBarItem(
-                  icon: Icon(Icons.leaderboard_rounded), label: 'Sales'),
+              const BottomNavigationBarItem(icon: Icon(Icons.leaderboard_rounded), label: 'Sales'),
               BottomNavigationBarItem(
-                  icon: (int.parse(Provider.of<UploadLength>(context)
-                              .itmNo
-                              .toString()) ==
-                          0)
-                      ? const Icon(Icons.sync)
-                      : SizedBox(
-                          width: 30,
-                          child: Stack(
-                            children: [
-                              const Icon(Icons.sync),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15),
-                                child: Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Container(
-                                    // margin: EdgeInsets.only(top: 2),
-                                    padding: const EdgeInsets.only(top: 0),
-                                    width: 20,
-                                    height: 15,
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.green),
-                                    child: Text(
-                                      Provider.of<UploadLength>(context)
-                                          .itmNo
-                                          .toString(),
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                      ),
-                                    ),
+                icon: (int.parse(Provider.of<UploadLength>(context).itmNo.toString()) == 0)
+                  ? const Icon(Icons.sync)
+                  : SizedBox(
+                      width: 30,
+                      child: Stack(
+                        children: [
+                          const Icon(Icons.sync),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 15),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                // margin: EdgeInsets.only(top: 2),
+                                padding: const EdgeInsets.only(top: 0),
+                                width: 20,
+                                height: 15,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.green,
+                                ),
+                                child: Text(Provider.of<UploadLength>(context).itmNo.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
+                      ),
+                    ),
                   label: 'Sync'),
               const BottomNavigationBarItem(
-                  icon: Icon(Icons.person), label: 'Profile')
+                icon: Icon(Icons.person), label: 'Profile',
+              ),
             ],
           ),
         ),

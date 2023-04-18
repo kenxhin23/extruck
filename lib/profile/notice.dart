@@ -36,8 +36,7 @@ class _ViewNoticeState extends State<ViewNotice> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Privacy Notice',
+              const Text('Privacy Notice',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
               ),
             ],
@@ -55,13 +54,14 @@ class _ViewNoticeState extends State<ViewNotice> {
             children: <Widget>[
               Expanded(
                 child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30),
-                          topRight: Radius.circular(30),
-                        )),
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    ),
+                  ),
                     child: const DataPrivacyNotice()),
               ),
             ],

@@ -134,16 +134,14 @@ class _PrintReceiptState extends State<PrintReceipt> {
               const Expanded(
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select Printer',
+                  child: Text('Select Printer',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
               GestureDetector(
                 onTap: () async {
-                  String msg =
-                      'Are you sure you want to skip printing receipt?';
+                  String msg = 'Are you sure you want to skip printing receipt?';
                   // ignore: use_build_context_synchronously
                   final action = await WarningDialogs.openDialog(
                     context,
@@ -162,15 +160,13 @@ class _PrintReceiptState extends State<PrintReceipt> {
                 child: Row(
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text(
-                      'SKIP',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                    const Text('SKIP',
+                      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                     ),
                     const Icon(
                       Icons.skip_next,
                       color: Colors.white,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -188,16 +184,16 @@ class _PrintReceiptState extends State<PrintReceipt> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text(
-                      'Connected',
+                    const Text('Connected',
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.green),
+                        fontWeight: FontWeight.w500, color: Colors.green,
+                      ),
                     ),
                     const SizedBox(width: 10),
                     const Icon(
                       Icons.check_circle_outline_outlined,
                       color: Colors.green,
-                    )
+                    ),
                   ],
                 )
               else
@@ -205,10 +201,10 @@ class _PrintReceiptState extends State<PrintReceipt> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    const Text(
-                      'No Printer Connected',
+                    const Text('No Printer Connected',
                       style: TextStyle(
-                          fontWeight: FontWeight.w500, color: Colors.red),
+                        fontWeight: FontWeight.w500, color: Colors.red,
+                      ),
                     ),
                     const SizedBox(width: 10),
                     const Icon(
@@ -224,8 +220,8 @@ class _PrintReceiptState extends State<PrintReceipt> {
                     onRefresh: getBluetooth,
                     child: ListView.builder(
                       itemCount: availableBluetoothDevices.isNotEmpty
-                          ? availableBluetoothDevices.length
-                          : 0,
+                        ? availableBluetoothDevices.length
+                        : 0,
                       itemBuilder: (context, index) {
                         bool con = false;
                         if (PrinterData.mac == '') {}
@@ -245,15 +241,13 @@ class _PrintReceiptState extends State<PrintReceipt> {
                           subtitle: !con
                               ? const Text('Click to connect')
                           // ignore: dead_code
-                              : const Text(
-                            'Connected',
+                              : const Text('Connected',
                             style: TextStyle(color: Colors.green),
                           ),
                         );
                       },
                     ),
                   ),
-
                 ),
               ),
               Row(
@@ -263,16 +257,17 @@ class _PrintReceiptState extends State<PrintReceipt> {
                       padding: const EdgeInsets.all(10),
                       child: ElevatedButton(
                         style: PrinterData.connected
-                            ? raisedButtonStyleOrange
-                            : raisedButtonStyleGrey,
+                          ? raisedButtonStyleOrange
+                          : raisedButtonStyleGrey,
                         onPressed: () async {
                           if (PrinterData.connected) {
                             Navigator.push(
-                                context,
-                                PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: PrintPreview(
-                                        CartData.list, widget.ordNo)));
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: PrintPreview(CartData.list, widget.ordNo),
+                              ),
+                            );
                           }
                         },
                         child: Row(
@@ -280,8 +275,7 @@ class _PrintReceiptState extends State<PrintReceipt> {
                           mainAxisSize: MainAxisSize.min,
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text(
-                              "CONTINUE TO PREVIEW",
+                            const Text("CONTINUE TO PREVIEW",
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.white,

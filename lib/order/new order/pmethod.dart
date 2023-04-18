@@ -43,8 +43,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
   String date = DateFormat("dd-MM-yyyy").format(DateTime.now());
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
-  final formatCurrencyTot =
-      NumberFormat.currency(locale: "en_US", symbol: "Php ");
+  final formatCurrencyTot = NumberFormat.currency(locale: "en_US", symbol: "Php ");
 
   @override
   void initState() {
@@ -88,8 +87,7 @@ class _PaymentMethodState extends State<PaymentMethod> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text(
-            '',
+          title: const Text('',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: ColorsTheme.mainColor,
@@ -112,28 +110,56 @@ class _PaymentMethodState extends State<PaymentMethod> {
 
   Container selectCont(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(
-            top: BorderSide(width: 0.2, color: Colors.black),
-          ),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        border: Border(
+          top: BorderSide(width: 0.2, color: Colors.black),
         ),
-        width: MediaQuery.of(context).size.width,
-        height: 80,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                  padding: const EdgeInsets.all(10),
-                  child: ElevatedButton(
-                    style:
-                        !pMeth ? raisedButtonStyleGrey : raisedButtonStyleGreen,
-                    onPressed: () async {
-                      if (pMeth) {
-                        if (CartData.pMeth == 'Cash') {
-                          String msg =
-                              'Successfully selected cash as payment method.';
+      ),
+      width: MediaQuery.of(context).size.width,
+      height: 80,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: ElevatedButton(
+                style: !pMeth ? raisedButtonStyleGrey : raisedButtonStyleGreen,
+                onPressed: () async {
+                  if (pMeth) {
+                    if (CartData.pMeth == 'Cash') {
+                      String msg = 'Successfully selected cash as payment method.';
+                      // ignore: use_build_context_synchronously
+                      final action = await WarningDialogs.openDialog(
+                        context,
+                        'Information',
+                        msg,
+                        false,
+                        'OK',
+                      );
+                      if (action == DialogAction.yes) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+                      } else {}
+                    }
+                    if (CartData.pMeth == 'Cheque') {
+                      // print(accNameController.text);
+                      if (_formKey.currentState!.validate()) {
+                        if (!chequeType) {
+                          showGlobalSnackbar(
+                            'Information',
+                            'Please select cheque type.',
+                            Colors.grey,
+                            Colors.white,
+                          );
+                        } else {
+                          ChequeData.accName = accNameController.text;
+                          ChequeData.accNum = accNumController.text;
+                          ChequeData.chequeNum = chequeNumController.text;
+                          ChequeData.chequeDate = chequeDateController.text;
+
+                          String msg = 'Cheque details has been saved successfully.';
                           // ignore: use_build_context_synchronously
                           final action = await WarningDialogs.openDialog(
                             context,
@@ -147,62 +173,35 @@ class _PaymentMethodState extends State<PaymentMethod> {
                             Navigator.pop(context);
                           } else {}
                         }
-                        if (CartData.pMeth == 'Cheque') {
-                          // print(accNameController.text);
-                          if (_formKey.currentState!.validate()) {
-                            if (!chequeType) {
-                              showGlobalSnackbar(
-                                  'Information',
-                                  'Please select cheque type.',
-                                  Colors.grey,
-                                  Colors.white);
-                            } else {
-                              ChequeData.accName = accNameController.text;
-                              ChequeData.accNum = accNumController.text;
-                              ChequeData.chequeNum = chequeNumController.text;
-                              ChequeData.chequeDate = chequeDateController.text;
-
-                              String msg =
-                                  'Cheque details has been saved successfully.';
-                              // ignore: use_build_context_synchronously
-                              final action = await WarningDialogs.openDialog(
-                                context,
-                                'Information',
-                                msg,
-                                false,
-                                'OK',
-                              );
-                              if (action == DialogAction.yes) {
-                                // ignore: use_build_context_synchronously
-                                Navigator.pop(context);
-                              } else {}
-                            }
-                          } else {
-                            if (accNameController.text.isEmpty) {
-                              showGlobalSnackbar(
-                                  'Information',
-                                  'Invalid account name.',
-                                  Colors.grey,
-                                  Colors.white);
-                            }
-                          }
-                        }
                       } else {
-                        showGlobalSnackbar(
+                        if (accNameController.text.isEmpty) {
+                          showGlobalSnackbar(
                             'Information',
-                            'Please select payment method.',
+                            'Invalid account name.',
                             Colors.grey,
-                            Colors.white);
+                            Colors.white,
+                          );
+                        }
                       }
-                    },
-                    child: const Text(
-                      'SELECT PAYMENT METHOD',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )),
-            )
-          ],
-        ));
+                    }
+                  } else {
+                    showGlobalSnackbar(
+                      'Information',
+                      'Please select payment method.',
+                      Colors.grey,
+                      Colors.white,
+                    );
+                  }
+                },
+                child: const Text('SELECT PAYMENT METHOD',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Row pmethOptCont(BuildContext context) {
@@ -266,10 +265,8 @@ class _PaymentMethodState extends State<PaymentMethod> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Account Name',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, color: Colors.grey[500]),
+                    Text('Account Name',
+                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
                     ),
                     TextFormField(
                       enabled: cheque,
@@ -281,8 +278,9 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       controller: accNameController,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                       decoration: const InputDecoration(
+                          hintText: 'Input Account Name',
                           contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 10),
+                            vertical: 10, horizontal: 10),
                           enabledBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: Colors.black),
                             borderRadius: BorderRadius.all(Radius.circular(0)),
@@ -291,14 +289,14 @@ class _PaymentMethodState extends State<PaymentMethod> {
                             borderSide: BorderSide(color: Colors.black87),
                             borderRadius: BorderRadius.all(Radius.circular(0)),
                           ),
-                          hintText: 'Input Account Name'),
+                        ),
                       validator: (value) {
                         if (value!.isEmpty || value == ' ') {
                           return 'Account Name cannot be empty';
                         }
                         return null;
                       },
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -312,10 +310,10 @@ class _PaymentMethodState extends State<PaymentMethod> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Account No.',
+                    Text('Account No.',
                       style: TextStyle(
-                          fontWeight: FontWeight.w400, color: Colors.grey[500]),
+                        fontWeight: FontWeight.w400, color: Colors.grey[500],
+                      ),
                     ),
                     TextFormField(
                       enabled: cheque,
@@ -326,17 +324,19 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       controller: accNumController,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                       decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87),
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          hintText: 'Input Account Number'),
+                        hintText: 'Input Account Number',
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                      ),
                       validator: (value) {
                         if (value!.isEmpty || value == ' ') {
                           return 'Account Number cannot be empty';
@@ -357,10 +357,8 @@ class _PaymentMethodState extends State<PaymentMethod> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Bank Name',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400, color: Colors.grey[500]),
+                    Text('Bank Name',
+                      style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
                     ),
                     Row(
                       children: [
@@ -381,9 +379,10 @@ class _PaymentMethodState extends State<PaymentMethod> {
                                     child: Text(
                                       item['bank_name'],
                                       style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey[700]),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey[700],
+                                      ),
                                     ),
                                   );
                                 }).toList(),
@@ -413,45 +412,46 @@ class _PaymentMethodState extends State<PaymentMethod> {
                 height: 90,
                 color: Colors.white,
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cheque No.',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Colors.grey[500]),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Cheque No.',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey[500],
                       ),
-                      TextFormField(
-                        enabled: cheque,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.number,
-                        // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                        onEditingComplete: () => node.nextFocus(),
-                        controller: chequeNumController,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                        decoration: const InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black87),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(0)),
-                            ),
-                            hintText: 'Input Cheque Number'),
-                        validator: (value) {
-                          if (value!.isEmpty || value == ' ') {
-                            return 'Cheque Number cannot be empty';
-                          }
-                          return null;
-                        },
-                      )
-                    ]),
+                    ),
+                    TextFormField(
+                      enabled: cheque,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.number,
+                      // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onEditingComplete: () => node.nextFocus(),
+                      controller: chequeNumController,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                      decoration: const InputDecoration(
+                        hintText: 'Input Cheque Number',
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value!.isEmpty || value == ' ') {
+                          return 'Cheque Number cannot be empty';
+                        }
+                        return null;
+                      },
+                    )
+                  ],
+                ),
               ),
               const SizedBox(height: 2),
               Container(
@@ -463,10 +463,10 @@ class _PaymentMethodState extends State<PaymentMethod> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Cheque Date',
+                    Text('Cheque Date',
                       style: TextStyle(
-                          fontWeight: FontWeight.w400, color: Colors.grey[500]),
+                        fontWeight: FontWeight.w400, color: Colors.grey[500],
+                      ),
                     ),
                     TextFormField(
                       enabled: cheque,
@@ -477,17 +477,18 @@ class _PaymentMethodState extends State<PaymentMethod> {
                       controller: chequeDateController,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                       decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 20),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black),
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black87),
-                            borderRadius: BorderRadius.all(Radius.circular(0)),
-                          ),
-                          hintText: 'Input Cheque Date'),
+                        hintText: 'Input Cheque Date',
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 20),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                          borderRadius: BorderRadius.all(Radius.circular(0)),
+                        ),
+                      ),
                       validator: (value) {
                         if (value!.isEmpty || value == ' ') {
                           return 'Cheque Date cannot be empty';
@@ -512,12 +513,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Cheque Type',
+                    Text('Cheque Type',
                       style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey[500]),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey[500],
+                      ),
                     ),
                     Row(
                       children: [
@@ -578,13 +579,13 @@ class _PaymentMethodState extends State<PaymentMethod> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Cheque details',
+          Text('Cheque details',
             style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[700]),
-          )
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700],
+            ),
+          ),
         ],
       ),
     );
@@ -606,12 +607,12 @@ class _PaymentMethodState extends State<PaymentMethod> {
           const SizedBox(
             width: 10,
           ),
-          Text(
-            'Payment Method',
+          Text('Payment Method',
             style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+              color: Colors.grey[800],
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),

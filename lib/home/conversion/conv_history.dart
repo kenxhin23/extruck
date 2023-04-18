@@ -58,8 +58,7 @@ class _ConversionHistoryState extends State<ConversionHistory> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Stock Conversion History',
+              const Text('Stock Conversion History',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -88,13 +87,9 @@ class _ConversionHistoryState extends State<ConversionHistory> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No conversions found.',
+            Text('No conversions found.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.grey[500],
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey[500],
               ),
             )
           ],
@@ -105,117 +100,108 @@ class _ConversionHistoryState extends State<ConversionHistory> {
         width: MediaQuery.of(context).size.width,
         color: Colors.transparent,
         child: ListView.builder(
-            itemCount: _convlist.length,
-            itemBuilder: ((context, index) {
-              String newDate = "";
-              String date = "";
-              date = _convlist[index]['conv_date'].toString();
-              DateTime s = DateTime.parse(date);
-              newDate =
-                  '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-              _convlist[index]['conv_date'] = newDate.toString();
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeft,
-                          child: ConvertedItems(
-                              _convlist[index]['conv_no'],
-                              _convlist[index]['totAmt'],
-                              _convlist[index]['nitem_qty'])));
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(8),
-                  height: 80,
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Icon(Icons.sync_outlined,
-                          size: 36, color: ColorsTheme.mainColor),
-                      const SizedBox(width: 5),
-                      Expanded(
-                        child: Column(
-                          // ignore: prefer_const_literals_to_create_immutables
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _convlist[index]['conv_no'],
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              _convlist[index]['conv_date'],
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w400, fontSize: 12),
-                            ),
-                            Row(
-                              children: [
-                                const Text('Items Converted: ',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: 12)),
-                                Text(
-                                  _convlist[index]['itmno'],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      color: Colors.deepOrange),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        width: 30,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text('Qty',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 12)),
-                            Text(_convlist[index]['item_qty'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 12)),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        width: 10,
-                        child: const Text(
-                          'to',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        width: 30,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text('Qty',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400, fontSize: 12)),
-                            Text(_convlist[index]['nitem_qty'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12,
-                                    color: Colors.green)),
-                          ],
-                        ),
-                      ),
-                    ],
+          itemCount: _convlist.length,
+          itemBuilder: ((context, index) {
+            String newDate = "";
+            String date = "";
+            date = _convlist[index]['conv_date'].toString();
+            DateTime s = DateTime.parse(date);
+            newDate = '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+            _convlist[index]['conv_date'] = newDate.toString();
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context, PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    child: ConvertedItems(
+                      _convlist[index]['conv_no'],
+                      _convlist[index]['totAmt'],
+                      _convlist[index]['nitem_qty'],
+                    ),
                   ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.all(8),
+                height: 80,
+                color: Colors.white,
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  children: [
+                    Icon(Icons.sync_outlined,
+                        size: 36, color: ColorsTheme.mainColor),
+                    const SizedBox(width: 5),
+                    Expanded(
+                      child: Column(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(_convlist[index]['conv_no'],
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(_convlist[index]['conv_date'],
+                            style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                          ),
+                          Row(
+                            children: [
+                              const Text('Items Converted: ',
+                                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
+                              ),
+                              Text(_convlist[index]['itmno'],
+                                style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 12, color: Colors.deepOrange),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      width: 30,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Qty',
+                            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12)),
+                          Text(_convlist[index]['item_qty'],
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      width: 10,
+                      child: const Text(
+                        'to',
+                        style: TextStyle(fontSize: 10),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.white,
+                      width: 30,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text('Qty',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 12),
+                          ),
+                          Text(_convlist[index]['nitem_qty'],
+                            style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Colors.green),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            })),
+              ),
+            );
+          }),
+        ),
       );
     }
   }

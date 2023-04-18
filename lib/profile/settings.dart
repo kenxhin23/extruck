@@ -85,8 +85,7 @@ class _ViewSettingsState extends State<ViewSettings> {
   }
 
   downloadImageP1() async {
-    final action = await Dialogs.openDialog(context, 'Confirmation',
-        'Are you sure you want to download image pack 1?', true, 'No', 'Yes');
+    final action = await Dialogs.openDialog(context, 'Confirmation', 'Are you sure you want to download image pack 1?', true, 'No', 'Yes');
     if (action == DialogAction.yes) {
       _zipPath = '${UrlAddress.itemImg}imgPack1.zip';
       _localZipFileName = 'imgPack1.zip';
@@ -107,8 +106,7 @@ class _ViewSettingsState extends State<ViewSettings> {
   }
 
   downloadImageP2() async {
-    final action = await Dialogs.openDialog(context, 'Confirmation',
-        'Are you sure you want to download image pack 2?', true, 'No', 'Yes');
+    final action = await Dialogs.openDialog(context, 'Confirmation', 'Are you sure you want to download image pack 2?', true, 'No', 'Yes');
     if (action == DialogAction.yes) {
       _zipPath = '${UrlAddress.itemImg}imgPack2.zip';
       _localZipFileName = 'imgPack2.zip';
@@ -118,8 +116,7 @@ class _ViewSettingsState extends State<ViewSettings> {
         GlobalVariables.progressString = "Preparing Download...";
       });
       // ignore: use_build_context_synchronously
-      Provider.of<DownloadStat>(context, listen: false)
-          .changeCap('Preparing Download...');
+      Provider.of<DownloadStat>(context, listen: false).changeCap('Preparing Download...');
       // showDialog(
       //     barrierDismissible: false,
       //     context: context,
@@ -135,10 +132,10 @@ class _ViewSettingsState extends State<ViewSettings> {
     _tempImages.clear();
     try {
       await dio.download(_zipPath, "$_dir/$_localZipFileName",
-          onReceiveProgress: (int rec, int total) {
+        onReceiveProgress: (int rec, int total) {
         Provider.of<DownloadStat>(context, listen: false).changeCap(
-            // ignore: prefer_interpolation_to_compose_strings
-            'Downloading...' + ((rec / total) * 100).toStringAsFixed(0) + "%");
+          // ignore: prefer_interpolation_to_compose_strings
+          'Downloading...' + ((rec / total) * 100).toStringAsFixed(0) + "%");
         // print(GlobalVariables.progressString);
       });
       await unarchiveAndSave();
@@ -216,8 +213,7 @@ class _ViewSettingsState extends State<ViewSettings> {
               crossAxisAlignment: CrossAxisAlignment.start,
               // ignore: prefer_const_literals_to_create_immutables
               children: [
-                const Text(
-                  'Settings',
+                const Text('Settings',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
                 ),
               ],
@@ -235,40 +231,41 @@ class _ViewSettingsState extends State<ViewSettings> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                      padding: const EdgeInsets.only(top: 15),
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                          )),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 15),
-                          Container(
-                            padding: const EdgeInsets.only(left: 10),
-                            width: MediaQuery.of(context).size.width,
-                            height: 20,
-                            child: const Text(
-                              'Image Settings',
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                            ),
+                    padding: const EdgeInsets.only(top: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        Container(
+                          padding: const EdgeInsets.only(left: 10),
+                          width: MediaQuery.of(context).size.width,
+                          height: 20,
+                          child: const Text('Image Settings',
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
-                          const SizedBox(height: 10),
-                          buildImageOption(context),
-                          const SizedBox(height: 3),
-                          Visibility(
-                              visible: !imgPk1downloaded,
-                              child: buildImgPack1(context)),
-                          const SizedBox(height: 3),
-                          Visibility(
-                              visible: !imgPk2downloaded,
-                              child: buildImgPack2(context)),
-                          // Visibility(
-                          //     visible: !downloading,
-                          //     child: buildDownloadProgress(context)),
-                        ],
-                      )),
+                        ),
+                        const SizedBox(height: 10),
+                        buildImageOption(context),
+                        const SizedBox(height: 3),
+                        Visibility(
+                          visible: !imgPk1downloaded,
+                          child: buildImgPack1(context)),
+                        const SizedBox(height: 3),
+                        Visibility(
+                          visible: !imgPk2downloaded,
+                          child: buildImgPack2(context)),
+                        // Visibility(
+                        //     visible: !downloading,
+                        //     child: buildDownloadProgress(context)),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -298,8 +295,7 @@ class _ViewSettingsState extends State<ViewSettings> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                'View Item Images',
+              child: Text('View Item Images',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -345,8 +341,7 @@ class _ViewSettingsState extends State<ViewSettings> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                'Image Pack 1',
+              child: Text('Image Pack 1',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -354,8 +349,8 @@ class _ViewSettingsState extends State<ViewSettings> {
               ),
             ),
             !downloading
-                ? buildDownloadButton1(context)
-                : buildDownloadProgress(context),
+            ? buildDownloadButton1(context)
+            : buildDownloadProgress(context),
           ],
         ),
       ),
@@ -382,8 +377,7 @@ class _ViewSettingsState extends State<ViewSettings> {
             ),
             const SizedBox(width: 10),
             Expanded(
-              child: Text(
-                'Image Pack 2',
+              child: Text('Image Pack 2',
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 14,
@@ -391,8 +385,8 @@ class _ViewSettingsState extends State<ViewSettings> {
               ),
             ),
             !downloading
-                ? buildDownloadButton2(context)
-                : buildDownloadProgress(context),
+            ? buildDownloadButton2(context)
+            : buildDownloadProgress(context),
           ],
         ),
       ),
@@ -415,11 +409,10 @@ class _ViewSettingsState extends State<ViewSettings> {
               }
               // _launchURL(Uri.parse(UrlAddress.appLink));
             },
-            child: const Text(
-              'Download',
+            child: const Text('Download',
               style: TextStyle(fontSize: 12),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -440,11 +433,10 @@ class _ViewSettingsState extends State<ViewSettings> {
                 downloadImageP2();
               }
             },
-            child: const Text(
-              'Download',
+            child: const Text('Download',
               style: TextStyle(fontSize: 12),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -457,13 +449,12 @@ class _ViewSettingsState extends State<ViewSettings> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            // GlobalVariables.progressString,
-            Provider.of<DownloadStat>(context).cap,
+          Text(Provider.of<DownloadStat>(context).cap,
             style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w400,
-                color: Colors.greenAccent.shade700),
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: Colors.greenAccent.shade700,
+            ),
           ),
           const SpinKitCircle(
             size: 24,

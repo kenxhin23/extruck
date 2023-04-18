@@ -284,17 +284,19 @@ class _StockInvetoryState extends State<StockInvetory> {
               Row(
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                  const Text(
-                    'Stock Inventory',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  const Text('Stock Inventory',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   const SizedBox(width: 5),
-                  Text(
-                    '(${formatCurrencyAmt.format(double.parse(loadBal))})',
+                  Text('(${formatCurrencyAmt.format(double.parse(loadBal))})',
                     style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.yellow[400]),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.yellow[400],
+                    ),
                   ),
                 ],
               ),
@@ -316,32 +318,32 @@ class _StockInvetoryState extends State<StockInvetory> {
                 children: [
                   Expanded(
                     child: !GlobalVariables.viewImg
-                        ? Container(
-                            padding: const EdgeInsets.all(5),
-                            child: ElevatedButton(
-                              style: raisedButtonStyleGrey,
-                              onPressed: () async {
-                                setState(() {
-                                  GlobalVariables.viewImg = true;
-                                });
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                // mainAxisSize: MainAxisSize.min,
-                                // ignore: prefer_const_literals_to_create_immutables
-                                children: [
-                                  const Text(
-                                    "View Images",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
+                      ? Container(
+                        padding: const EdgeInsets.all(5),
+                        child: ElevatedButton(
+                          style: raisedButtonStyleGrey,
+                          onPressed: () async {
+                            setState(() {
+                              GlobalVariables.viewImg = true;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            // mainAxisSize: MainAxisSize.min,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              const Text(
+                                "View Images",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
                               ),
-                            ),
-                          )
-                        : const Text(''),
+                            ],
+                          ),
+                        ),
+                      )
+                    : const Text(''),
                   ),
                   Container(
                     padding: EdgeInsets.all(5),
@@ -351,16 +353,15 @@ class _StockInvetoryState extends State<StockInvetory> {
                       onPressed: () {
                         if (!NetworkData.connected) {
                           showGlobalSnackbar(
-                              'Connectivity',
-                              'Please connect to internet.',
-                              Colors.black,
-                              Colors.white);
+                            'Connectivity',
+                            'Please connect to internet.',
+                            Colors.black,
+                            Colors.white);
                         } else {
                           showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) =>
-                                  const ProcessingBox('Checking for Updates'));
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => const ProcessingBox('Checking for Updates'));
                         }
                         checkforPriceChange();
                       },
@@ -383,22 +384,22 @@ class _StockInvetoryState extends State<StockInvetory> {
                   const SizedBox(
                     width: 5,
                   ),
-                  const Text(
-                    'Total Qty:',
+                  const Text('Total Qty:',
                     style: TextStyle(
-                        fontWeight: FontWeight.w500, color: Colors.deepOrange),
+                      fontWeight: FontWeight.w500, color: Colors.deepOrange,
+                    ),
                   ),
-                  Text(
-                    '  $totQty',
+                  Text('  $totQty',
                     style: const TextStyle(
-                        fontWeight: FontWeight.w500, fontSize: 16),
+                      fontWeight: FontWeight.w500, fontSize: 16,
+                    ),
                   ),
                   const SizedBox(
                     width: 20,
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -436,131 +437,118 @@ class _StockInvetoryState extends State<StockInvetory> {
         padding: const EdgeInsets.all(5),
         width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-            itemCount: _inv.length,
-            itemBuilder: ((context, index) {
-              bool discounted = false;
-              if (_inv[index]['discounted'] == 1) {
-                discounted = true;
-              } else {
-                discounted = false;
-              }
-              if (_inv[index]['image'] == '') {
-                noImage = true;
-              } else {
-                noImage = false;
-              }
-              return Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (discounted) {
-                        showDialog(
-                            context: context,
-                            builder: (context) =>
-                                DiscountDetails(_inv[index]['item_principal']));
-                      }
-                    },
-                    child: Row(
-                      children: [
-                        if (GlobalVariables.viewImg)
-                          Container(
-                            // margin: const EdgeInsets.only(left: 3, top: 3),
-                            width: 75,
-                            height: 80,
-                            color: Colors.white,
-                            child: noImage
-                                ? Image(image: AssetsValues.noImageImg)
-                                : Image.file(
-                                    File(imgPath + _inv[index]['image'])),
-                          )
-                        else if (!GlobalVariables.viewImg)
-                          Container(
-                            // margin: const EdgeInsets.only(left: 3, top: 3),
-                            width: 75,
-                            height: 80,
-                            color: Colors.white,
-                            child: Image(image: AssetsValues.noImageImg),
-                          ),
-                        Expanded(
-                            child: Container(
-                          padding: const EdgeInsets.only(left: 5),
-                          color: Colors.white,
-                          height: 80,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _inv[index]['item_desc'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Text(_inv[index]['item_uom']),
-                                  const SizedBox(
-                                    width: 30,
-                                  ),
-                                  Text(
-                                    formatCurrencyAmt.format(
-                                        double.parse(_inv[index]['item_amt'])),
-                                    style: const TextStyle(
-                                        // fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        )),
+          itemCount: _inv.length,
+          itemBuilder: ((context, index) {
+            bool discounted = false;
+            if (_inv[index]['discounted'] == 1) {
+              discounted = true;
+            } else {
+              discounted = false;
+            }
+            if (_inv[index]['image'] == '') {
+              noImage = true;
+            } else {
+              noImage = false;
+            }
+            return Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    if (discounted) {
+                      showDialog(context: context, builder: (context) => DiscountDetails(_inv[index]['item_principal']));
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      if (GlobalVariables.viewImg)
                         Container(
-                          color: Colors.white,
-                          width: 50,
+                          // margin: const EdgeInsets.only(left: 3, top: 3),
+                          width: 75,
                           height: 80,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Visibility(
-                                visible: discounted,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (context) => DiscountDetails(
-                                            _inv[index]['item_principal']));
-                                  },
-                                  child: Container(
-                                    width: 50,
-                                    color: Colors.white,
-                                    height: 15,
-                                    child: Image(
-                                      // color: ColorsTheme.mainColor,
-                                      image: AssetsValues.discTag,
-                                    ),
+                          color: Colors.white,
+                          child: noImage ? Image(image: AssetsValues.noImageImg) : Image.file(File(imgPath + _inv[index]['image'])),
+                        )
+                      else if (!GlobalVariables.viewImg)
+                        Container(
+                          // margin: const EdgeInsets.only(left: 3, top: 3),
+                          width: 75,
+                          height: 80,
+                          color: Colors.white,
+                          child: Image(image: AssetsValues.noImageImg),
+                        ),
+                      Expanded(
+                        child: Container(
+                        padding: const EdgeInsets.only(left: 5),
+                        color: Colors.white,
+                        height: 80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_inv[index]['item_desc'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(_inv[index]['item_uom']),
+                                const SizedBox(
+                                  width: 30,
+                                ),
+                                Text(formatCurrencyAmt.format(double.parse(_inv[index]['item_amt'])),
+                                  style: const TextStyle(
+                                    // fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )),
+                      Container(
+                        color: Colors.white,
+                        width: 50,
+                        height: 80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Visibility(
+                              visible: discounted,
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(context: context, builder: (context) => DiscountDetails(_inv[index]['item_principal']));
+                                },
+                                child: Container(
+                                  width: 50,
+                                  color: Colors.white,
+                                  height: 15,
+                                  child: Image(
+                                    // color: ColorsTheme.mainColor,
+                                    image: AssetsValues.discTag,
                                   ),
                                 ),
                               ),
-                              const Text(
-                                'Qty',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                _inv[index]['item_qty'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                            const Text('Qty',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Text(_inv[index]['item_qty'],
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 10)
-                ],
-              );
-            })),
+                ),
+                const SizedBox(height: 10)
+              ],
+            );
+          }),
+        ),
       );
     }
   }

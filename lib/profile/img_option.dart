@@ -26,8 +26,7 @@ class Option extends StatelessWidget {
       children: [
         const Padding(
           padding: EdgeInsets.all(10.0),
-          child: Text(
-            'Choose image from',
+          child: Text('Choose image from',
             style: TextStyle(
               color: Colors.black,
               fontSize: 16,

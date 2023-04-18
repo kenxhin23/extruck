@@ -259,17 +259,16 @@ class _LoadItemsState extends State<LoadItems> {
             visible: appTrue,
             child: Row(
               children: [
-                const Text(
-                  'App Total:',
+                const Text('App Total:',
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                 ),
                 const SizedBox(width: 5),
-                Text(
-                  RequestData.appQty,
+                Text(RequestData.appQty,
                   style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.deepOrange),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.deepOrange,
+                  ),
                 ),
               ],
             ),
@@ -293,35 +292,36 @@ class _LoadItemsState extends State<LoadItems> {
         children: [
           Expanded(
             child: Container(
-                padding: const EdgeInsets.all(10),
-                child: ElevatedButton(
-                  style:
-                      appTrue ? raisedButtonStyleGreen : raisedButtonStyleGrey,
-                  onPressed: () async {
-                    if (appTrue) {
-                      final action = await Dialogs.openDialog(
-                          context,
-                          'Confirmation',
-                          'Are you sure you want to add this items?',
-                          false,
-                          'No',
-                          'Yes');
-                      if (action == DialogAction.yes) {
-                        Spinkit.label = 'Loading Items...';
-                        showDialog(
-                            barrierDismissible: false,
-                            context: context,
-                            builder: (context) => const LoadingSpinkit());
-                        loadItems();
-                      } else {}
+              padding: const EdgeInsets.all(10),
+              child: ElevatedButton(
+                style:
+                    appTrue ? raisedButtonStyleGreen : raisedButtonStyleGrey,
+                onPressed: () async {
+                  if (appTrue) {
+                    final action = await Dialogs.openDialog(
+                        context,
+                        'Confirmation',
+                        'Are you sure you want to add this items?',
+                        false,
+                        'No',
+                        'Yes');
+                    if (action == DialogAction.yes) {
+                      Spinkit.label = 'Loading Items...';
+                      showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (context) => const LoadingSpinkit());
+                      loadItems();
                     } else {}
-                  },
-                  child: const Text(
-                    'LOAD ITEMS',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )),
-          )
+                  } else {}
+                },
+                child: const Text(
+                  'LOAD ITEMS',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ],
       ));
 
@@ -337,7 +337,7 @@ class _LoadItemsState extends State<LoadItems> {
               const SpinKitCircle(
                 size: 36,
                 color: Colors.deepOrange,
-              )
+              ),
             ],
           ),
         ),
@@ -356,15 +356,14 @@ class _LoadItemsState extends State<LoadItems> {
                 size: 100,
                 color: Colors.orange[500],
               ),
-              Text(
-                'No items found. Please contact administrator.',
+              Text('No items found. Please contact administrator.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[500],
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -373,49 +372,47 @@ class _LoadItemsState extends State<LoadItems> {
           padding: const EdgeInsets.all(5),
           width: MediaQuery.of(context).size.width,
           child: ListView.builder(
-              itemCount: _line.length,
-              itemBuilder: ((context, index) {
-                if (appTrue) {
-                  if (_line[index]['item_path'] == '') {
-                    noImage = true;
-                  } else {
-                    noImage = false;
-                  }
+            itemCount: _line.length,
+            itemBuilder: ((context, index) {
+              if (appTrue) {
+                if (_line[index]['item_path'] == '') {
+                  noImage = true;
                 } else {
-                  if (_line[index]['image'] == '') {
-                    noImage = true;
-                  } else {
-                    noImage = false;
-                  }
+                  noImage = false;
                 }
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        if (GlobalVariables.viewImg)
-                          Container(
-                            // margin: const EdgeInsets.only(left: 3, top: 3),
-                            width: 75,
-                            height: 80,
-                            color: Colors.white,
-                            child: noImage
-                                ? Image(image: AssetsValues.noImageImg)
-                                : appTrue
-                                    ? Image.file(File(imgPath +
-                                        _line[index]['item_path'].toString()))
-                                    : Image.file(File(imgPath +
-                                        _line[index]['image'].toString())),
-                          )
-                        else if (!GlobalVariables.viewImg)
-                          Container(
-                            // margin: const EdgeInsets.only(left: 3, top: 3),
-                            width: 75,
-                            height: 80,
-                            color: Colors.white,
-                            child: Image(image: AssetsValues.noImageImg),
-                          ),
-                        Expanded(
-                            child: Container(
+              } else {
+                if (_line[index]['image'] == '') {
+                  noImage = true;
+                } else {
+                  noImage = false;
+                }
+              }
+              return Column(
+                children: [
+                  Row(
+                    children: [
+                      if (GlobalVariables.viewImg)
+                        Container(
+                          // margin: const EdgeInsets.only(left: 3, top: 3),
+                          width: 75,
+                          height: 80,
+                          color: Colors.white,
+                          child: noImage
+                            ? Image(image: AssetsValues.noImageImg)
+                            : appTrue
+                            ? Image.file(File(imgPath + _line[index]['item_path'].toString()))
+                            : Image.file(File(imgPath + _line[index]['image'].toString())),
+                        )
+                      else if (!GlobalVariables.viewImg)
+                        Container(
+                          // margin: const EdgeInsets.only(left: 3, top: 3),
+                          width: 75,
+                          height: 80,
+                          color: Colors.white,
+                          child: Image(image: AssetsValues.noImageImg),
+                        ),
+                      Expanded(
+                        child: Container(
                           padding: const EdgeInsets.only(left: 5),
                           color: Colors.white,
                           height: 80,
@@ -423,8 +420,7 @@ class _LoadItemsState extends State<LoadItems> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                _line[index]['item_desc'],
+                              Text(_line[index]['item_desc'],
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -435,46 +431,46 @@ class _LoadItemsState extends State<LoadItems> {
                                   const SizedBox(
                                     width: 30,
                                   ),
-                                  Text(
-                                    formatCurrencyAmt.format(
-                                        double.parse(_line[index]['amt'])),
+                                  Text(formatCurrencyAmt.format(double.parse(_line[index]['amt'])),
                                     style: const TextStyle(
-                                        // fontSize: 12,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green),
-                                  )
+                                      // fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.green,
+                                    ),
+                                  ),
                                 ],
-                              )
-                            ],
-                          ),
-                        )),
-                        Container(
-                          color: Colors.white,
-                          width: 50,
-                          height: 80,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Qty',
-                                style: TextStyle(fontSize: 12),
-                              ),
-                              Text(
-                                appTrue
-                                    ? _line[index]['app_qty']
-                                    : _line[index]['req_qty'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10)
-                  ],
-                );
-              })),
+                        ),
+                      ),
+                      Container(
+                        color: Colors.white,
+                        width: 50,
+                        height: 80,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text('Qty',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Text(appTrue
+                                ? _line[index]['app_qty']
+                                : _line[index]['req_qty'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10)
+                ],
+              );
+            }),
+          ),
         );
       }
     }

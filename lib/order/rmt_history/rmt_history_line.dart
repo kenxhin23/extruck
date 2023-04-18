@@ -127,33 +127,39 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                   if (!PrinterData.connected) {
                     // ignore: use_build_context_synchronously
                     Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: ConnectPrinter(
-                                _list,
-                                widget.rmtNo,
-                                boAmt.toString(),
-                                widget.ordNo,
-                                totAmt,
-                                discount,
-                                satWh,
-                                totNet)));
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ConnectPrinter(
+                          _list,
+                          widget.rmtNo,
+                          boAmt.toString(),
+                          widget.ordNo,
+                          totAmt,
+                          discount,
+                          satWh,
+                          totNet,
+                        ),
+                      ),
+                    );
                   } else {
                     // ignore: use_build_context_synchronously
                     Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: ReprintReport(
-                                _list,
-                                widget.rmtNo,
-                                boAmt.toString(),
-                                widget.ordNo,
-                                totAmt,
-                                discount,
-                                satWh,
-                                totNet)));
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: ReprintReport(
+                          _list,
+                          widget.rmtNo,
+                          boAmt.toString(),
+                          widget.ordNo,
+                          totAmt,
+                          discount,
+                          satWh,
+                          totNet,
+                        ),
+                      ),
+                    );
                   }
                 } else {}
               },
@@ -221,10 +227,12 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
           const Text('Satellite Warehouse: ', style: TextStyle(fontSize: 12)),
           Expanded(
             child: Text(formatCurrencyAmt.format(double.parse(satWh)),
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
-                    fontSize: 12)),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
+                fontSize: 12,
+              ),
+            ),
           ),
         ],
       ),
@@ -250,26 +258,36 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
             children: [
               const Text('Discount: ', style: TextStyle(fontSize: 12)),
               Text(formatCurrencyAmt.format(double.parse(discount)),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
-                      fontSize: 12)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              ),
               SizedBox(width: 5),
-              const Text('Cheque: ', style: TextStyle(fontSize: 12)),
+              const Text('Cheque: ',
+                style: TextStyle(fontSize: 12),
+              ),
               Expanded(
                 child: Text(formatCurrencyAmt.format(double.parse(cheque)),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                        fontSize: 12)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12,
+                  ),
+                ),
               ),
-              const Text('Cash: ', style: TextStyle(fontSize: 12)),
+              const Text('Cash: ',
+                style: TextStyle(fontSize: 12),
+              ),
               Expanded(
                 child: Text(formatCurrencyAmt.format(double.parse(cash)),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                        fontSize: 12)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ],
           ),
@@ -279,27 +297,35 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
             children: [
               const Text('BO: ', style: TextStyle(fontSize: 12)),
               Text(formatCurrencyAmt.format(double.parse(bo)),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
-                      fontSize: 12)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              ),
               SizedBox(
                 width: 5,
               ),
               const Text('Order No: ', style: TextStyle(fontSize: 12)),
               Expanded(
-                  child: Text(_list.length.toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.deepOrange,
-                          fontSize: 12))),
+                child: Text(_list.length.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.deepOrange,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
               const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
               Expanded(
-                  child: Text(formatCurrencyAmt.format(double.parse(totNet)),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.deepOrange,
-                          fontSize: 12))),
+                child: Text(formatCurrencyAmt.format(double.parse(totNet)),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.deepOrange,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -321,15 +347,14 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No orders found.',
+            Text('No orders found.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -380,41 +405,40 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          _list[index]['order_no'],
+                        Text(_list[index]['order_no'],
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w500),
                         ),
-                        Text(
-                          _list[index]['store_name'],
+                        Text(_list[index]['store_name'],
                           style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey,
+                          ),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'SI #: ',
+                            const Text('SI #: ',
                               style: TextStyle(
-                                  fontSize: 10, fontWeight: FontWeight.w400),
+                                fontSize: 10, fontWeight: FontWeight.w400,
+                              ),
                             ),
-                            Text(
-                              _list[index]['si_no'],
+                            Text(_list[index]['si_no'],
                               style: const TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.green),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green,
+                              ),
                             ),
                           ],
                         ),
-                        Text(
-                          _list[index]['date'],
+                        Text(_list[index]['date'],
                           style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -427,30 +451,29 @@ class _ReportsHistoryLineState extends State<ReportsHistoryLine> {
                         child: Container(
                           padding: const EdgeInsets.all(3),
                           color: Colors.grey,
-                          child: const Text(
-                            'BO REFUND',
+                          child: const Text('BO REFUND',
                             style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                      const Text(
-                        'Total Amount',
+                      const Text('Total Amount',
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
+                          fontSize: 12, fontWeight: FontWeight.w400,
+                        ),
                       ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(_list[index]['net_amt'])),
+                      Text(formatCurrencyAmt.format(double.parse(_list[index]['net_amt'])),
                         style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.green),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.green,
+                        ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             );

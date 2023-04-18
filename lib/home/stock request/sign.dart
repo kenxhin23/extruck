@@ -71,6 +71,7 @@ class _MyAppState extends State<MyApp> {
                     }
                   },
                 ),
+
                 //CLEAR CANVAS
                 IconButton(
                   icon: const Icon(Icons.clear),

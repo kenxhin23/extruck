@@ -515,21 +515,23 @@ class _SyncPageState extends State<SyncPage> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Sync",
+                Text("Sync",
                   textAlign: TextAlign.right,
                   style: TextStyle(
-                      color: ColorsTheme.mainColor,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold),
+                    color: ColorsTheme.mainColor,
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Visibility(
-                    visible: NetworkData.errorMsgShow,
-                    child: buildStatusCont()),
+                  visible: NetworkData.errorMsgShow,
+                  child: buildStatusCont(),
+                ),
                 buildOrderOption(),
               ],
             ),
           ),
+
           body: uploadPressed ? buildUploadCont() : buildDownloadCont(),
           floatingActionButton: Visibility(
             visible: uploadPressed,
@@ -539,6 +541,7 @@ class _SyncPageState extends State<SyncPage> {
                 alignment: Alignment.bottomCenter,
                 child: FloatingActionButton(
                   onPressed: () {
+                    print("mao nig button");
                     if (_list.isNotEmpty) {
                       uploadButtonclicked();
                     }
@@ -623,8 +626,7 @@ class _SyncPageState extends State<SyncPage> {
                       style: TextStyle(
                         // fontSize: 15,
                         fontSize: ScreenData.scrWidth * .038,
-                        fontWeight:
-                            uploadPressed ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: uploadPressed ? FontWeight.bold : FontWeight.normal,
                         decoration: TextDecoration.underline,
                         color:
                             uploadPressed ? ColorsTheme.mainColor : Colors.grey,
@@ -667,19 +669,18 @@ class _SyncPageState extends State<SyncPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   RichText(
-                      text: TextSpan(
-                    text: "Download Data",
+                    text: TextSpan(
+                      text: "Download Data",
                     // recognizer: _tapGestureRecognizer,
-                    style: TextStyle(
+                      style: TextStyle(
                       // fontSize: 15,
-                      fontSize: ScreenData.scrWidth * .038,
-                      fontWeight:
-                          uploadPressed ? FontWeight.normal : FontWeight.bold,
-                      decoration: TextDecoration.underline,
-                      color:
-                          uploadPressed ? Colors.grey : ColorsTheme.mainColor,
+                        fontSize: ScreenData.scrWidth * .038,
+                        fontWeight: uploadPressed ? FontWeight.normal : FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: uploadPressed ? Colors.grey : ColorsTheme.mainColor,
+                      ),
                     ),
-                  )),
+                  ),
                   Icon(
                     Icons.file_download,
                     color: Colors.yellowAccent,
@@ -718,7 +719,7 @@ class _SyncPageState extends State<SyncPage> {
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );

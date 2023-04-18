@@ -32,17 +32,18 @@ class _ConfirmUploadState extends State<ConfirmUpload> {
           padding: const EdgeInsets.only(top: 5, bottom: 16, right: 5, left: 5),
           margin: const EdgeInsets.only(top: 16),
           decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(20),
-              // ignore: prefer_const_literals_to_create_immutables
-              boxShadow: [
-                const BoxShadow(
-                  color: Colors.black26,
-                  blurRadius: 10.0,
-                  offset: Offset(0.0, 10.0),
-                ),
-              ]),
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 10.0),
+              ),
+            ],
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -70,9 +71,8 @@ class _ConfirmUploadState extends State<ConfirmUpload> {
                     Container(
                       child: Text(
                         widget.title.toString(),
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                     const SizedBox(
@@ -82,13 +82,11 @@ class _ConfirmUploadState extends State<ConfirmUpload> {
                     Container(
                       child: Column(
                         children: [
-                          Text(
-                            widget.description1.toString(),
+                          Text(widget.description1.toString(),
                             style: const TextStyle(fontSize: 12),
                             textAlign: TextAlign.justify,
                           ),
-                          Text(
-                            widget.description2.toString(),
+                          Text(widget.description2.toString(),
                             style: const TextStyle(fontSize: 12),
                             textAlign: TextAlign.justify,
                           ),
@@ -124,8 +122,7 @@ class _ConfirmUploadState extends State<ConfirmUpload> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text(
-                        'Cancel',
+                      child: Text('Cancel',
                         style: TextStyle(color: ColorsTheme.mainColor),
                       ),
                     ),

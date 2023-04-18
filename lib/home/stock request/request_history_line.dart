@@ -29,8 +29,7 @@ class _RequestHistoryLineState extends State<RequestHistoryLine> {
 
   final db = DatabaseHelper();
 
-  final date =
-      DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
+  final date = DateTime.parse(DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now()));
 
   final formatCurrencyAmt = NumberFormat.currency(locale: "en_US", symbol: "₱");
   final formatCurrencyTot =
@@ -105,47 +104,45 @@ class _RequestHistoryLineState extends State<RequestHistoryLine> {
       child: Row(
         // ignore: prefer_const_literals_to_create_immutables
         children: [
-          const Text(
-            'Amount:',
+          const Text('Amount:',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
           Expanded(
-              child: Text(
-            formatCurrencyAmt.format(double.parse(RequestData.totAmt)),
-            style: const TextStyle(
+            child: Text(formatCurrencyAmt.format(double.parse(RequestData.totAmt)),
+              style: const TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
-                color: Colors.deepOrange),
-          )),
-          const Text(
-            'Req Total:',
+                color: Colors.deepOrange,
+              ),
+            ),
+          ),
+          const Text('Req Total:',
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
           ),
           const SizedBox(width: 5),
-          Text(
-            RequestData.reqQty,
+          Text(RequestData.reqQty,
             style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: Colors.deepOrange),
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.deepOrange,
+            ),
           ),
           const SizedBox(width: 10),
           Row(
             children: [
-              const Text(
-                'App Total:',
+              const Text('App Total:',
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 5),
-              Text(
-                RequestData.appQty,
+              Text(RequestData.appQty,
                 style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.deepOrange),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.deepOrange,
+                ),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

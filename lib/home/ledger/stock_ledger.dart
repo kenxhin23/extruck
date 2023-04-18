@@ -263,117 +263,96 @@ class _StockLedgerState extends State<StockLedger> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _ledger.length,
-          itemBuilder: ((context, index) {
-            if (_ledger[index]['type'] == 'STOCK IN') {
-              varColor = Colors.green;
-            }
-            if (_ledger[index]['type'] == 'STOCK OUT') {
-              varColor = Colors.grey.shade600;
-            }
-            if (_ledger[index]['type'] == 'CONVERSION') {
-              varColor = Colors.blue.shade900;
-            }
-            return Column(
-              children: [
-                Container(
-                  // padding: const EdgeInsets.only(top: 10),
-                  height: 50,
-                  color: varColor,
-                  child: Row(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Text(
-                        _ledger[index]['date'],
-                        style:
-                            const TextStyle(fontSize: 10, color: Colors.white),
+        itemCount: _ledger.length,
+        itemBuilder: ((context, index) {
+          if (_ledger[index]['type'] == 'STOCK IN') {
+            varColor = Colors.green;
+          }
+          if (_ledger[index]['type'] == 'STOCK OUT') {
+            varColor = Colors.grey.shade600;
+          }
+          if (_ledger[index]['type'] == 'CONVERSION') {
+            varColor = Colors.blue.shade900;
+          }
+          return Column(
+            children: [
+              Container(
+                // padding: const EdgeInsets.only(top: 10),
+                height: 50,
+                color: varColor,
+                child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Text(_ledger[index]['date'],
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    ),
+                    const Divider(
+                      color: Colors.white,
+                      height: 50,
+                      // thickness: 10,
+                      indent: 10,
+                    ),
+                    Expanded(
+                      child: Text(_ledger[index]['ref_no'],
+                        style: const TextStyle(fontSize: 9, color: Colors.white, fontWeight: FontWeight.w500),
                       ),
-                      const Divider(
-                        color: Colors.white,
-                        height: 50,
-                        // thickness: 10,
-                        indent: 10,
-                      ),
-                      Expanded(
-                        child: Text(
-                          _ledger[index]['ref_no'],
-                          style: const TextStyle(
-                              fontSize: 9,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 80,
+                      child: Center(
+                        child: Text(_ledger[index]['type'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      Container(
-                        color: varColor,
-                        width: 80,
-                        child: Center(
-                          child: Text(
-                            _ledger[index]['type'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500),
-                          ),
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['qty_in'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['qty_in'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
-                          ),
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['qty_out'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w400),
                         ),
                       ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['qty_out'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w400),
-                          ),
+                    ),
+                    const SizedBox(
+                      width: 1,
+                    ),
+                    Container(
+                      color: varColor,
+                      width: 55,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(_ledger[index]['bal'],
+                          style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      const SizedBox(
-                        width: 1,
-                      ),
-                      Container(
-                        color: varColor,
-                        width: 55,
-                        child: Align(
-                          alignment: Alignment.centerRight,
-                          child: Text(
-                            _ledger[index]['bal'],
-                            style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      )
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    )
+                  ],
                 ),
-                const SizedBox(height: 10),
-              ],
-            );
-          })),
+              ),
+              const SizedBox(height: 10),
+            ],
+          );
+        }),
+      ),
     );
   }
 }

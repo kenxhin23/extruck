@@ -77,8 +77,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
   updateTransactions() async {
     //TRAN CHEQUE
     List list = [];
-    Provider.of<SyncCaption>(context, listen: false)
-        .changeCap('Updating Cheque Transactions...');
+    Provider.of<SyncCaption>(context, listen: false).changeCap('Updating Cheque Transactions...');
     print(UserData.id);
     print(upType);
     print(GlobalVariables.syncStartDate.toString());
@@ -94,8 +93,7 @@ class _SyncLoadingSpinkitState extends State<SyncLoadingSpinkit>
       await db.deleteTable('xt_tran_cheque');
       await db.insertTable(list, 'xt_tran_cheque');
       await db.updateTable('xt_tran_cheque ', date.toString());
-      await db.addUpdateTable(
-          'xt_tran_cheque', 'TRANSACTIONS', date.toString());
+      await db.addUpdateTable('xt_tran_cheque', 'TRANSACTIONS', date.toString());
       updateXtTranLine();
     } else {
       updateTransactions();

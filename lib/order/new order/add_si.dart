@@ -38,12 +38,8 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            'Enter Sales Invoice #',
-            style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
-                color: Colors.grey[500]),
+          Text('Enter Sales Invoice #',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.grey[500]),
           ),
           const SizedBox(height: 5),
           TextFormField(
@@ -54,17 +50,17 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
             controller: salesinvoicecontroller,
             style: const TextStyle(fontWeight: FontWeight.w500),
             decoration: const InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87),
-                  borderRadius: BorderRadius.all(Radius.circular(0)),
-                ),
-                hintText: 'Input Sales Invoice Number'),
+              hintText: 'Input Sales Invoice Number',
+              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(0)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black87),
+                borderRadius: BorderRadius.all(Radius.circular(0)),
+              ),
+            ),
             validator: (value) {
               if (value!.isEmpty || value == ' ') {
                 return 'Sales Invoice Number cannot be empty';
@@ -78,14 +74,14 @@ class _AddSalesInvoiceState extends State<AddSalesInvoice> {
             onPressed: () async {
               if (salesinvoicecontroller.text.isEmpty) {
                 showGlobalSnackbar(
-                    'Information',
-                    'Please input sales invoice number.',
-                    Colors.grey,
-                    Colors.white);
+                  'Information',
+                  'Please input sales invoice number.',
+                  Colors.grey,
+                  Colors.white,
+                );
               } else {
                 CartData.siNum = salesinvoicecontroller.text;
-                String msg =
-                    'Sales Invoice number has been saved successfully.';
+                String msg ='Sales Invoice number has been saved successfully.';
                 // ignore: use_build_context_synchronously
                 final action = await WarningDialogs.openDialog(
                   context,

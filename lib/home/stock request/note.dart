@@ -31,8 +31,7 @@ class _SpecialNoteState extends State<SpecialNote> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: Text(
-                'Add a note',
+              child: Text('Add a note',
                 style: TextStyle(fontSize: 14, color: ColorsTheme.mainColor),
               ),
             ),
@@ -51,8 +50,7 @@ class _SpecialNoteState extends State<SpecialNote> {
                 }
                 Navigator.pop(context);
               },
-              child: Text(
-                'DONE',
+              child: Text('DONE',
                 style: TextStyle(fontSize: 12, color: ColorsTheme.mainColor),
               ),
             )
@@ -80,9 +78,10 @@ class _SpecialNoteState extends State<SpecialNote> {
                     OrderData.specialInstruction = str.toUpperCase();
                   },
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Type your special instructions ...',
-                      hintStyle: TextStyle(color: Colors.grey[500])),
+                    border: InputBorder.none,
+                    hintText: 'Type your special instructions ...',
+                    hintStyle: TextStyle(color: Colors.grey[500]),
+                  ),
                 ),
               ),
             ),

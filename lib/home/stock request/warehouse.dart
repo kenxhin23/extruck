@@ -77,8 +77,7 @@ class _WarehousePageState extends State<WarehousePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  'Select a warehouse',
+                child: Text('Select a warehouse',
                   style: TextStyle(fontSize: 14, color: ColorsTheme.mainColor),
                 ),
               ),
@@ -102,16 +101,17 @@ class _WarehousePageState extends State<WarehousePage> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    'Distribution Center',
+                  Text('Distribution Center',
                     style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  )
+                      color: Colors.grey[800],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
+
             ListTile(
               title: const Text('Central DC (Cortes)'),
               leading: Radio<WarehouseName>(
@@ -159,13 +159,13 @@ class _WarehousePageState extends State<WarehousePage> {
                   const SizedBox(
                     width: 10,
                   ),
-                  Text(
-                    'Satellite Warehouses',
+                  Text('Satellite Warehouses',
                     style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  )
+                      color: Colors.grey[800],
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -228,12 +228,12 @@ class _WarehousePageState extends State<WarehousePage> {
               visible: satW,
               child: Column(
                 children: [
-                  Text(
-                    'Select Payment',
+                  Text('Select Payment',
                     style: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.grey[700],
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Row(
                     children: [
@@ -287,7 +287,9 @@ class _WarehousePageState extends State<WarehousePage> {
                 ],
               ),
             ),
+
             SizedBox(height: 5),
+
             Visibility(
               visible: viewCheque,
               child: Expanded(
@@ -330,33 +332,34 @@ class _WarehousePageState extends State<WarehousePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(_list[index]['cheque_no'],
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w500)),
-                                    Text(
-                                      _list[index]['bank_name'],
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey[700]),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                     ),
-                                    Text(
-                                      _list[index]['account_name'],
+                                    Text(_list[index]['bank_name'],
                                       style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.grey),
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    Text(_list[index]['account_name'],
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              Text(
-                                formatCurrencyAmt.format(
-                                    double.parse(_list[index]['amount'])),
+                              Text(formatCurrencyAmt.format(double.parse(_list[index]['amount'])),
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.green[700]),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green[700],
+                                ),
                               ),
                             ],
                           ),
@@ -369,56 +372,59 @@ class _WarehousePageState extends State<WarehousePage> {
             )
           ],
         ),
+
         bottomNavigationBar: BottomAppBar(
           child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(width: 0.2, color: Colors.black),
-                ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(width: 0.2, color: Colors.black),
               ),
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: ElevatedButton(
-                          style: raisedButtonStyleGreen,
-                          onPressed: () {
-                            setState(() {
-                              if (CartData.pMeth == 'Cheque') {
-                                for (var element in _list) {
-                                  if (element['mark'] == 1) {
-                                    GlobalVariables.chequeList.add(element);
-                                  }
-                                }
-                                if (GlobalVariables.chequeList.isEmpty) {
-                                  showGlobalSnackbar(
-                                      'Information',
-                                      'Please select cheque.',
-                                      Colors.blue,
-                                      Colors.white);
-                                } else {
-                                  Navigator.pop(context);
-                                }
-                              } else {
-                                Navigator.pop(context);
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: raisedButtonStyleGreen,
+                      onPressed: () {
+                        setState(() {
+                          if (CartData.pMeth == 'Cheque') {
+                            for (var element in _list) {
+                              if (element['mark'] == 1) {
+                                GlobalVariables.chequeList.add(element);
                               }
-                            });
+                            }
+                            if (GlobalVariables.chequeList.isEmpty) {
+                              showGlobalSnackbar(
+                                'Information',
+                                'Please select cheque.',
+                                Colors.blue,
+                                Colors.white,
+                              );
+                            } else {
+                              Navigator.pop(context);
+                            }
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        });
 
-                            // print(GlobalVariables.chequeList);
-                          },
-                          child: const Text(
-                            'SAVE WAREHOUSE',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  )
-                ],
-              )),
+                        // print(GlobalVariables.chequeList);
+                      },
+                      child: const Text('SAVE WAREHOUSE',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

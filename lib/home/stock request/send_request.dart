@@ -115,8 +115,7 @@ class _SendRequestState extends State<SendRequest> {
         if (CartData.pMeth == 'Cheque') {
           List temp = [];
           double balance = 0.00;
-          balance =
-              double.parse(CartData.totalAmount) - double.parse(chequeonHand);
+          balance = double.parse(CartData.totalAmount) - double.parse(chequeonHand);
           for (var element in GlobalVariables.chequeList) {
             print('NISUD');
             // temp = element;
@@ -164,8 +163,7 @@ class _SendRequestState extends State<SendRequest> {
 
         Provider.of<PendingCounter>(context, listen: false).addTotal(1);
 
-        String msg =
-            'Your Request #${GlobalVariables.tranNo!} is being processed right now.View Pending Requests to check status.';
+        String msg = 'Your Request #${GlobalVariables.tranNo!} is being processed right now.View Pending Requests to check status.';
         // ignore: use_build_context_synchronously
         final action = await WarningDialogs.openDialog(
           context,
@@ -196,17 +194,18 @@ class _SendRequestState extends State<SendRequest> {
         // double totamt = double.parse(element['item_amt']) *
         //     double.parse(element['item_qty']);
         db.addRequestLine(
-            GlobalVariables.tranNo,
-            element['item_code'],
-            element['item_desc'],
-            element['item_qty'],
-            element['item_uom'],
-            element['item_amt'],
-            element['item_total'],
-            element['item_principal'],
-            UserData.id,
-            date.toString(),
-            element['image']);
+          GlobalVariables.tranNo,
+          element['item_code'],
+          element['item_desc'],
+          element['item_qty'],
+          element['item_uom'],
+          element['item_amt'],
+          element['item_total'],
+          element['item_principal'],
+          UserData.id,
+          date.toString(),
+          element['image'],
+        );
       }
     });
   }
@@ -232,8 +231,7 @@ class _SendRequestState extends State<SendRequest> {
         checking = false;
         //kung e update ang revolving fund sa salesman ani sya mo trigger og change sa fund sa local
         if (double.parse(GlobalVariables.revFund) != revolvingFund) {
-          db.setRevolvingFund(
-              UserData.id, GlobalVariables.revFund, GlobalVariables.revBal);
+          db.setRevolvingFund(UserData.id, GlobalVariables.revFund, GlobalVariables.revBal);
         }
       });
     }
@@ -267,9 +265,7 @@ class _SendRequestState extends State<SendRequest> {
       cashonHand = cashList[0]['cash_onhand'];
 
       for (var element in GlobalVariables.chequeList) {
-        chequeonHand =
-            (double.parse(chequeonHand) + double.parse(element['amount']))
-                .toStringAsFixed(2);
+        chequeonHand = (double.parse(chequeonHand) + double.parse(element['amount'])).toStringAsFixed(2);
       }
       balance = double.parse(chequeonHand) + double.parse(cashonHand);
       if (balance < double.parse(CartData.totalAmount)) {
@@ -308,10 +304,8 @@ class _SendRequestState extends State<SendRequest> {
           ),
           backgroundColor: Colors.white,
           foregroundColor: Colors.white,
-          title: Text(
-            'Review Request',
-            style:
-                TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
+          title: Text('Review Request',
+            style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold),
           ),
           centerTitle: false,
         ),
@@ -344,8 +338,7 @@ class _SendRequestState extends State<SendRequest> {
                         height: 5,
                       ),
                       Visibility(visible: viewCash, child: buildCashCont()),
-                      Visibility(
-                          visible: viewRevFund, child: buildRevolvingCont()),
+                      Visibility(visible: viewRevFund, child: buildRevolvingCont()),
                       const SizedBox(
                         height: 30,
                       ),
@@ -380,10 +373,8 @@ class _SendRequestState extends State<SendRequest> {
         crossAxisAlignment: CrossAxisAlignment.center,
         // ignore: prefer_const_literals_to_create_immutables
         children: [
-          const Text(
-            'No Internet Connection. Please connect to a network.',
-            style: TextStyle(
-                fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white),
+          const Text('No Internet Connection. Please connect to a network.',
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.white),
           ),
         ],
       ),
@@ -410,13 +401,13 @@ class _SendRequestState extends State<SendRequest> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text(
-                  'Warehouse',
+                Text('Warehouse',
                   style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                )
+                    color: Colors.grey[800],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),
@@ -425,13 +416,11 @@ class _SendRequestState extends State<SendRequest> {
               GestureDetector(
                 onTap: () {
                   GlobalVariables.chequeList.clear();
-                  Navigator.push(
-                          context,
-                          PageTransition(
-                              // duration: const Duration(milliseconds: 100),
-                              type: PageTransitionType.rightToLeft,
-                              child: const WarehousePage()))
-                      .then((value) {
+                  Navigator.push(context,
+                    PageTransition(
+                        // duration: const Duration(milliseconds: 100),
+                      type: PageTransitionType.rightToLeft,
+                      child: const WarehousePage())).then((value) {
                     setState(() {
                       // print(GlobalVariables.chequeList);
                       warehouse = CartData.warehouse;

@@ -85,8 +85,7 @@ class _BalancePageState extends State<BalancePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Your Balance',
+              const Text('Your Balance',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -108,49 +107,50 @@ class _BalancePageState extends State<BalancePage> {
         ),
         bottomNavigationBar: BottomAppBar(
           child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(width: 0.2, color: Colors.black),
-                ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(width: 0.2, color: Colors.black),
               ),
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: ElevatedButton(
-                          style: updated
-                              ? raisedButtonStyleGrey
-                              : raisedButtonStyleGreen,
-                          onPressed: () async {
-                            // final action = await Dialogs.openDialog(
-                            //     context,
-                            //     'Confirmation',
-                            //     'You cannot cancel or modify after this. Are you sure you want to convert items?',
-                            //     false,
-                            //     'No',
-                            //     'Yes');
-                            // if (action == DialogAction.yes) {
-                            //   showDialog(
-                            //       barrierDismissible: false,
-                            //       context: context,
-                            //       builder: (context) =>
-                            //           const ProcessingBox('Converting Items'));
-                            //   savingConversion();
-                            // } else {}
-                          },
-                          child: const Text(
-                            'SYNC DATA',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  )
-                ],
-              )),
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: updated ?
+                      raisedButtonStyleGrey :
+                      raisedButtonStyleGreen,
+                      onPressed: () async {
+                        // final action = await Dialogs.openDialog(
+                        //     context,
+                        //     'Confirmation',
+                        //     'You cannot cancel or modify after this. Are you sure you want to convert items?',
+                        //     false,
+                        //     'No',
+                        //     'Yes');
+                        // if (action == DialogAction.yes) {
+                        //   showDialog(
+                        //       barrierDismissible: false,
+                        //       context: context,
+                        //       builder: (context) =>
+                        //           const ProcessingBox('Converting Items'));
+                        //   savingConversion();
+                        // } else {}
+                      },
+                      child: const Text('SYNC DATA',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -161,21 +161,17 @@ class _BalancePageState extends State<BalancePage> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const CashLedger()));
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const CashLedger()));
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           height: 100,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
-              color: Colors.green[300],
-              border: Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(10)),
+            color: Colors.green[300],
+            border: Border.all(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Stack(
             children: <Widget>[
               Column(
@@ -191,13 +187,8 @@ class _BalancePageState extends State<BalancePage> {
                         children: const <Widget>[
                           // SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              'Cash',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 36,
-                              ),
+                            child: Text('Cash',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36),
                             ),
                           ),
                         ],
@@ -209,26 +200,16 @@ class _BalancePageState extends State<BalancePage> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
-                          child: const Text(
-                            'Click to view ledger',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
+                          child: const Text('Click to view ledger',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                         ),
                       ),
-                      Text(
-                        formatCurrencyAmt.format(double.parse(cash)).toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 36,
-                        ),
+                      Text(formatCurrencyAmt.format(double.parse(cash)).toString(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -242,22 +223,17 @@ class _BalancePageState extends State<BalancePage> {
     // ignore: avoid_unnecessary_containers
     return Container(
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const ChequeView()));
+        onTap: () {Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ChequeView()));
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           height: 80,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
-              color: Colors.yellow[600],
-              border: Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(10)),
+            color: Colors.yellow[600],
+            border: Border.all(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Stack(
             children: <Widget>[
               Column(
@@ -273,13 +249,8 @@ class _BalancePageState extends State<BalancePage> {
                         children: const <Widget>[
                           // SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              'Cheque',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                              ),
+                            child: Text('Cheque',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24),
                             ),
                           ),
                         ],
@@ -291,28 +262,17 @@ class _BalancePageState extends State<BalancePage> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
-                          child: const Text(
-                            'Click to view cheque details',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
+                          child: const Text('Click to view cheque details',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                         ),
                       ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(cheque))
-                            .toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 36,
+                      Text(formatCurrencyAmt.format(double.parse(cheque)).toString(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36,
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -357,12 +317,8 @@ class _BalancePageState extends State<BalancePage> {
                         children: const <Widget>[
                           // SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              'Discounts',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
+                            child: Text('Discounts',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24,
                               ),
                             ),
                           ),
@@ -375,28 +331,16 @@ class _BalancePageState extends State<BalancePage> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
-                          child: const Text(
-                            '',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
+                          child: const Text('',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                         ),
                       ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(discounts))
-                            .toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 36,
-                        ),
+                      Text(formatCurrencyAmt.format(double.parse(discounts)).toString(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -411,21 +355,17 @@ class _BalancePageState extends State<BalancePage> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const BoView()));
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const BoView()));
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           height: 80,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
-              color: Colors.grey[600],
-              border: Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(10)),
+            color: Colors.grey[600],
+            border: Border.all(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Stack(
             children: <Widget>[
               Column(
@@ -441,13 +381,8 @@ class _BalancePageState extends State<BalancePage> {
                         children: const <Widget>[
                           // SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              'Bad Order',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                              ),
+                            child: Text('Bad Order',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24),
                             ),
                           ),
                         ],
@@ -459,28 +394,17 @@ class _BalancePageState extends State<BalancePage> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
-                          child: const Text(
-                            'Click to view transactions',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                            ),
+                          child: const Text('Click to view transactions',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14),
                           ),
                         ),
                       ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(badorder))
-                            .toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 36,
+                      Text(formatCurrencyAmt.format(double.parse(badorder)).toString(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36,
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -495,21 +419,17 @@ class _BalancePageState extends State<BalancePage> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const RemitView()));
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const RemitView()));
         },
         child: Container(
           margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           height: 100,
           // width: MediaQuery.of(context).size.width / 2 - 30,
           decoration: BoxDecoration(
-              color: Colors.blue[300],
-              border: Border.all(color: Colors.transparent),
-              borderRadius: BorderRadius.circular(10)),
+            color: Colors.blue[300],
+            border: Border.all(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: Stack(
             children: <Widget>[
               Column(
@@ -525,13 +445,8 @@ class _BalancePageState extends State<BalancePage> {
                         children: const <Widget>[
                           // SizedBox(width: 10),
                           Expanded(
-                            child: Text(
-                              'Pending Remittance',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 24,
-                              ),
+                            child: Text('Pending Remittance',
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24),
                             ),
                           ),
                         ],
@@ -543,28 +458,18 @@ class _BalancePageState extends State<BalancePage> {
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(left: 15),
-                          child: const Text(
-                            'Click to view transactions',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
+                          child: const Text('Click to view transactions',
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14,
                             ),
                           ),
                         ),
                       ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(pendingremit))
-                            .toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 36,
+                      Text(formatCurrencyAmt.format(double.parse(pendingremit)).toString(),
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 36,
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ],
@@ -580,9 +485,10 @@ class _BalancePageState extends State<BalancePage> {
       height: 100,
       // width: MediaQuery.of(context).size.width / 2 - 30,
       decoration: BoxDecoration(
-          color: Colors.orange[300],
-          border: Border.all(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(10)),
+        color: Colors.orange[300],
+        border: Border.all(color: Colors.transparent),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Stack(
         children: <Widget>[
           Column(
@@ -616,8 +522,7 @@ class _BalancePageState extends State<BalancePage> {
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.only(left: 15),
-                      child: const Text(
-                        '',
+                      child: const Text('',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w400,
@@ -626,10 +531,7 @@ class _BalancePageState extends State<BalancePage> {
                       ),
                     ),
                   ),
-                  Text(
-                    formatCurrencyAmt
-                        .format(double.parse(loadbalance))
-                        .toString(),
+                  Text(formatCurrencyAmt.format(double.parse(loadbalance)).toString(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w500,

@@ -98,10 +98,11 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
         //           buttonText: 'Okay',
         //         ));
         showGlobalSnackbar(
-            'Information',
-            'This account has been locked due to excessive login failures. Please contact your administrator.',
-            Colors.blue,
-            Colors.white);
+          'Information',
+          'This account has been locked due to excessive login failures. Please contact your administrator.',
+          Colors.blue,
+          Colors.white,
+        );
         db.updateSalesmanStatus(usernameController.text);
         if (NetworkData.connected) {
           db.updateSalesmanStatusOnline(usernameController.text);
@@ -269,12 +270,12 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
                       ),
                     ),
                   ),
-                  const Text(
-                    "Salesman Login",
+                  const Text("Salesman Login",
                     style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                      color: Colors.grey,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(
                     height: ScreenData.scrHeight * .030,
@@ -302,15 +303,15 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
               width: MediaQuery.of(context).size.width,
               // height: 30,
               // color: Colors.grey,
-              child: const Text(
-                'E-COMMERCE(exTruck App) COPYRIGHT 2022',
+              child: const Text('E-COMMERCE(exTruck App) COPYRIGHT 2022',
                 style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.grey,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -330,9 +331,9 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
                 var password = passwordController.text;
 
                 showDialog(
-                    barrierDismissible: false,
-                    context: context,
-                    builder: (context) => const LoggingInBox());
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => const LoggingInBox());
 
                 var rsp = await db.salesmanLogin(username, password);
 
@@ -383,8 +384,9 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
                   // ignore: use_build_context_synchronously
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        backgroundColor: Colors.red,
-                        content: Text("Invalid username or Password")),
+                      backgroundColor: Colors.red,
+                      content: Text("Invalid username or Password"),
+                    ),
                   );
                   // ignore: use_build_context_synchronously
                   Navigator.pop(context);
@@ -400,15 +402,17 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
                     //           buttonText: 'Okay',
                     //         ));
                     showGlobalSnackbar(
-                        'Information',
-                        'This account has been locked due to excessive login failures. Please contact your administrator.',
-                        Colors.blue,
-                        Colors.white);
+                      'Information',
+                      'This account has been locked due to excessive login failures. Please contact your administrator.',
+                      Colors.blue,
+                      Colors.white,
+                    );
                   } else {
                     showDialog(
-                        barrierDismissible: false,
-                        context: context,
-                        builder: (context) => const LoggingInBox());
+                      barrierDismissible: false,
+                      context: context,
+                      builder: (context) => const LoggingInBox(),
+                    );
 
                     UserData.id = _userdata[0]['sm_code'];
                     UserData.firstname = _userdata[0]['firstname'];
@@ -481,8 +485,7 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
               mainAxisSize: MainAxisSize.min,
               // ignore: prefer_const_literals_to_create_immutables
               children: [
-                const Text(
-                  "LOGIN",
+                const Text("LOGIN",
                   style: TextStyle(
                     fontSize: 18,
                     color: Colors.white,
@@ -501,81 +504,86 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
 
   Column buildSignInTextField() {
     final node = FocusScope.of(context);
-    return Column(children: [
-      Form(
+    return Column(
+      children: [
+        Form(
           key: _formKey,
-          child: Column(children: <Widget>[
-            TextFormField(
-              textInputAction: TextInputAction.next,
-              // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-              onEditingComplete: () => node.nextFocus(),
-              controller: usernameController,
-              decoration: const InputDecoration(
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                textInputAction: TextInputAction.next,
+                // onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                onEditingComplete: () => node.nextFocus(),
+                controller: usernameController,
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black87),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  hintText: 'Username',
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black87),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                hintText: 'Username',
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Username cannot be empty';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Username cannot be empty';
-                }
-                return null;
-              },
-            ),
-            SizedBox(
-              height: ScreenData.scrHeight * .020,
-            ),
-            TextFormField(
-              textInputAction: TextInputAction.done,
-              onFieldSubmitted: (_) => node.unfocus(),
-              obscureText: _obscureText,
-              controller: passwordController,
-              decoration: InputDecoration(
-                enabledBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                ),
-                hintText: 'Password',
-                suffixIcon: GestureDetector(
-                  onLongPressStart: (_) async {
-                    _toggle();
-                  },
-                  onLongPressEnd: (_) {
-                    setState(() {
+              SizedBox(
+                height: ScreenData.scrHeight * .020,
+              ),
+              TextFormField(
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (_) => node.unfocus(),
+                obscureText: _obscureText,
+                controller: passwordController,
+                decoration: InputDecoration(
+                  enabledBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  hintText: 'Password',
+                  suffixIcon: GestureDetector(
+                    onLongPressStart: (_) async {
                       _toggle();
-                    });
-                  },
-                  child: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.grey,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      // _toggle();
                     },
+                    onLongPressEnd: (_) {
+                      setState(() {
+                        _toggle();
+                      });
+                    },
+                    child: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.grey,
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        // _toggle();
+                      },
+                    ),
                   ),
                 ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Password cannot be empty';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Password cannot be empty';
-                }
-                return null;
-              },
-            ),
-          ]))
-    ]);
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Container buildForgetPass() {
@@ -611,8 +619,7 @@ class _SalesmanLoginPageState extends State<SalesmanLoginPage> {
               // //   return ForgetPass();
               // // }));
             },
-            child: Text(
-              'Forgot Password?',
+            child: Text('Forgot Password?',
               style: TextStyle(
                 fontSize: 12,
                 color: ColorsTheme.mainColor,
@@ -650,57 +657,59 @@ class _LoggingInBoxState extends State<LoggingInBox> {
     return Stack(
       children: <Widget>[
         Container(
-            // width: MediaQuery.of(context).size.width,
-            padding:
-                const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
+          // width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
                 color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Colors.transparent,
-                    // blurRadius: 10.0,
-                    // offset: Offset(0.0, 10.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  // color: Colors.white,
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.transparent,
-                        ),
-                      ]),
-                  child: Column(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Text(
-                        'Logging in as Salesman...',
-                        style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                      ),
-                      const LinearProgressIndicator(),
-                    ],
-                  ),
+                // blurRadius: 10.0,
+                // offset: Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                // color: Colors.white,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  boxShadow: [
+                    const BoxShadow(
+                      color: Colors.transparent,
+                    ),
+                  ],
                 ),
-                // SpinKitCircle(
-                //   color: ColorsTheme.mainColor,
-                // ),
-              ],
-            )),
+                child: Column(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Text('Logging in as Salesman...',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const LinearProgressIndicator(),
+                  ],
+                ),
+              ),
+              // SpinKitCircle(
+              //   color: ColorsTheme.mainColor,
+              // ),
+            ],
+          ),
+        ),
       ],
     );
   }

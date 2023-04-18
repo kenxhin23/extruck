@@ -144,8 +144,7 @@ class _PendingRequestsState extends State<PendingRequests> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Pending Requests',
+              const Text('Pending Requests',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -175,14 +174,13 @@ class _PendingRequestsState extends State<PendingRequests> {
               ),
               const SizedBox(width: 10),
               const Expanded(
-                child: Text(
-                  'Always connect to an internet connection to get updated of the latest status changes.',
+                child: Text('Always connect to an internet connection to get updated of the latest status changes.',
                   style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
                 ),
               ),
               const SizedBox(width: 10),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -219,15 +217,14 @@ class _PendingRequestsState extends State<PendingRequests> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'No pending requests found.',
+            Text('No pending requests found.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -236,149 +233,124 @@ class _PendingRequestsState extends State<PendingRequests> {
         padding: const EdgeInsets.all(5),
         width: MediaQuery.of(context).size.width,
         child: ListView.builder(
-            itemCount: _pendList.length,
-            itemBuilder: ((context, index) {
-              String newDate = "";
-              String dateReq = "";
-              if (_pendList[index]['tran_stat'] == 'Pending' ||
-                  _pendList[index]['tran_stat'] == 'Loaded') {
-                appTrue = false;
-              } else {
-                appTrue = true;
-              }
-              if (_pendList[index]['pmeth_type'] == 'RF') {
-                revTrue = true;
-              } else {
-                revTrue = false;
-              }
-              dateReq = _pendList[index]['date_req'];
-              // print(_pendList[index]['tran_stat']);
-              DateTime s = DateTime.parse(dateReq);
-              newDate =
-                  '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
-              _pendList[index]['date_req'] = newDate;
-              return GestureDetector(
-                onTap: () {
-                  if (_pendList[index]['tran_stat'] != 'Pending') {
-                    RequestData.reqQty = _pendList[index]['item_count'];
-                    RequestData.appQty = _pendList[index]['app_count'];
-                  } else {
-                    RequestData.reqQty = _pendList[index]['item_count'];
-                    RequestData.appQty = '0';
-                  }
-                  RequestData.tranNo = _pendList[index]['tran_no'];
-                  RequestData.status = _pendList[index]['tran_stat'];
+          itemCount: _pendList.length,
+          itemBuilder: ((context, index) {
+            String newDate = "";
+            String dateReq = "";
+            if (_pendList[index]['tran_stat'] == 'Pending' ||
+                _pendList[index]['tran_stat'] == 'Loaded') {
+              appTrue = false;
+            } else {
+              appTrue = true;
+            }
+            if (_pendList[index]['pmeth_type'] == 'RF') {
+              revTrue = true;
+            } else {
+              revTrue = false;
+            }
+            dateReq = _pendList[index]['date_req'];
+            // print(_pendList[index]['tran_stat']);
+            DateTime s = DateTime.parse(dateReq);
+            newDate = '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+            _pendList[index]['date_req'] = newDate;
+            return GestureDetector(
+              onTap: () {
+                if (_pendList[index]['tran_stat'] != 'Pending') {
+                  RequestData.reqQty = _pendList[index]['item_count'];
+                  RequestData.appQty = _pendList[index]['app_count'];
+                } else {
+                  RequestData.reqQty = _pendList[index]['item_count'];
+                  RequestData.appQty = '0';
+                }
+                RequestData.tranNo = _pendList[index]['tran_no'];
+                RequestData.status = _pendList[index]['tran_stat'];
 
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          // duration: const Duration(milliseconds: 100),
-                          type: PageTransitionType.rightToLeft,
-                          child: LoadItems(_pendList[index]['pmeth_type'],
-                              _pendList[index]['tot_amt'])));
-                },
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          height: 90,
-                          width: 5,
-                          color: Colors.deepOrange,
-                        ),
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 5),
-                            height: 90,
-                            color: Colors.white,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '#${_pendList[index]['tran_no']}',
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      revTrue
-                                          ? Icons.warehouse_rounded
-                                          : Icons.cell_tower_rounded,
-                                      color:
-                                          revTrue ? Colors.blue : Colors.green,
-                                      size: 21,
-                                    ),
-                                    Text(
-                                      ' - ${_pendList[index]['warehouse']}',
-                                      style:
-                                          const TextStyle(color: Colors.grey),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    Text(
-                                      appTrue
-                                          ? 'Qty: ${_pendList[index]['app_count']}'
-                                          : 'Qty: ${_pendList[index]['item_count']}',
-                                      style: const TextStyle(fontSize: 12),
-                                    ),
-                                    const SizedBox(width: 40),
-                                    const Text(
-                                      'Total: ',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                    Text(
-                                      formatCurrencyTot.format(double.parse(
-                                          _pendList[index]['tot_amt'])),
-                                      style: const TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.green),
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  _pendList[index]['date_req'],
-                                  style: const TextStyle(fontSize: 10),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
+                Navigator.push(context, PageTransition(
+                  // duration: const Duration(milliseconds: 100),
+                  type: PageTransitionType.rightToLeft,
+                  child: LoadItems(_pendList[index]['pmeth_type'], _pendList[index]['tot_amt']),
+                ));
+              },
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        height: 90,
+                        width: 5,
+                        color: Colors.deepOrange,
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 5),
                           height: 90,
                           color: Colors.white,
-                          child: Center(
-                            child: Text(
-                              _pendList[index]['tran_stat'],
-                              style: TextStyle(
-                                  color: appTrue
-                                      ? Colors.green
-                                      : Colors.deepOrange,
-                                  fontWeight: FontWeight.w500),
-                            ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('#${_pendList[index]['tran_no']}',
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                              Row(
+                                children: [
+                                  Icon(revTrue ? Icons.warehouse_rounded : Icons.cell_tower_rounded,
+                                    color: revTrue ? Colors.blue : Colors.green,
+                                    size: 21,
+                                  ),
+                                  Text(' - ${_pendList[index]['warehouse']}',
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text(appTrue ? 'Qty: ${_pendList[index]['app_count']}' : 'Qty: ${_pendList[index]['item_count']}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  const SizedBox(width: 40),
+                                  const Text('Total: ',
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                  Text(formatCurrencyTot.format(double.parse(_pendList[index]['tot_amt'])),
+                                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Text(_pendList[index]['date_req'],
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                            ],
                           ),
                         ),
-                        Container(
-                          width: 10,
-                          height: 90,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                  ],
-                ),
-              );
-            })),
+                      ),
+                      Container(
+                        height: 90,
+                        color: Colors.white,
+                        child: Center(
+                          child: Text(_pendList[index]['tran_stat'],
+                            style: TextStyle(color: appTrue ? Colors.green : Colors.deepOrange,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 10,
+                        height: 90,
+                        color: Colors.white,
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
       );
     }
   }

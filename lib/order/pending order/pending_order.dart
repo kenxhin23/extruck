@@ -121,8 +121,7 @@ class _PendingOrdersState extends State<PendingOrders> {
         totDiscount = totDiscount + double.parse(element['disc_amt']);
         totNet = totNet + double.parse(element['net_amt']);
         DateTime s = DateTime.parse(element['date'].toString());
-        newDate =
-            '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
+        newDate = '${DateFormat("MMM dd, yyyy").format(s)} at ${DateFormat("hh:mm aaa").format(s)}';
         element['date'] = newDate.toString();
       }
     });
@@ -154,8 +153,7 @@ class _PendingOrdersState extends State<PendingOrders> {
   }
 
   generateReport() async {
-    final String date1 =
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    final String date1 = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     final String date2 = DateFormat("MMddyy").format(DateTime.now());
 
     var count = await db.checkRMTCount(UserData.id);
@@ -187,27 +185,27 @@ class _PendingOrdersState extends State<PendingOrders> {
       await db.changeSatWhStat(UserData.id, 'Posted');
       await db.addRemitBal(UserData.id, pendingRemit.toStringAsFixed(2));
       var rsp = await db.saveRemittanceReport(
-          rmtNo,
-          date1,
-          UserData.id,
-          _list.length.toString(),
-          GlobalVariables.revBal,
-          loadBal,
-          '0.00',
-          totAmount,
-          cash,
-          cheque,
-          totDiscount,
-          satWh,
-          totNet,
-          pendingRemit.toStringAsFixed(2),
-          'Pending');
+        rmtNo,
+        date1,
+        UserData.id,
+        _list.length.toString(),
+        GlobalVariables.revBal,
+        loadBal,
+        '0.00',
+        totAmount,
+        cash,
+        cheque,
+        totDiscount,
+        satWh,
+        totNet,
+        pendingRemit.toStringAsFixed(2),
+        'Pending',
+      );
       if (rsp != null) {
         // ignore: use_build_context_synchronously
         Navigator.pop(context);
 
-        String msg =
-            'Your Remittance #$rmtNo has been saved successfully. Continue to print report';
+        String msg = 'Your Remittance #$rmtNo has been saved successfully. Continue to print report';
         // ignore: use_build_context_synchronously
         final action = await WarningDialogs.openDialog(
           context,
@@ -221,40 +219,46 @@ class _PendingOrdersState extends State<PendingOrders> {
           if (!PrinterData.connected) {
             // ignore: use_build_context_synchronously
             Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    child: ConnectPrinter(
-                        _list,
-                        _ord,
-                        _bo,
-                        ordAmt.toString(),
-                        boAmt.toString(),
-                        rmtNo,
-                        _list.length.toString(),
-                        totAmount.toString(),
-                        totDiscount.toString(),
-                        satWh,
-                        totNet.toString())));
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: ConnectPrinter(
+                  _list,
+                  _ord,
+                  _bo,
+                  ordAmt.toString(),
+                  boAmt.toString(),
+                  rmtNo,
+                  _list.length.toString(),
+                  totAmount.toString(),
+                  totDiscount.toString(),
+                  satWh,
+                  totNet.toString(),
+                ),
+              ),
+            );
           } else {
             // ignore: use_build_context_synchronously
             Navigator.push(
-                context,
-                PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    child: PrintReport(
-                        _list,
-                        _ord,
-                        _bo,
-                        ordAmt.toString(),
-                        boAmt.toString(),
-                        rmtNo,
-                        _list.length.toString(),
-                        totAmount.toString(),
-                        totDiscount.toString(),
-                        satWh,
-                        totNet.toString(),
-                        false)));
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: PrintReport(
+                  _list,
+                  _ord,
+                  _bo,
+                  ordAmt.toString(),
+                  boAmt.toString(),
+                  rmtNo,
+                  _list.length.toString(),
+                  totAmount.toString(),
+                  totDiscount.toString(),
+                  satWh,
+                  totNet.toString(),
+                  false,
+                ),
+              ),
+            );
           }
         } else {}
       }
@@ -270,11 +274,9 @@ class _PendingOrdersState extends State<PendingOrders> {
       // print(_bal);
       for (var element in _bal) {
         double amt = 0.00;
-        amt =
-            double.parse(element['item_amt']) * int.parse(element['item_qty']);
+        amt = double.parse(element['item_amt']) * int.parse(element['item_qty']);
         loadBal = (double.parse(loadBal) + amt).toString();
-        loadQty =
-            (int.parse(loadQty) + int.parse(element['item_qty'])).toString();
+        loadQty = (int.parse(loadQty) + int.parse(element['item_qty'])).toString();
       }
       viewSpinkit = false;
     });
@@ -300,8 +302,7 @@ class _PendingOrdersState extends State<PendingOrders> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Pending Orders',
+          title: const Text('Pending Orders',
             style: TextStyle(fontSize: 16),
           ),
         ),
@@ -336,10 +337,12 @@ class _PendingOrdersState extends State<PendingOrders> {
           const Text('Satellite Warehouse: ', style: TextStyle(fontSize: 12)),
           Expanded(
             child: Text(formatCurrencyAmt.format(double.parse(satWh)),
-                style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[700],
-                    fontSize: 12)),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[700],
+                fontSize: 12,
+              ),
+            ),
           ),
         ],
       ),
@@ -365,26 +368,32 @@ class _PendingOrdersState extends State<PendingOrders> {
             children: [
               const Text('Discount: ', style: TextStyle(fontSize: 12)),
               Text(formatCurrencyAmt.format(double.parse(discount)),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
-                      fontSize: 12)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              ),
               SizedBox(width: 5),
               const Text('Cheque: ', style: TextStyle(fontSize: 12)),
               Expanded(
                 child: Text(formatCurrencyAmt.format(double.parse(cheque)),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                        fontSize: 12)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12,
+                  ),
+                ),
               ),
               const Text('Cash: ', style: TextStyle(fontSize: 12)),
               Expanded(
                 child: Text(formatCurrencyAmt.format(double.parse(cash)),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
-                        fontSize: 12)),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey[700],
+                    fontSize: 12,
+                  ),
+                ),
               ),
             ],
           ),
@@ -394,27 +403,35 @@ class _PendingOrdersState extends State<PendingOrders> {
             children: [
               const Text('BO: ', style: TextStyle(fontSize: 12)),
               Text(formatCurrencyAmt.format(double.parse(bo)),
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[700],
-                      fontSize: 12)),
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey[700],
+                  fontSize: 12,
+                ),
+              ),
               SizedBox(
                 width: 5,
               ),
               const Text('Order No: ', style: TextStyle(fontSize: 12)),
               Expanded(
-                  child: Text(_list.length.toString(),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.deepOrange,
-                          fontSize: 12))),
+                child: Text(_list.length.toString(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.deepOrange,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
               const Text('Total Amount: ', style: TextStyle(fontSize: 12)),
               Expanded(
-                  child: Text(formatCurrencyAmt.format(totNet),
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.deepOrange,
-                          fontSize: 12))),
+                child: Text(formatCurrencyAmt.format(totNet),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.deepOrange,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
             ],
           ),
         ],
@@ -434,7 +451,7 @@ class _PendingOrdersState extends State<PendingOrders> {
               const SpinKitCircle(
                 size: 36,
                 color: Colors.deepOrange,
-              )
+              ),
             ],
           ),
         ),
@@ -453,15 +470,14 @@ class _PendingOrdersState extends State<PendingOrders> {
                 size: 100,
                 color: Colors.orange[500],
               ),
-              Text(
-                'No pending orders found.',
+              Text('No pending orders found.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[500],
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -470,115 +486,115 @@ class _PendingOrdersState extends State<PendingOrders> {
           width: MediaQuery.of(context).size.width,
           color: Colors.transparent,
           child: ListView.builder(
-              itemCount: _list.length,
-              itemBuilder: ((context, index) {
-                bool cash = false;
-                if (_list[index]['pmeth_type'] == 'Cash') {
-                  cash = true;
-                } else {
-                  cash = false;
-                }
-                if (_list[index]['tran_type'] == 'BO') {
-                  boRef = true;
-                } else {
-                  boRef = false;
-                }
+            itemCount: _list.length,
+            itemBuilder: ((context, index) {
+              bool cash = false;
+              if (_list[index]['pmeth_type'] == 'Cash') {
+                cash = true;
+              } else {
+                cash = false;
+              }
+              if (_list[index]['tran_type'] == 'BO') {
+                boRef = true;
+              } else {
+                boRef = false;
+              }
 
-                return Container(
-                  // width: MediaQuery.of(context).size.width,
-                  color: Colors.white,
-                  // height: 70,
-                  margin: const EdgeInsets.all(8),
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      Icon(
-                        cash ? Icons.money_rounded : Icons.fact_check_outlined,
-                        color: cash ? Colors.green : Colors.deepOrange,
-                        size: 36,
-                      ),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _list[index]['order_no'],
-                              style: const TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              _list[index]['store_name'],
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'SI #: ',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400),
-                                ),
-                                Text(
-                                  _list[index]['si_no'],
-                                  style: const TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.green),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              _list[index]['date'],
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        // ignore: prefer_const_literals_to_create_immutables
+              return Container(
+                // width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                // height: 70,
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                child: Row(
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    Icon(
+                      cash ? Icons.money_rounded : Icons.fact_check_outlined,
+                      color: cash ? Colors.green : Colors.deepOrange,
+                      size: 36,
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Visibility(
-                            visible: boRef,
-                            child: Container(
-                              padding: const EdgeInsets.all(3),
+                          Text(_list[index]['order_no'],
+                            style: const TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(_list[index]['store_name'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                               color: Colors.grey,
-                              child: const Text(
-                                'BO REFUND',
+                            ),
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('SI #: ',
                                 style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              Text(_list[index]['si_no'],
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(_list[index]['date'],
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      // ignore: prefer_const_literals_to_create_immutables
+                      children: [
+                        Visibility(
+                          visible: boRef,
+                          child: Container(
+                            padding: const EdgeInsets.all(3),
+                            color: Colors.grey,
+                            child: const Text('BO REFUND',
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                          const Text(
-                            'Total Amount',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w400),
+                        ),
+                        const Text('Total Amount',
+                          style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w400,
                           ),
-                          Text(
-                            formatCurrencyAmt
-                                .format(double.parse(_list[index]['net_amt'])),
-                            style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.green),
+                        ),
+                        Text(formatCurrencyAmt.format(double.parse(_list[index]['net_amt'])),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.green,
                           ),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              })),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
         );
       }
     }
@@ -601,45 +617,47 @@ class _PendingOrdersState extends State<PendingOrders> {
             child: Container(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  style: _list.isEmpty
-                      ? raisedButtonStyleGrey
-                      : raisedButtonStyleGreen,
-                  onPressed: () async {
-                    // print('ORDER TOTAL:${ordAmt}');
-                    // print('BO TOTAL:${boAmt}');
-                    // print('GRAND TOTAL:${totAmount}');
-                    if (_list.isEmpty) {
+                style: _list.isEmpty
+                  ? raisedButtonStyleGrey
+                  : raisedButtonStyleGreen,
+                onPressed: () async {
+                  // print('ORDER TOTAL:${ordAmt}');
+                  // print('BO TOTAL:${boAmt}');
+                  // print('GRAND TOTAL:${totAmount}');
+                  if (_list.isEmpty) {
+                  } else {
+                    if (_tmp.isNotEmpty) {
+                      showGlobalSnackbar(
+                        'Information',
+                        'Please load pending stock requests to continue.',
+                        Colors.grey,
+                        Colors.white,
+                      );
                     } else {
-                      if (_tmp.isNotEmpty) {
-                        showGlobalSnackbar(
-                            'Information',
-                            'Please load pending stock requests to continue.',
-                            Colors.grey,
-                            Colors.white);
-                      } else {
-                        final action = await Dialogs.openDialog(
-                            context,
-                            'Confirmation',
-                            'You cannot cancel or modify after this. Are you sure you want to generate report?',
-                            false,
-                            'No',
-                            'Yes');
-                        if (action == DialogAction.yes) {
-                          // update();
-                          showDialog(
-                              barrierDismissible: false,
-                              context: context,
-                              builder: (context) =>
-                                  const ProcessingBox('Generating Report'));
-                          generateReport();
-                        } else {}
-                      }
+                      final action = await Dialogs.openDialog(
+                        context,
+                        'Confirmation',
+                        'You cannot cancel or modify after this. Are you sure you want to generate report?',
+                        false,
+                        'No',
+                        'Yes',
+                      );
+                      if (action == DialogAction.yes) {
+                        // update();
+                        showDialog(
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) =>
+                              const ProcessingBox('Generating Report'));
+                        generateReport();
+                      } else {}
                     }
-                  },
-                  child: const Text(
-                    'GENERATE REPORT',
-                    style: TextStyle(color: Colors.white),
-                  )),
+                  }
+                },
+                child: const Text('GENERATE REPORT',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
         ],

@@ -20,36 +20,37 @@ class _SalesPageState extends State<SalesPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          handleUserInteraction();
-        },
-        onPanDown: (details) {
-          handleUserInteraction();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 85,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Sales",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      color: ColorsTheme.mainColor,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold),
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        handleUserInteraction();
+      },
+      onPanDown: (details) {
+        handleUserInteraction();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 85,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Sales",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: ColorsTheme.mainColor,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          body: Column(
-            children: const [],
-          ),
-        ));
+        ),
+        body: Column(
+          children: const [],
+        ),
+      ),
+    );
   }
 }

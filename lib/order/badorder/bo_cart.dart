@@ -68,8 +68,7 @@ class _BoCartState extends State<BoCart> {
       int x;
       x = int.parse(element['mark'].toString());
       if (x == 1) {
-        var rsp = await db.getRefundLines(
-            element['order_no'], element['item_code'], element['uom']);
+        var rsp = await db.getRefundLines(element['order_no'], element['item_code'], element['uom']);
         if (!mounted) return;
         setState(() {
           _list.addAll(json.decode(json.encode(rsp)));
@@ -136,28 +135,28 @@ class _BoCartState extends State<BoCart> {
 
   addingTransactionLine() async {
     ///ADD ORDER LINE
-    final String date =
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+    final String date = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
 
     for (var element in _list) {
       // print(element);
       db.addTransactionLine(
-          tranNo,
-          CartData.siNum,
-          element['rf_itmcode'],
-          element['rf_itemdesc'],
-          element['rf_qty'],
-          element['rf_uom'],
-          element['rf_amount'],
-          '0.00',
-          element['rf_totamt'],
-          '0.00',
-          element['item_cat'],
-          'Served',
-          'F',
-          UserData.id,
-          date.toString(),
-          element['rf_image']);
+        tranNo,
+        CartData.siNum,
+        element['rf_itmcode'],
+        element['rf_itemdesc'],
+        element['rf_qty'],
+        element['rf_uom'],
+        element['rf_amount'],
+        '0.00',
+        element['rf_totamt'],
+        '0.00',
+        element['item_cat'],
+        'Served',
+        'F',
+        UserData.id,
+        date.toString(),
+        element['rf_image'],
+      );
     }
     // if (CartData.pMeth == 'Cheque') {
     //   db.addChequeData(
@@ -185,8 +184,7 @@ class _BoCartState extends State<BoCart> {
 
     Navigator.pop(context);
 
-    String msg =
-        'Your BO Refund #$tranNo has been saved successfully. Continue to print receipt';
+    String msg = 'Your BO Refund #$tranNo has been saved successfully. Continue to print receipt';
     // ignore: use_build_context_synchronously
     final action = await WarningDialogs.openDialog(
       context,
@@ -236,17 +234,19 @@ class _BoCartState extends State<BoCart> {
       setCateg, itmImg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: const Text(
-            '1 Item Deleted',
-          ),
-          action: SnackBarAction(
-              label: "",
-              onPressed: () {
-                // setState(() {
-                //   unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
-                //       setCateg, itmImg);
-                // });
-              })),
+        content: const Text(
+          '1 Item Deleted',
+        ),
+        action: SnackBarAction(
+          label: "",
+          onPressed: () {
+            // setState(() {
+            //   unDoDelete(itmCode, itmDesc, itmUom, itmAmt, itmQty, itmTotal,
+            //       setCateg, itmImg);
+            // });
+          },
+        ),
+      ),
     );
   }
 
@@ -271,10 +271,8 @@ class _BoCartState extends State<BoCart> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              Text(
-                '#${widget.ordNo}',
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              Text('#${widget.ordNo}',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -312,66 +310,67 @@ class _BoCartState extends State<BoCart> {
         // ),
         bottomNavigationBar: BottomAppBar(
           child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  top: BorderSide(width: 0.2, color: Colors.black),
-                ),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                top: BorderSide(width: 0.2, color: Colors.black),
               ),
-              width: MediaQuery.of(context).size.width,
-              height: 80,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                        padding: const EdgeInsets.all(10),
-                        child: ElevatedButton(
-                          style: _list.isEmpty
-                              ? raisedButtonStyleGrey
-                              : raisedButtonStyleGreen,
-                          onPressed: () async {
-                            bool emptyLine = true;
-                            for (var element in _list) {
-                              if (element['rf_itmcode'] == '' ||
-                                  element['rf_itmcode'] == ' ') {
-                                emptyLine = true;
-                              } else {
-                                emptyLine = false;
-                              }
-                            }
-                            if (emptyLine == true) {
-                              showGlobalSnackbar(
-                                  'Information',
-                                  'Please supply empty item.',
-                                  Colors.grey,
-                                  Colors.white);
-                            } else {
-                              final action = await Dialogs.openDialog(
-                                  context,
-                                  'Confirmation',
-                                  'You cannot cancel or modify after this. Are you sure you want to refund items?',
-                                  false,
-                                  'No',
-                                  'Yes');
-                              if (action == DialogAction.yes) {
-                                showDialog(
-                                    barrierDismissible: false,
-                                    context: context,
-                                    builder: (context) => const ProcessingBox(
-                                        'Processing Items'));
-                                savingBoRefund();
-                              }
-                            }
-                          },
-                          child: const Text(
-                            'REFUND ITEMS',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        )),
-                  )
-                ],
-              )),
+            ),
+            width: MediaQuery.of(context).size.width,
+            height: 80,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    child: ElevatedButton(
+                      style: _list.isEmpty
+                        ? raisedButtonStyleGrey
+                        : raisedButtonStyleGreen,
+                      onPressed: () async {
+                        bool emptyLine = true;
+                        for (var element in _list) {
+                          if (element['rf_itmcode'] == '' ||
+                              element['rf_itmcode'] == ' ') {
+                            emptyLine = true;
+                          } else {
+                            emptyLine = false;
+                          }
+                        }
+                        if (emptyLine == true) {
+                          showGlobalSnackbar(
+                            'Information',
+                            'Please supply empty item.',
+                            Colors.grey,
+                            Colors.white);
+                        } else {
+                          final action = await Dialogs.openDialog(
+                            context,
+                            'Confirmation',
+                            'You cannot cancel or modify after this. Are you sure you want to refund items?',
+                            false,
+                            'No',
+                            'Yes',
+                          );
+                          if (action == DialogAction.yes) {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) => const ProcessingBox('Processing Items'));
+                            savingBoRefund();
+                          }
+                        }
+                      },
+                      child: const Text('REFUND ITEMS',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -391,15 +390,14 @@ class _BoCartState extends State<BoCart> {
               size: 100,
               color: Colors.orange[500],
             ),
-            Text(
-              'List is Empty. Press the add button below to add items.',
+            Text('List is Empty. Press the add button below to add items.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.grey[500],
               ),
-            )
+            ),
           ],
         ),
       );
@@ -409,269 +407,269 @@ class _BoCartState extends State<BoCart> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: (context, index) {
-            if (_list[index]['image'] == '') {
-              noImage = true;
-            } else {
-              noImage = false;
-            }
-            if (_list[index]['rf_itmcode'] == '' ||
-                _list[index]['rf_itmcode'] == ' ') {
-              noItem = true;
-            } else {
-              noItem = false;
-            }
-            final item = _list[index].toString();
-            return Container(
-              margin: const EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100,
-                    ),
-                  ]),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    height: 70,
-                    child: Row(
-                      children: [
+        itemCount: _list.length,
+        itemBuilder: (context, index) {
+          if (_list[index]['image'] == '') {
+            noImage = true;
+          } else {
+            noImage = false;
+          }
+          if (_list[index]['rf_itmcode'] == '' ||
+              _list[index]['rf_itmcode'] == ' ') {
+            noItem = true;
+          } else {
+            noItem = false;
+          }
+          final item = _list[index].toString();
+          return Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10),
+              // ignore: prefer_const_literals_to_create_immutables
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  height: 70,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 70,
+                        color: ColorsTheme.mainColor,
+                      ),
+                      if (GlobalVariables.viewImg)
                         Container(
-                          width: 5,
-                          height: 70,
-                          color: ColorsTheme.mainColor,
-                        ),
-                        if (GlobalVariables.viewImg)
-                          Container(
+                          width: 75,
+                          color: Colors.white,
+                          child: noImage
+                              ? Image(image: AssetsValues.noImageImg)
+                              : Image.file(
+                                  File(imgPath + _list[index]['image'])),
+                        )
+                      else if (!GlobalVariables.viewImg)
+                        Container(
+                            margin: const EdgeInsets.only(left: 3, top: 3),
                             width: 75,
                             color: Colors.white,
-                            child: noImage
-                                ? Image(image: AssetsValues.noImageImg)
-                                : Image.file(
-                                    File(imgPath + _list[index]['image'])),
-                          )
-                        else if (!GlobalVariables.viewImg)
-                          Container(
-                              margin: const EdgeInsets.only(left: 3, top: 3),
-                              width: 75,
-                              color: Colors.white,
-                              child: Image(image: AssetsValues.noImageImg)),
-                        Expanded(
-                            child: Container(
-                          margin: const EdgeInsets.only(left: 5),
-                          // color: Colors.grey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _list[index]['item_desc'],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
+                            child: Image(image: AssetsValues.noImageImg)),
+                      Expanded(
+                          child: Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        // color: Colors.grey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _list[index]['item_desc'],
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  _list[index]['uom'].toString(),
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  formatCurrencyAmt.format(double.parse(
+                                      _list[index]['amt'].toString())),
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
+                                    color: Colors.green,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black),
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    _list[index]['uom'].toString(),
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                        color: Colors.deepOrange,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    formatCurrencyAmt.format(double.parse(
-                                        _list[index]['amt'].toString())),
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )),
+                      Container(
+                        color: Colors.transparent,
+                        width: 80,
+                        // color: Colors.grey,
+                        child: Column(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            const Expanded(
+                                child: SizedBox(
+                              width: 50,
+                            )),
+                            Text(
+                              _list[index]['qty'].toString(),
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                //////CONVERT CONTAINER
+                noItem
+                    ? GestureDetector(
+                        onTap: () {
+                          clearValue();
+                          Navigator.push(context,
+                            PageTransition(
+                              // duration: const Duration(milliseconds: 100),
+                              type: PageTransitionType.rightToLeft,
+                              child: RefundList(
+                                _list,
+                                _list[index]['item_code'],
+                                _list[index]['qty']),
+                            ),
+                          ).then((value) {
+                            setState(() {
+                              if (RefundData.tmplist.isNotEmpty) {
+                                _list = RefundData.tmplist;
+                                //print(_list);
+                              }
+                            });
+                            // print(_list);
+                            // refreshList();
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 15),
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          height: 70,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            // ignore: prefer_const_literals_to_create_immutables
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_circle_outlined,
+                                    color: Colors.grey.shade400,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text('Click to Add Item',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey.shade400,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                 ],
                               ),
                             ],
                           ),
-                        )),
-                        Container(
-                          color: Colors.transparent,
-                          width: 80,
-                          // color: Colors.grey,
-                          child: Column(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              const Expanded(
-                                  child: SizedBox(
-                                width: 50,
-                              )),
-                              Text(
-                                _list[index]['qty'].toString(),
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
+                        ),
+                      )
+                    : Dismissible(
+                        background: Container(
+                          alignment: AlignmentDirectional.centerEnd,
+                          color: ColorsTheme.mainColor,
+                          child: const Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                            size: 36,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  //////CONVERT CONTAINER
-                  noItem
-                      ? GestureDetector(
-                          onTap: () {
-                            clearValue();
-                            Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        // duration: const Duration(milliseconds: 100),
-                                        type: PageTransitionType.rightToLeft,
-                                        child: RefundList(
-                                            _list,
-                                            _list[index]['item_code'],
-                                            _list[index]['qty'])))
-                                .then((value) {
-                              setState(() {
-                                if (RefundData.tmplist.isNotEmpty) {
-                                  _list = RefundData.tmplist;
-                                  //print(_list);
-                                }
-                              });
-                              // print(_list);
+                        direction: DismissDirection.endToStart,
+                        key: Key(item),
+                        onDismissed: (direction) {
+                          if (!mounted) return;
+                          setState(() {
+                            var itmcode = _list[index]['rf_itmcode'].toString();
+                            var itmdesc = _list[index]['rf_itemdesc'].toString();
+                            var itmuom  = _list[index]['rf_uom'].toString();
+                            var itmamt  = _list[index]['rf_amount'].toString();
+                            var itmqty  = _list[index]['rf_qty'].toString();
+                            var itmtot  = _list[index]['rf_totamt'].toString();
+                            var itmcat  = '';
+                            var itmImg  = _list[index]['rf_image'].toString();
+                            db.addInventory(
+                              UserData.id,
+                              _list[index]['rf_itmcode'],
+                              _list[index]['rf_itemdesc'],
+                              _list[index]['rf_uom'],
+                              _list[index]['rf_qty'],
+                            );
 
-                              // refreshList();
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 15),
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            height: 70,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              // ignore: prefer_const_literals_to_create_immutables
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add_circle_outlined,
-                                      color: Colors.grey.shade400,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    Text(
-                                      'Click to Add Item',
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.grey.shade400,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Dismissible(
-                          background: Container(
-                            alignment: AlignmentDirectional.centerEnd,
-                            color: ColorsTheme.mainColor,
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 36,
-                            ),
-                          ),
-                          direction: DismissDirection.endToStart,
-                          key: Key(item),
-                          onDismissed: (direction) {
-                            if (!mounted) return;
-                            setState(() {
-                              var itmcode =
-                                  _list[index]['rf_itmcode'].toString();
-                              var itmdesc =
-                                  _list[index]['rf_itemdesc'].toString();
-                              var itmuom = _list[index]['rf_uom'].toString();
-                              var itmamt = _list[index]['rf_amount'].toString();
-                              var itmqty = _list[index]['rf_qty'].toString();
-                              var itmtot = _list[index]['rf_totamt'].toString();
-                              var itmcat = '';
-                              var itmImg = _list[index]['rf_image'].toString();
-                              db.addInventory(
-                                  UserData.id,
-                                  _list[index]['rf_itmcode'],
-                                  _list[index]['rf_itemdesc'],
-                                  _list[index]['rf_uom'],
-                                  _list[index]['rf_qty']);
+                            deletetoRefundList(_list[index]['item_code']);
 
-                              deletetoRefundList(_list[index]['item_code']);
+                            // _list.removeAt(index);
 
-                              // _list.removeAt(index);
+                            refreshList();
+                            // if (_list.isEmpty) {
+                            //   setState(() {
+                            //     // print('TRUE');
+                            //     refreshList();
+                            //   });
+                            // }
 
-                              refreshList();
-                              // if (_list.isEmpty) {
-                              //   setState(() {
-                              //     // print('TRUE');
-                              //     refreshList();
-                              //   });
-                              // }
-
-                              showSnackBar(context, itmcode, itmdesc, itmuom,
-                                  itmamt, itmqty, itmtot, itmcat, itmImg);
-
-                              // print(cartList);
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(left: 15),
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            height: 70,
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.subdirectory_arrow_right_outlined,
-                                  color: Colors.grey,
-                                  size: 36,
-                                ),
-                                if (GlobalVariables.viewImg)
-                                  Container(
+                            showSnackBar(context, itmcode, itmdesc, itmuom,
+                              itmamt, itmqty, itmtot, itmcat, itmImg);
+                            // print(cartList);
+                          });
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(left: 15),
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.white,
+                          height: 70,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.subdirectory_arrow_right_outlined,
+                                color: Colors.grey,
+                                size: 36,
+                              ),
+                              if (GlobalVariables.viewImg)
+                                Container(
+                                  width: 45,
+                                  color: Colors.white,
+                                  child: noImage
+                                    ? Image(image: AssetsValues.noImageImg)
+                                    : Image.file(File(imgPath + _list[index]['rf_image'])),
+                                )
+                              else if (!GlobalVariables.viewImg)
+                                Container(
+                                    margin: const EdgeInsets.only(
+                                      left: 3, top: 3),
                                     width: 45,
                                     color: Colors.white,
-                                    child: noImage
-                                        ? Image(image: AssetsValues.noImageImg)
-                                        : Image.file(File(imgPath +
-                                            _list[index]['rf_image'])),
-                                  )
-                                else if (!GlobalVariables.viewImg)
-                                  Container(
-                                      margin: const EdgeInsets.only(
-                                          left: 3, top: 3),
-                                      width: 45,
-                                      color: Colors.white,
-                                      child: Image(
-                                          image: AssetsValues.noImageImg)),
-                                Expanded(
-                                    child: Container(
+                                    child: Image(image: AssetsValues.noImageImg)),
+                              Expanded(
+                                child: Container(
                                   margin: const EdgeInsets.only(left: 5),
                                   // color: Colors.grey,
                                   child: Column(
@@ -693,152 +691,155 @@ class _BoCartState extends State<BoCart> {
                                             _list[index]['rf_uom'],
                                             textAlign: TextAlign.left,
                                             style: const TextStyle(
-                                                color: Colors.deepOrange,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w500),
+                                              color: Colors.deepOrange,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
                                           const SizedBox(width: 10),
-                                          Text(
-                                            formatCurrencyAmt.format(
-                                                double.parse(
-                                                    _list[index]['rf_amount'])),
+                                          Text(formatCurrencyAmt.format(double.parse(_list[index]['rf_amount'])),
                                             textAlign: TextAlign.right,
                                             style: const TextStyle(
-                                                color: Colors.green,
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold),
+                                              color: Colors.green,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-                                )),
-                                Container(
-                                  color: Colors.transparent,
-                                  width: 80,
-                                  // color: Colors.grey,
-                                  child: Column(
-                                    // ignore: prefer_const_literals_to_create_immutables
-                                    children: [
-                                      const Expanded(
-                                          child: SizedBox(
-                                        width: 50,
-                                      )),
-                                      Text(
-                                        _list[index]['rf_qty'],
-                                        textAlign: TextAlign.right,
-                                        style: const TextStyle(
-                                            color: Colors.green,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+
+                              Container(
+                                color: Colors.transparent,
+                                width: 80,
+                                // color: Colors.grey,
+                                child: Column(
+                                  // ignore: prefer_const_literals_to_create_immutables
+                                  children: [
+                                    const Expanded(
+                                      child: SizedBox(
+                                        width: 50,
+                                      ),
+                                    ),
+                                    Text(_list[index]['rf_qty'],
+                                      textAlign: TextAlign.right,
+                                      style: const TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                  // Container(
-                  //   margin: const EdgeInsets.only(left: 15),
-                  //   width: MediaQuery.of(context).size.width,
-                  //   color: Colors.white,
-                  //   height: 70,
-                  //   child: Row(
-                  //     children: [
-                  //       const Icon(
-                  //         Icons.subdirectory_arrow_right_outlined,
-                  //         color: Colors.grey,
-                  //         size: 36,
-                  //       ),
-                  //       Container(
-                  //           margin: const EdgeInsets.only(left: 3, top: 3),
-                  //           // width: 75,
-                  //           color: Colors.white,
-                  //           child: Icon(
-                  //             Icons.image_not_supported_outlined,
-                  //             color: ColorsTheme.mainColor,
-                  //             size: 36,
-                  //           )),
-                  //       Expanded(
-                  //           child: Container(
-                  //         margin: const EdgeInsets.only(left: 5),
-                  //         // color: Colors.grey,
-                  //         child: Column(
-                  //           mainAxisAlignment: MainAxisAlignment.center,
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           children: [
-                  //             Text(
-                  //               _list[index]['rf_itemdesc'],
-                  //               textAlign: TextAlign.left,
-                  //               style: TextStyle(
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.bold,
-                  //                   color: outofStock
-                  //                       ? Colors.grey
-                  //                       : Colors.black),
-                  //             ),
-                  //             Row(
-                  //               children: [
-                  //                 Text(
-                  //                   _list[index]['rf_uom'],
-                  //                   textAlign: TextAlign.left,
-                  //                   style: const TextStyle(
-                  //                       color: Colors.deepOrange,
-                  //                       fontSize: 11,
-                  //                       fontWeight: FontWeight.w500),
-                  //                 ),
-                  //                 const SizedBox(width: 10),
-                  //                 Text(
-                  //                   formatCurrencyAmt.format(double.parse(
-                  //                       _list[index]['rf_amount'])),
-                  //                   textAlign: TextAlign.right,
-                  //                   style: const TextStyle(
-                  //                       color: Colors.green,
-                  //                       fontSize: 12,
-                  //                       fontWeight: FontWeight.bold),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       )),
-                  //       Container(
-                  //         color: Colors.transparent,
-                  //         width: 80,
-                  //         // color: Colors.grey,
-                  //         child: Column(
-                  //           // ignore: prefer_const_literals_to_create_immutables
-                  //           children: [
-                  //             const Expanded(
-                  //                 child: SizedBox(
-                  //               width: 50,
-                  //             )),
-                  //             Text(
-                  //               _list[index]['rf_qty'],
-                  //               textAlign: TextAlign.right,
-                  //               style: const TextStyle(
-                  //                   color: Colors.green,
-                  //                   fontSize: 12,
-                  //                   fontWeight: FontWeight.bold),
-                  //             ),
-                  //             const SizedBox(
-                  //               height: 20,
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            );
-          }),
+                      ),
+                // Container(
+                //   margin: const EdgeInsets.only(left: 15),
+                //   width: MediaQuery.of(context).size.width,
+                //   color: Colors.white,
+                //   height: 70,
+                //   child: Row(
+                //     children: [
+                //       const Icon(
+                //         Icons.subdirectory_arrow_right_outlined,
+                //         color: Colors.grey,
+                //         size: 36,
+                //       ),
+                //       Container(
+                //           margin: const EdgeInsets.only(left: 3, top: 3),
+                //           // width: 75,
+                //           color: Colors.white,
+                //           child: Icon(
+                //             Icons.image_not_supported_outlined,
+                //             color: ColorsTheme.mainColor,
+                //             size: 36,
+                //           )),
+                //       Expanded(
+                //           child: Container(
+                //         margin: const EdgeInsets.only(left: 5),
+                //         // color: Colors.grey,
+                //         child: Column(
+                //           mainAxisAlignment: MainAxisAlignment.center,
+                //           crossAxisAlignment: CrossAxisAlignment.start,
+                //           children: [
+                //             Text(
+                //               _list[index]['rf_itemdesc'],
+                //               textAlign: TextAlign.left,
+                //               style: TextStyle(
+                //                   fontSize: 12,
+                //                   fontWeight: FontWeight.bold,
+                //                   color: outofStock
+                //                       ? Colors.grey
+                //                       : Colors.black),
+                //             ),
+                //             Row(
+                //               children: [
+                //                 Text(
+                //                   _list[index]['rf_uom'],
+                //                   textAlign: TextAlign.left,
+                //                   style: const TextStyle(
+                //                       color: Colors.deepOrange,
+                //                       fontSize: 11,
+                //                       fontWeight: FontWeight.w500),
+                //                 ),
+                //                 const SizedBox(width: 10),
+                //                 Text(
+                //                   formatCurrencyAmt.format(double.parse(
+                //                       _list[index]['rf_amount'])),
+                //                   textAlign: TextAlign.right,
+                //                   style: const TextStyle(
+                //                       color: Colors.green,
+                //                       fontSize: 12,
+                //                       fontWeight: FontWeight.bold),
+                //                 ),
+                //               ],
+                //             ),
+                //           ],
+                //         ),
+                //       )),
+                //       Container(
+                //         color: Colors.transparent,
+                //         width: 80,
+                //         // color: Colors.grey,
+                //         child: Column(
+                //           // ignore: prefer_const_literals_to_create_immutables
+                //           children: [
+                //             const Expanded(
+                //                 child: SizedBox(
+                //               width: 50,
+                //             )),
+                //             Text(
+                //               _list[index]['rf_qty'],
+                //               textAlign: TextAlign.right,
+                //               style: const TextStyle(
+                //                   color: Colors.green,
+                //                   fontSize: 12,
+                //                   fontWeight: FontWeight.bold),
+                //             ),
+                //             const SizedBox(
+                //               height: 20,
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

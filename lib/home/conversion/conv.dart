@@ -37,8 +37,7 @@ class _ConversionState extends State<Conversion> {
             crossAxisAlignment: CrossAxisAlignment.start,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'Stock Conversion',
+              const Text('Stock Conversion',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ],
@@ -60,24 +59,21 @@ class _ConversionState extends State<Conversion> {
     return Container(
       child: GestureDetector(
         onTap: () {
-          Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.rightToLeft,
-                      child: const StockConversion()))
-              .then((value) {
+          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft,
+            child: const StockConversion())).then((value) {
             if (ConversionData.list.isNotEmpty) {
               for (var element in ConversionData.list) {
                 db.addInventory(
-                    UserData.id,
-                    element['item_code'],
-                    element['item_desc'],
-                    element['item_uom'],
-                    element['item_qty']);
+                  UserData.id,
+                  element['item_code'],
+                  element['item_desc'],
+                  element['item_uom'],
+                  element['item_qty'],
+                );
               }
               db.deleteAllConvItem(UserData.id);
               showGlobalSnackbar('Information', 'Items returned to inventory.',
-                  Colors.blue, Colors.white);
+                Colors.blue, Colors.white);
             }
           });
         },
@@ -100,12 +96,8 @@ class _ConversionState extends State<Conversion> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Convert new stocks',
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                    Text('Convert new stocks',
+                      style: TextStyle(color: Colors.grey[700], fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 15),
                   ],

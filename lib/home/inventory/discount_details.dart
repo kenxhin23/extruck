@@ -75,7 +75,7 @@ class _DiscountDetailsState extends State<DiscountDetails> {
             widget.principal,
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontWeight: FontWeight.w500, color: ColorsTheme.mainColor),
+              fontWeight: FontWeight.w500, color: ColorsTheme.mainColor),
           ),
           listViewCont()
         ],
@@ -89,78 +89,73 @@ class _DiscountDetailsState extends State<DiscountDetails> {
       width: MediaQuery.of(context).size.width,
       height: 100,
       child: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: ((context, index) {
-            double abAmt = 99999.00;
-            bool above = false;
+        itemCount: _list.length,
+        itemBuilder: ((context, index) {
+          double abAmt = 99999.00;
+          bool above = false;
 
-            if (double.parse(_list[index]['range_to']) >= abAmt) {
-              above = true;
-            } else {
-              above = false;
-            }
+          if (double.parse(_list[index]['range_to']) >= abAmt) {
+            above = true;
+          } else {
+            above = false;
+          }
 
-            return Column(
-              children: [
-                Container(
-                  // color: Colors.grey,
-                  // height: 40,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        'Buy worth ',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
-                      ),
-                      Text(
-                        formatCurrencyAmt
-                            .format(double.parse(_list[index]['range_from'])),
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            fontSize: 12,
-                            color: Colors.grey[700]),
-                      ),
-                      Text(' - '),
-                      above
-                          ? Text(
-                              'above',
-                              style: TextStyle(fontSize: 12),
-                            )
-                          : Text(
-                              formatCurrencyAmt.format(
-                                  double.parse(_list[index]['range_to'])),
-                              style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 12,
-                                  color: Colors.grey[700]),
+          return Column(
+            children: [
+              Container(
+                // color: Colors.grey,
+                // height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Text('Buy worth ',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                    ),
+                    Text(formatCurrencyAmt.format(double.parse(_list[index]['range_from'])),
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        fontSize: 12,
+                        color: Colors.grey[700]),
+                    ),
+                    Text(' - '),
+                    above
+                        ? Text('above',
+                            style: TextStyle(fontSize: 12),
+                          )
+                        : Text(formatCurrencyAmt.format(double.parse(_list[index]['range_to'])),
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 12,
+                              color: Colors.grey[700],
                             ),
-                      Text(
-                        ' enjoy ',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
+                          ),
+                    Text(' enjoy ',
+                      style: TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w400,
                       ),
-                      Text(
-                        '${_list[index]['discount']}%',
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: ColorsTheme.mainColor),
+                    ),
+                    Text('${_list[index]['discount']}%',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: ColorsTheme.mainColor,
                       ),
-                      Text(
-                        ' discount.',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w400),
+                    ),
+                    Text(' discount.',
+                      style: TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w400,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10)
-              ],
-            );
-          })),
+              ),
+              SizedBox(height: 10)
+            ],
+          );
+        }),
+      ),
     );
   }
 }

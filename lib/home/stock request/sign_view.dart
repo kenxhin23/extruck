@@ -21,7 +21,7 @@ class _ViewSignatureState extends State<ViewSignature> {
         title: const Center(child: Text('Signature Captured')),
       ),
       body: Center(
-          child: Stack(
+        child: Stack(
         children: <Widget>[
           Container(
             margin: const EdgeInsets.only(top: 20),
@@ -39,8 +39,7 @@ class _ViewSignatureState extends State<ViewSignature> {
               child: OutlinedButton(
                 onPressed: () {
                   // ChequeData.changeImg = true;
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                     return const MyApp();
                   }));
                 },

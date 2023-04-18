@@ -212,45 +212,51 @@ class _PrintReportState extends State<PrintReport> {
     //     styles: const PosStyles(align: PosAlign.right));
     bytes += generator.row([
       PosColumn(
-          text: '',
-          width: 5,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
+        text: '',
+        width: 5,
+        styles: const PosStyles(align: PosAlign.right, bold: true),
+      ),
       PosColumn(
-          text: 'DATE:',
-          width: 2,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
+        text: 'DATE:',
+        width: 2,
+        styles: const PosStyles(align: PosAlign.right, bold: true),
+      ),
       PosColumn(
-          text: nDate.toString(),
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: nDate.toString(),
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
 
     bytes += generator.hr(ch: ' ');
     bytes += generator.text('Remittance No : ${widget.rmtNo}',
         styles: const PosStyles(align: PosAlign.left));
-    bytes += generator.text(
-        'Salesman   : ${UserData.firstname} ${UserData.lastname}',
-        styles: const PosStyles(align: PosAlign.left));
+    bytes += generator.text('Salesman   : ${UserData.firstname} ${UserData.lastname}',
+      styles: const PosStyles(align: PosAlign.left));
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: '',
-          width: 1,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: '',
+        width: 1,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: 'DESCRIPTION',
-          width: 7,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: 'DESCRIPTION',
+        width: 7,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: '',
-          width: 1,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: '',
+        width: 1,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
       PosColumn(
-          text: 'AMOUNT',
-          width: 3,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
+        text: 'AMOUNT',
+        width: 3,
+        styles: const PosStyles(align: PosAlign.center, bold: true),
+      ),
     ]);
 
     for (var i = 0; i < widget.data.length; i++) {
@@ -266,109 +272,125 @@ class _PrintReportState extends State<PrintReport> {
           styles: const PosStyles(align: PosAlign.left));
       bytes += generator.row([
         // PosColumn(text: ' ', width: 1),
-        viewBo
-            ? PosColumn(
-                text: '${widget.data[i]['store_name']}',
-                width: 4,
-                styles: const PosStyles(
-                  align: PosAlign.left,
-                ))
-            : PosColumn(
-                text: '${widget.data[i]['store_name']}',
-                width: 5,
-                styles: const PosStyles(
-                  align: PosAlign.left,
-                )),
-        viewBo
-            ? PosColumn(
-                text: '(Bo)',
-                width: 3,
-                styles: const PosStyles(
-                  align: PosAlign.center,
-                ))
-            : PosColumn(
-                text: '(${widget.data[i]['pmeth_type']})',
-                width: 2,
-                styles: const PosStyles(
-                  align: PosAlign.center,
-                )),
+        viewBo ?
         PosColumn(
-            text: '@',
-            width: 1,
-            styles: const PosStyles(
-              align: PosAlign.center,
-            )),
+          text: '${widget.data[i]['store_name']}',
+          width: 4,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          ),
+        ) :
         PosColumn(
-            text: '${widget.data[i]['item_count']}',
-            width: 1,
-            styles: const PosStyles(
-              align: PosAlign.center,
-            )),
+          text: '${widget.data[i]['store_name']}',
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          ),
+        ),
+        viewBo ?
         PosColumn(
-            text: '${widget.data[i]['net_amt']}',
-            width: 3,
-            styles: const PosStyles(align: PosAlign.right)),
+          text: '(Bo)',
+          width: 3,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ) :
+        PosColumn(
+          text: '(${widget.data[i]['pmeth_type']})',
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ),
+        PosColumn(
+          text: '@',
+          width: 1,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ),
+        PosColumn(
+          text: '${widget.data[i]['item_count']}',
+          width: 1,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          ),
+        ),
+        PosColumn(
+          text: '${widget.data[i]['net_amt']}',
+          width: 3,
+          styles: const PosStyles(align: PosAlign.right,
+          ),
+        ),
       ]);
     }
 
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: 'Order Amount Total',
-          width: 6,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Order Amount Total',
+        width: 6,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
-          width: 6,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(widget.totAmt)),
+        width: 6,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.row([
       PosColumn(
-          text: 'Discount Total',
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Discount Total',
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
-    ]);
-
-    bytes += generator.row([
-      PosColumn(
-          text: 'BO Amount Total',
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
-      PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.boTot)),
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(widget.totDisc)),
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
 
     bytes += generator.row([
       PosColumn(
-          text: 'Satellite Warehouse Request',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'BO Amount Total',
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(double.parse(widget.satWh)),
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(double.parse(widget.boTot)),
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+        text: 'Satellite Warehouse Request',
+        width: 8,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
+      PosColumn(
+        text: formatCurrencyAmt.format(double.parse(widget.satWh)),
+        width: 4,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.text('  No. of Orders  :      ${widget.ordCount}',
         styles: const PosStyles(align: PosAlign.left));
@@ -405,17 +427,19 @@ class _PrintReportState extends State<PrintReport> {
 
     bytes += generator.row([
       PosColumn(
-          text: 'Total Sales Amount',
-          width: 5,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Total Sales Amount',
+        width: 5,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: formatCurrencyAmt.format(netAmount),
-          width: 7,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: formatCurrencyAmt.format(netAmount),
+        width: 7,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
 
     bytes += generator.hr(ch: ' ', linesAfter: 1);
@@ -429,17 +453,19 @@ class _PrintReportState extends State<PrintReport> {
     bytes += generator.hr(ch: ' ');
     bytes += generator.row([
       PosColumn(
-          text: 'Received by: ',
-          width: 4,
-          styles: const PosStyles(
-            align: PosAlign.left,
-          )),
+        text: 'Received by: ',
+        width: 4,
+        styles: const PosStyles(
+          align: PosAlign.left,
+        ),
+      ),
       PosColumn(
-          text: '_______________________________',
-          width: 8,
-          styles: const PosStyles(
-            align: PosAlign.right,
-          )),
+        text: '_______________________________',
+        width: 8,
+        styles: const PosStyles(
+          align: PosAlign.right,
+        ),
+      ),
     ]);
     bytes += generator.text('(Signature over Printed Name)',
         styles: const PosStyles(align: PosAlign.right));
@@ -525,10 +551,12 @@ class _PrintReportState extends State<PrintReport> {
             ),
             centerTitle: false,
           ),
-          body: Column(children: [
-            Expanded(child: bodyCont(context)),
-            printCont(context)
-          ]),
+          body: Column(
+            children: [
+              Expanded(child: bodyCont(context)),
+              printCont(context)
+            ],
+          ),
         ),
       ),
     );
@@ -541,18 +569,18 @@ class _PrintReportState extends State<PrintReport> {
       child: Column(
         children: [
           SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: const Icon(
-                Icons.local_grocery_store_outlined,
-                color: Colors.black,
-                size: 60,
-              )),
+            width: MediaQuery.of(context).size.width,
+            child: const Icon(
+              Icons.local_grocery_store_outlined,
+              color: Colors.black,
+              size: 60,
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             // ignore: prefer_const_literals_to_create_immutables
             children: [
-              const Text(
-                'DATE :',
+              const Text('DATE :',
                 style: TextStyle(fontWeight: FontWeight.w500),
               ),
               Text(nDate.toString())
@@ -568,9 +596,9 @@ class _PrintReportState extends State<PrintReport> {
                   const Text('Remittance No. :  '),
                   Text(
                     widget.rmtNo,
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
           Column(
@@ -582,9 +610,9 @@ class _PrintReportState extends State<PrintReport> {
                     child: Text(
                       '${UserData.firstname} ${UserData.lastname}',
                     ),
-                  )
+                  ),
                 ],
-              )
+              ),
             ],
           ),
           const SizedBox(
@@ -626,19 +654,18 @@ class _PrintReportState extends State<PrintReport> {
                         Row(
                           children: [
                             Text('SI # ${widget.data[index]['si_no']}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500)),
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
                             Text('- ${widget.data[index]['order_no']}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500)),
+                              style: const TextStyle(fontWeight: FontWeight.w500),
+                            ),
                           ],
                         ),
                         Row(
                           children: [
                             SizedBox(
                               width: MediaQuery.of(context).size.width / 2,
-                              child: Text(
-                                '${widget.data[index]['store_name']}',
+                              child: Text('${widget.data[index]['store_name']}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -648,16 +675,19 @@ class _PrintReportState extends State<PrintReport> {
                                 : Text('(${widget.data[index]['pmeth_type']})'),
                             const Text('@'),
                             Expanded(
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        '${widget.data[index]['item_count']}'))),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text('${widget.data[index]['item_count']}'),
+                              ),
+                            ),
                             Text('${widget.data[index]['net_amt']}'),
                           ],
-                        )
+                        ),
                       ],
                     );
-                  })),
+                  }
+                ),
+              ),
             ),
           ),
           // const Expanded(
@@ -669,14 +699,16 @@ class _PrintReportState extends State<PrintReport> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Order Amount Total',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Order Amount Total',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
-                  style: const TextStyle(fontWeight: FontWeight.w400))
+                style: const TextStyle(fontWeight: FontWeight.w400),
+              ),
             ],
           ),
           const SizedBox(
@@ -750,26 +782,30 @@ class _PrintReportState extends State<PrintReport> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Discount Total',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Discount Total',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(widget.totDisc)),
-                  style: const TextStyle(fontWeight: FontWeight.w400))
+                style: const TextStyle(fontWeight: FontWeight.w400),
+              ),
             ],
           ),
           Row(
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'BO Amount Total',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('BO Amount Total',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(widget.boTot)),
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
@@ -778,12 +814,13 @@ class _PrintReportState extends State<PrintReport> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Satellite Warehouse Request',
-                        style: TextStyle(fontWeight: FontWeight.w400),
-                      ))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Satellite Warehouse Request',
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
               Text(formatCurrencyAmt.format(double.parse(widget.satWh)),
                   style: const TextStyle(fontWeight: FontWeight.w400))
             ],
@@ -803,14 +840,16 @@ class _PrintReportState extends State<PrintReport> {
             children: [
               const SizedBox(width: 15),
               const Expanded(
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Total Sales Amount',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Total Sales Amount',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
               Text(formatCurrencyAmt.format(netAmount),
-                  style: const TextStyle(fontWeight: FontWeight.bold))
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
           Row(
@@ -840,26 +879,27 @@ class _PrintReportState extends State<PrintReport> {
             child: Container(
               padding: const EdgeInsets.all(10),
               child: ElevatedButton(
-                  style: raisedButtonStyleGreen,
-                  onPressed: () async {
-                    printTicket();
-                    // print(widget.data);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // ignore: prefer_const_literals_to_create_immutables
-                    children: [
-                      const Icon(
-                        Icons.print,
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        'PRINT REPORT',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  )),
+                style: raisedButtonStyleGreen,
+                onPressed: () async {
+                  printTicket();
+                  // print(widget.data);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // ignore: prefer_const_literals_to_create_immutables
+                  children: [
+                    const Icon(
+                      Icons.print,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(width: 10),
+                    const Text(
+                      'PRINT REPORT',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

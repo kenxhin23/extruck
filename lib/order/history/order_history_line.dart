@@ -146,17 +146,21 @@ class _HistoryItemsState extends State<HistoryItems> {
                     if (!PrinterData.connected) {
                       // ignore: use_build_context_synchronously
                       Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: ConnectPrinter(_list, widget.ordNo)));
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ConnectPrinter(_list, widget.ordNo),
+                        ),
+                      );
                     } else {
                       // ignore: use_build_context_synchronously
                       Navigator.push(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.rightToLeft,
-                              child: ReprintReceipt(_list, widget.ordNo)));
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: ReprintReceipt(_list, widget.ordNo),
+                        ),
+                      );
                     }
                   } else {}
                 },
@@ -196,137 +200,140 @@ class _HistoryItemsState extends State<HistoryItems> {
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: (context, index) {
-            if (_list[index]['image'] == '') {
-              noImage = true;
-            } else {
-              noImage = false;
-            }
-            // ignore: unused_local_variable
-            final item = _list[index].toString();
-            return Container(
-              margin: const EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(10),
-                  // ignore: prefer_const_literals_to_create_immutables
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.shade100,
-                    ),
-                  ]),
-              child: Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 5),
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    height: 70,
-                    child: Row(
-                      children: [
+        itemCount: _list.length,
+        itemBuilder: (context, index) {
+          if (_list[index]['image'] == '') {
+            noImage = true;
+          } else {
+            noImage = false;
+          }
+          // ignore: unused_local_variable
+          final item = _list[index].toString();
+          return Container(
+            margin: const EdgeInsets.only(top: 10),
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(10),
+              // ignore: prefer_const_literals_to_create_immutables
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade100,
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 5),
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  height: 70,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 70,
+                        color: ColorsTheme.mainColor,
+                      ),
+                      if (GlobalVariables.viewImg)
                         Container(
-                          width: 5,
-                          height: 70,
-                          color: ColorsTheme.mainColor,
-                        ),
-                        if (GlobalVariables.viewImg)
-                          Container(
+                          width: 75,
+                          color: Colors.white,
+                          child: noImage
+                              ? Image(image: AssetsValues.noImageImg)
+                              : Image.file(
+                                  File(imgPath + _list[index]['image'])),
+                        )
+                      else if (!GlobalVariables.viewImg)
+                        Container(
+                            margin: const EdgeInsets.only(left: 3, top: 3),
                             width: 75,
                             color: Colors.white,
-                            child: noImage
-                                ? Image(image: AssetsValues.noImageImg)
-                                : Image.file(
-                                    File(imgPath + _list[index]['image'])),
-                          )
-                        else if (!GlobalVariables.viewImg)
-                          Container(
-                              margin: const EdgeInsets.only(left: 3, top: 3),
-                              width: 75,
-                              color: Colors.white,
-                              child: Image(image: AssetsValues.noImageImg)),
-                        Expanded(
-                            child: Container(
-                          margin: const EdgeInsets.only(left: 5),
-                          // color: Colors.grey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _list[index]['item_desc'],
-                                textAlign: TextAlign.left,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                            child: Image(image: AssetsValues.noImageImg)),
+                      Expanded(
+                          child: Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        // color: Colors.grey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _list[index]['item_desc'],
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    _list[index]['uom'],
-                                    textAlign: TextAlign.left,
-                                    style: const TextStyle(
-                                        color: Colors.deepOrange,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  _list[index]['uom'],
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    formatCurrencyAmt.format(
-                                        double.parse(_list[index]['amt'])),
-                                    textAlign: TextAlign.right,
-                                    style: const TextStyle(
-                                        color: Colors.green,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        )),
-                        const SizedBox(width: 10),
-                        Text(
-                          _list[index]['qty'],
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(width: 20),
-                        Container(
-                          color: Colors.transparent,
-                          // width: 80,
-                          // color: Colors.grey,
-                          child: Row(
-                            // ignore: prefer_const_literals_to_create_immutables
-                            children: [
-                              Text(
-                                formatCurrencyAmt.format(
-                                    double.parse(_list[index]['tot_amt'])),
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  formatCurrencyAmt.format(double.parse(_list[index]['amt'])),
+                                  textAlign: TextAlign.right,
+                                  style: const TextStyle(
                                     color: Colors.green,
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      )),
+                      const SizedBox(width: 10),
+                      Text(_list[index]['qty'],
+                        textAlign: TextAlign.right,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Container(
+                        color: Colors.transparent,
+                        // width: 80,
+                        // color: Colors.grey,
+                        child: Row(
+                          // ignore: prefer_const_literals_to_create_immutables
+                          children: [
+                            Text(formatCurrencyAmt.format(double.parse(_list[index]['tot_amt'])),
+                              textAlign: TextAlign.right,
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 5),
-                ],
-              ),
-            );
-          }),
+                ),
+                const SizedBox(height: 5),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -337,19 +344,18 @@ class _HistoryItemsState extends State<HistoryItems> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Summary',
+          Text('Summary',
             style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+              color: Colors.grey[800],
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text('${_list.length} lines, ${widget.itmCount} items'),
           Row(
             children: [
               const Expanded(child: Text('Goods')),
-              Text(
-                formatCurrencyAmt.format(double.parse(widget.totAmt)),
+              Text(formatCurrencyAmt.format(double.parse(widget.totAmt)),
               ),
             ],
           ),
@@ -364,28 +370,27 @@ class _HistoryItemsState extends State<HistoryItems> {
             // ignore: prefer_const_literals_to_create_immutables
             children: [
               const Expanded(child: Text('Total Discount')),
-              Text(
-                formatCurrencyAmt.format(double.parse(widget.discAmt)),
+              Text(formatCurrencyAmt.format(double.parse(widget.discAmt)),
               ),
             ],
           ),
           Row(
             children: [
               Expanded(
-                child: Text(
-                  'Total',
+                child: Text('Total',
                   style: TextStyle(
-                      color: Colors.grey[800],
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              Text(
-                formatCurrencyTot.format(double.parse(widget.netAmt)),
-                style: TextStyle(
                     color: Colors.grey[800],
                     fontSize: 20,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              Text(formatCurrencyTot.format(double.parse(widget.netAmt)),
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),

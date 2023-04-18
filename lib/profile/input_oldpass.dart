@@ -65,10 +65,10 @@ class _InputPassDialogState extends State<InputPassDialog> {
                         // color: Colors.grey,
                         width: MediaQuery.of(context).size.width / 2,
                         margin: const EdgeInsets.only(left: 10),
-                        child: const Text(
-                          'Old Password',
+                        child: const Text('Old Password',
                           style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                            fontSize: 16, fontWeight: FontWeight.w500,
+                          ),
                           // overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -80,17 +80,14 @@ class _InputPassDialogState extends State<InputPassDialog> {
                             obscureText: true,
                             controller: oldPassController,
                             decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.only(
-                                  left: 20, top: 10, bottom: 10),
+                              contentPadding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
                               // hintText: 'Password',
                             ),
@@ -160,13 +157,13 @@ class _InputPassDialogState extends State<InputPassDialog> {
                           }
                         } else {
                           showDialog(
-                              context: context,
-                              builder: (context) => const LoadingSpinkit(
-                                    description: 'Checking Password...',
-                                  ));
+                            context: context,
+                            builder: (context) => const LoadingSpinkit(
+                              description: 'Checking Password...',
+                            ),
+                          );
                           if (UserData.position == 'Salesman') {
-                            var rsp =
-                                await db.loginUser(UserData.username!, pass);
+                            var rsp = await db.loginUser(UserData.username!, pass);
                             if (rsp == 'failed password') {
                               // ignore: use_build_context_synchronously
                               Navigator.pop(context);
@@ -190,14 +187,14 @@ class _InputPassDialogState extends State<InputPassDialog> {
                               Navigator.pop(context);
                               // ignore: use_build_context_synchronously
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const ChangePass();
-                              }));
+                                MaterialPageRoute(builder: (context) {
+                                  return const ChangePass();
+                                }),
+                              );
                             }
                           }
                           if (UserData.position == 'Jefe de Viaje') {
-                            var rsp =
-                                await db.loginHepe(UserData.username!, pass);
+                            var rsp = await db.loginHepe(UserData.username!, pass);
                             if (rsp == 'failed password') {
                               // ignore: use_build_context_synchronously
                               Navigator.pop(context);
@@ -221,16 +218,16 @@ class _InputPassDialogState extends State<InputPassDialog> {
 
                               // ignore: use_build_context_synchronously
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return const ChangePass();
-                              }));
+                                MaterialPageRoute(builder: (context) {
+                                  return const ChangePass();
+                                }),
+                              );
                             }
                           }
                         }
                       }
                     },
-                    child: const Text(
-                      'Continue',
+                    child: const Text('Continue',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -244,8 +241,7 @@ class _InputPassDialogState extends State<InputPassDialog> {
                       OrderData.setSign = false;
                       Navigator.pop(context);
                     },
-                    child: Text(
-                      'Cancel',
+                    child: Text('Cancel',
                       style: TextStyle(color: ColorsTheme.mainColor),
                     ),
                   ),
@@ -285,35 +281,35 @@ class _LoadingSpinkitState extends State<LoadingSpinkit> {
     return Stack(
       children: <Widget>[
         Container(
-            padding:
-                const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
+          padding: const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
                 color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Colors.transparent,
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  // 'Checking username...',
-                  widget.description.toString(),
-                  style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.white),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(widget.description.toString(),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.white,
                 ),
-                SpinKitCircle(
-                  color: ColorsTheme.mainColor,
-                ),
-              ],
-            )),
+              ),
+              SpinKitCircle(
+                color: ColorsTheme.mainColor,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

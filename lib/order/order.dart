@@ -27,51 +27,52 @@ class _OrderPageState extends State<OrderPage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          handleUserInteraction();
-        },
-        onPanDown: (details) {
-          handleUserInteraction();
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 85,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Order",
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      color: ColorsTheme.mainColor,
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ),
-          body: Column(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        handleUserInteraction();
+      },
+      onPanDown: (details) {
+        handleUserInteraction();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 85,
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              newOrderCont(context),
-              const SizedBox(height: 10),
-              pendingCont(context),
-              const SizedBox(height: 10),
-              remitReportCont(context),
-              const SizedBox(height: 10),
-              historyCont(context),
-              const SizedBox(height: 20),
-              boRefundCont(context),
-              const SizedBox(height: 10),
-              boHistoryCont(context),
-              const SizedBox(height: 10),
-              changePriceCont(context),
+              Text("Order",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: ColorsTheme.mainColor,
+                  fontSize: 50,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
-        ));
+        ),
+        body: Column(
+          children: [
+            newOrderCont(context),
+            const SizedBox(height: 10),
+            pendingCont(context),
+            const SizedBox(height: 10),
+            remitReportCont(context),
+            const SizedBox(height: 10),
+            historyCont(context),
+            const SizedBox(height: 20),
+            boRefundCont(context),
+            const SizedBox(height: 10),
+            boHistoryCont(context),
+            const SizedBox(height: 10),
+            changePriceCont(context),
+          ],
+        ),
+      ),
+    );
   }
 
   Container newOrderCont(BuildContext context) {
@@ -80,11 +81,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const SelectCustomer()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const SelectCustomer(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -105,12 +108,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Create new order',
+                    Text('Create new order',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -122,7 +125,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -136,11 +139,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const PendingOrders()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const PendingOrders(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -161,12 +166,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'View Pending Orders',
+                    Text('View Pending Orders',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -178,7 +183,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -192,11 +197,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const ReportsHistory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const ReportsHistory(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -217,12 +224,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'View Remittance Reports',
+                    Text('View Remittance Reports',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -234,7 +241,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -248,11 +255,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const OrderHistory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const OrderHistory(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -273,12 +282,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'View Order History',
+                    Text('View Order History',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -290,7 +299,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -304,11 +313,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const BadOrderRefund()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const BadOrderRefund(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -329,12 +340,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'Create BO refund',
+                    Text('Create BO refund',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -346,7 +357,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -360,11 +371,13 @@ class _OrderPageState extends State<OrderPage> {
       child: GestureDetector(
         onTap: () {
           Navigator.push(
-              context,
-              PageTransition(
-                  // duration: const Duration(milliseconds: 100),
-                  type: PageTransitionType.rightToLeft,
-                  child: const BoHistory()));
+            context,
+            PageTransition(
+              // duration: const Duration(milliseconds: 100),
+              type: PageTransitionType.rightToLeft,
+              child: const BoHistory(),
+            ),
+          );
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
@@ -385,12 +398,12 @@ class _OrderPageState extends State<OrderPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 15),
-                    Text(
-                      'View BO History',
+                    Text('View BO History',
                       style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                        color: Colors.grey[700],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],
@@ -402,7 +415,7 @@ class _OrderPageState extends State<OrderPage> {
               const Icon(
                 Icons.chevron_right,
                 color: Colors.grey,
-              )
+              ),
             ],
           ),
         ),
@@ -430,12 +443,12 @@ class _OrderPageState extends State<OrderPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 15),
-                Text(
-                  'Change Price Reports',
+                Text('Change Price Reports',
                   style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                    color: Colors.grey[700],
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 15),
               ],
@@ -447,7 +460,7 @@ class _OrderPageState extends State<OrderPage> {
           const Icon(
             Icons.chevron_right,
             color: Colors.grey,
-          )
+          ),
         ],
       ),
     );

@@ -127,7 +127,7 @@ class _ChequeViewState extends State<ChequeView> {
                   fontWeight: FontWeight.w500,
                   color: Colors.grey[500],
                 ),
-              )
+              ),
             ],
           ),
         );
@@ -136,99 +136,76 @@ class _ChequeViewState extends State<ChequeView> {
           width: MediaQuery.of(context).size.width,
           color: Colors.transparent,
           child: ListView.builder(
-              itemCount: _list.length,
-              itemBuilder: ((context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            // duration: const Duration(milliseconds: 100),
-                            type: PageTransitionType.rightToLeft,
-                            child: ChequeDetails(_list[index]['order_no'])));
-                  },
-                  child: Container(
-                    // width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    // height: 70,
-                    margin: const EdgeInsets.all(8),
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      // ignore: prefer_const_literals_to_create_immutables
-                      children: [
-                        const Icon(
-                          Icons.fact_check_outlined,
-                          color: Colors.deepOrange,
-                          size: 36,
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _list[index]['order_no'],
-                                style: const TextStyle(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                _list[index]['account_name'],
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Bank: ',
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  Text(
-                                    _list[index]['bank_name'],
-                                    style: const TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.green),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                _list[index]['dtm'],
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Column(
-                          // ignore: prefer_const_literals_to_create_immutables
+            itemCount: _list.length,
+            itemBuilder: ((context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          // duration: const Duration(milliseconds: 100),
+                          type: PageTransitionType.rightToLeft,
+                          child: ChequeDetails(_list[index]['order_no'])));
+                },
+                child: Container(
+                  // width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  // height: 70,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    // ignore: prefer_const_literals_to_create_immutables
+                    children: [
+                      const Icon(
+                        Icons.fact_check_outlined,
+                        color: Colors.deepOrange,
+                        size: 36,
+                      ),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Total Amount',
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w400),
+                            Text(_list[index]['order_no'],
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                             ),
-                            Text(
-                              formatCurrencyAmt
-                                  .format(double.parse(_list[index]['amount'])),
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.green),
+                            Text(_list[index]['account_name'],
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Bank: ',
+                                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400),
+                                ),
+                                Text(_list[index]['bank_name'],
+                                  style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: Colors.green),
+                                ),
+                              ],
+                            ),
+                            Text(_list[index]['dtm'],
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.black),
                             ),
                           ],
-                        )
-                      ],
-                    ),
+                        ),
+                      ),
+                      Column(
+                        // ignore: prefer_const_literals_to_create_immutables
+                        children: [
+                          const Text('Total Amount',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                          ),
+                          Text(formatCurrencyAmt.format(double.parse(_list[index]['amount'])),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.green),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
-                );
-              })),
+                ),
+              );
+            }),
+          ),
         );
       }
     }

@@ -247,8 +247,7 @@ class _WelcomePageState extends State<WelcomePage> {
   }
 
   downloadSalesmanImage() async {
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Downloading Salesman Images...');
+    Provider.of<Caption>(context, listen: false).changeCap('Downloading Salesman Images...');
     int x = 1;
     for (var element in salesmanList) {
       try {
@@ -278,10 +277,9 @@ class _WelcomePageState extends State<WelcomePage> {
           customModal(
               context,
               const Icon(CupertinoIcons.exclamationmark_circle,
-                  size: 50, color: Colors.red),
-              Text(
-                  "Error: ${response.statusCode}. Your client has issued a malformed or illegal request.",
-                  textAlign: TextAlign.center),
+                size: 50, color: Colors.red),
+              Text("Error: ${response.statusCode}. Your client has issued a malformed or illegal request.",
+                textAlign: TextAlign.center),
               true,
               const Icon(
                 CupertinoIcons.checkmark_alt,
@@ -293,28 +291,30 @@ class _WelcomePageState extends State<WelcomePage> {
         } else if (response.statusCode >= 500 || response.statusCode <= 599) {
           // ignore: use_build_context_synchronously
           customModal(
-              context,
-              const Icon(CupertinoIcons.exclamationmark_circle,
-                  size: 50, color: Colors.red),
-              Text("Error: ${response.statusCode}. Internal server error.",
-                  textAlign: TextAlign.center),
-              true,
-              const Icon(
-                CupertinoIcons.checkmark_alt,
-                size: 25,
-                color: Colors.greenAccent,
-              ),
-              '',
-              () {});
+            context,
+            const Icon(CupertinoIcons.exclamationmark_circle,
+              size: 50, color: Colors.red),
+            Text("Error: ${response.statusCode}. Internal server error.",
+              textAlign: TextAlign.center),
+            true,
+            const Icon(
+              CupertinoIcons.checkmark_alt,
+              size: 25,
+              color: Colors.greenAccent,
+            ),
+            '',
+            () {}
+          );
         }
       } on TimeoutException {
         customModal(
             context,
             const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Connection timed out. Please check internet connection or proxy server configurations.",
-                textAlign: TextAlign.center),
+              size: 50, color: Colors.red,
+            ),
+            const Text("Connection timed out. Please check internet connection or proxy server configurations.",
+              textAlign: TextAlign.center,
+            ),
             true,
             const Icon(
               CupertinoIcons.checkmark_alt,
@@ -327,10 +327,11 @@ class _WelcomePageState extends State<WelcomePage> {
         customModal(
             context,
             const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Connection timed out. Please check internet connection or proxy server configurations.",
-                textAlign: TextAlign.center),
+              size: 50, color: Colors.red,
+            ),
+            const Text("Connection timed out. Please check internet connection or proxy server configurations.",
+              textAlign: TextAlign.center,
+            ),
             true,
             const Icon(
               CupertinoIcons.checkmark_alt,
@@ -341,35 +342,40 @@ class _WelcomePageState extends State<WelcomePage> {
             () {});
       } on HttpException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text("An HTTP error eccured. Please try again later.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("An HTTP error eccured. Please try again later.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {},
+        );
       } on FormatException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Format exception error occured. Please try again later.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("Format exception error occured. Please try again later.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {},
+        );
       }
     }
   }
@@ -403,100 +409,111 @@ class _WelcomePageState extends State<WelcomePage> {
         } else if (response.statusCode >= 400 || response.statusCode <= 499) {
           // ignore: use_build_context_synchronously
           customModal(
-              context,
-              const Icon(CupertinoIcons.exclamationmark_circle,
-                  size: 50, color: Colors.red),
-              Text(
-                  "Error: ${response.statusCode}. Your client has issued a malformed or illegal request.",
-                  textAlign: TextAlign.center),
-              true,
-              const Icon(
-                CupertinoIcons.checkmark_alt,
-                size: 25,
-                color: Colors.greenAccent,
-              ),
-              '',
-              () {});
+            context,
+            const Icon(CupertinoIcons.exclamationmark_circle,
+              size: 50, color: Colors.red,
+            ),
+            Text("Error: ${response.statusCode}. Your client has issued a malformed or illegal request.",
+              textAlign: TextAlign.center,
+            ),
+            true,
+            const Icon(
+              CupertinoIcons.checkmark_alt,
+              size: 25,
+              color: Colors.greenAccent,
+            ),
+            '',
+            () {},
+          );
         } else if (response.statusCode >= 500 || response.statusCode <= 599) {
           // ignore: use_build_context_synchronously
           customModal(
-              context,
-              const Icon(CupertinoIcons.exclamationmark_circle,
-                  size: 50, color: Colors.red),
-              Text("Error: ${response.statusCode}. Internal server error.",
-                  textAlign: TextAlign.center),
-              true,
-              const Icon(
-                CupertinoIcons.checkmark_alt,
-                size: 25,
-                color: Colors.greenAccent,
-              ),
-              '',
-              () {});
+            context,
+            const Icon(CupertinoIcons.exclamationmark_circle,
+                size: 50, color: Colors.red),
+            Text("Error: ${response.statusCode}. Internal server error.",
+                textAlign: TextAlign.center),
+            true,
+            const Icon(
+              CupertinoIcons.checkmark_alt,
+              size: 25,
+              color: Colors.greenAccent,
+            ),
+            '',
+            () {},
+          );
         }
       } on TimeoutException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Connection timed out. Please check internet connection or proxy server configurations.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("Connection timed out. Please check internet connection or proxy server configurations.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {},
+        );
       } on SocketException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Connection timed out. Please check internet connection or proxy server configurations.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("Connection timed out. Please check internet connection or proxy server configurations.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {},
+        );
       } on HttpException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text("An HTTP error eccured. Please try again later.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("An HTTP error eccured. Please try again later.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {});
       } on FormatException {
         customModal(
-            context,
-            const Icon(CupertinoIcons.exclamationmark_circle,
-                size: 50, color: Colors.red),
-            const Text(
-                "Format exception error occured. Please try again later.",
-                textAlign: TextAlign.center),
-            true,
-            const Icon(
-              CupertinoIcons.checkmark_alt,
-              size: 25,
-              color: Colors.greenAccent,
-            ),
-            'Okay',
-            () {});
+          context,
+          const Icon(CupertinoIcons.exclamationmark_circle,
+            size: 50, color: Colors.red,
+          ),
+          const Text("Format exception error occured. Please try again later.",
+            textAlign: TextAlign.center,
+          ),
+          true,
+          const Icon(
+            CupertinoIcons.checkmark_alt,
+            size: 25,
+            color: Colors.greenAccent,
+          ),
+          'Okay',
+          () {},
+        );
       }
     }
   }
@@ -508,8 +525,7 @@ class _WelcomePageState extends State<WelcomePage> {
     if (salesmanList.isEmpty) {
       // context.read().changeCap('Creating Salesman List...');
       // ignore: use_build_context_synchronously
-      Provider.of<Caption>(context, listen: false)
-          .changeCap('Creating Salesman List...');
+      Provider.of<Caption>(context, listen: false).changeCap('Creating Salesman List...');
       // ignore: use_build_context_synchronously
       var rsp = await db.getSalesmanList(context);
       salesmanList = rsp;
@@ -527,17 +543,17 @@ class _WelcomePageState extends State<WelcomePage> {
     } else {
       // ignore: use_build_context_synchronously
       final action = await Dialogs.openDialog(
-          context,
-          'Confirmation',
-          'Update data? It may take a while please secure a stable connection.',
-          false,
-          'No',
-          'Yes');
+        context,
+        'Confirmation',
+        'Update data? It may take a while please secure a stable connection.',
+        false,
+        'No',
+        'Yes',
+      );
       if (action == DialogAction.yes) {
         // context.read().changeCap('Updating Salesman List...');
         // ignore: use_build_context_synchronously
-        Provider.of<Caption>(context, listen: false)
-            .changeCap('Updating Order Limit...');
+        Provider.of<Caption>(context, listen: false).changeCap('Updating Order Limit...');
         // ignore: unused_local_variable
         String updateType = 'Salesman';
         if (NetworkData.connected == true) {
@@ -574,16 +590,14 @@ class _WelcomePageState extends State<WelcomePage> {
         }
       } else {
         // ignore: use_build_context_synchronously
-        Provider.of<Caption>(context, listen: false)
-            .changeCap('Updated Successfuly!');
+        Provider.of<Caption>(context, listen: false).changeCap('Updated Successfuly!');
         unloadSpinkit();
       }
     }
   }
 
   loadSalesman() async {
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Updating Salesman List...');
+    Provider.of<Caption>(context, listen: false).changeCap('Updating Salesman List...');
     String updateType = 'Salesman';
     var resp = await db.getSalesmanList(context);
     if (!mounted) return;
@@ -664,7 +678,7 @@ class _WelcomePageState extends State<WelcomePage> {
       // context.read().changeCap('Creating Category...');
       // ignore: use_build_context_synchronously
       Provider.of<Caption>(context, listen: false)
-          .changeCap('Creating Categories...');
+        .changeCap('Creating Categories...');
       // ignore: use_build_context_synchronously
       var rsp = await db.getCategList(context);
       categList = rsp;
@@ -699,8 +713,7 @@ class _WelcomePageState extends State<WelcomePage> {
       }
     } else {
       // ignore: use_build_context_synchronously
-      Provider.of<Caption>(context, listen: false)
-          .changeCap('All Database Created Successfuly!');
+      Provider.of<Caption>(context, listen: false).changeCap('All Database Created Successfuly!');
       setState(() {
         unloadSpinkit();
       });
@@ -710,8 +723,7 @@ class _WelcomePageState extends State<WelcomePage> {
   //ITEM IMAGE (ALL IMAGE PATH)
   loadItemImgPath() async {
     // context.read().changeCap('Creating Image Path...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Image Path...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Image Path...');
     var itmImg = await db.ofFetchItemImgList();
     itemAllImgList = itmImg;
     if (itemAllImgList.isEmpty) {
@@ -734,8 +746,7 @@ class _WelcomePageState extends State<WelcomePage> {
 //ITEM MASTERFILE
   loadItemMasterfile() async {
     // context.read().changeCap('Creating Item Masterfile...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Item Masterfile...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Item Masterfile...');
     var itm = await db.ofFetchItemList();
     itemList = itm;
     if (itemList.isEmpty) {
@@ -807,8 +818,7 @@ class _WelcomePageState extends State<WelcomePage> {
 //BANK LIST
   loadBankList() async {
     // context.read().changeCap('Creating Bank List...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Bank List...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Bank List...');
     var blist = await db.ofFetchBankList();
     bankList = blist;
     // print(bankList);
@@ -823,8 +833,7 @@ class _WelcomePageState extends State<WelcomePage> {
           x++;
           if (x == bankList.length) {
             await db.insertBankList(bankList);
-            await db.addUpdateTable(
-                'tb_bank_list', 'CUSTOMER', date.toString());
+            await db.addUpdateTable('tb_bank_list', 'CUSTOMER', date.toString());
             // print('Bank List Created');
             GlobalVariables.tableProcessing = 'Bank List Created';
             setState(() {
@@ -883,8 +892,7 @@ class _WelcomePageState extends State<WelcomePage> {
 
   loadUserAccess() async {
     // context.read().changeCap('Creating Bank List...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating User Access...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating User Access...');
     var ulist = await db.ofFetchUserAccess();
     accessList = ulist;
     // print(bankList);
@@ -919,8 +927,7 @@ class _WelcomePageState extends State<WelcomePage> {
   //SALES TYPE LIST
   loadSalesType() async {
     // context.read().changeCap('Creating Sales Type...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Sales Type...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Sales Type...');
     var stlist = await db.ofSalesTypeList();
     salestypeList = stlist;
     if (salestypeList.isEmpty) {
@@ -953,8 +960,7 @@ class _WelcomePageState extends State<WelcomePage> {
   //CUSTOMER_DISCOUNT
   loadCustomerDiscount() async {
     // context.read().changeCap('Creating Customer Discount...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Principal Discount...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Principal Discount...');
     var disc = await db.ofFetchDiscountList();
     discountList = disc;
     if (discountList.isEmpty) {
@@ -988,8 +994,7 @@ class _WelcomePageState extends State<WelcomePage> {
   //CUSTOMER
   loadCustomer() async {
     // context.read().changeCap('Creating Customer List...');
-    Provider.of<Caption>(context, listen: false)
-        .changeCap('Creating Customer List...');
+    Provider.of<Caption>(context, listen: false).changeCap('Creating Customer List...');
     var cust = await db.ofFetchCustomerList();
     customerList = cust;
     if (customerList.isEmpty) {
@@ -1144,18 +1149,19 @@ class _WelcomePageState extends State<WelcomePage> {
                       style: raisedButtonLoginStyle,
                       onPressed: () async {
                         Navigator.push(
-                            context,
-                            PageTransition(
-                                // duration: const Duration(milliseconds: 100),
-                                type: PageTransitionType.rightToLeft,
-                                child: const SalesmanLoginPage()));
+                          context,
+                          PageTransition(
+                            // duration: const Duration(milliseconds: 100),
+                            type: PageTransitionType.rightToLeft,
+                            child: const SalesmanLoginPage(),
+                          ),
+                        );
                       },
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         // ignore: prefer_const_literals_to_create_immutables
                         children: [
-                          const Text(
-                            "Get Started",
+                          const Text("Get Started",
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 24,
@@ -1183,12 +1189,13 @@ class _WelcomePageState extends State<WelcomePage> {
               child: Text(
                 AppData.appName + AppData.appYear,
                 style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          )
+          ),
         ],
       )),
     );
@@ -1221,58 +1228,61 @@ class _LoadingSpinkitState extends State<LoadingSpinkit> {
     return Stack(
       children: <Widget>[
         Container(
-            width: MediaQuery.of(context).size.width,
-            padding:
-                const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
-            margin: const EdgeInsets.only(top: 16),
-            decoration: BoxDecoration(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.only(top: 50, bottom: 16, right: 5, left: 5),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(20),
+            // ignore: prefer_const_literals_to_create_immutables
+            boxShadow: [
+              const BoxShadow(
                 color: Colors.transparent,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(20),
-                // ignore: prefer_const_literals_to_create_immutables
-                boxShadow: [
-                  const BoxShadow(
-                    color: Colors.transparent,
-                    // blurRadius: 10.0,
-                    // offset: Offset(0.0, 10.0),
-                  ),
-                ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  // color: Colors.white,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(10),
-                      // ignore: prefer_const_literals_to_create_immutables
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.transparent,
-                          // blurRadius: 10.0,
-                          // offset: Offset(0.0, 10.0),
-                        ),
-                      ]),
-                  child: Column(
-                    children: [
-                      Text(
-                        // Provider.of<Caption>(context).cap,
-                        context.watch<Caption>().cap,
-                        style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black),
-                      ),
-                      const SizedBox(height: 10),
-                      const LinearProgressIndicator(),
-                      const SizedBox(height: 10),
-                    ],
-                  ),
+                // blurRadius: 10.0,
+                // offset: Offset(0.0, 10.0),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(10),
+                // color: Colors.white,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(10),
+                  // ignore: prefer_const_literals_to_create_immutables
+                  boxShadow: [
+                    const BoxShadow(
+                      color: Colors.transparent,
+                      // blurRadius: 10.0,
+                      // offset: Offset(0.0, 10.0),
+                    ),
+                  ],
                 ),
-              ],
-            )),
+                child: Column(
+                  children: [
+                    Text(
+                      // Provider.of<Caption>(context).cap,
+                      context.watch<Caption>().cap,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const LinearProgressIndicator(),
+                    const SizedBox(height: 10),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

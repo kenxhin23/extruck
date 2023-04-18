@@ -102,13 +102,9 @@ class _ChequeDetailsState extends State<ChequeDetails> {
           const SizedBox(
             width: 10,
           ),
-          Text(
-            'Cheque Details',
-            style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
-          )
+          Text('Cheque Details',
+            style: TextStyle(color: Colors.grey[800], fontSize: 16, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -126,18 +122,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Account Name',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.grey[500]),
+              Text('Account Name',
+                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                accountName,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black),
+              Text(accountName,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
               ),
             ],
           ),
@@ -152,18 +144,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Account No.',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.grey[500]),
+              Text('Account No.',
+                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                accountNo,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black),
+              Text(accountNo,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
               ),
             ],
           ),
@@ -178,18 +166,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Bank Name',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.grey[500]),
+              Text('Bank Name',
+                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                bankName,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black),
+              Text(bankName,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
               ),
             ],
           ),
@@ -201,23 +185,20 @@ class _ChequeDetailsState extends State<ChequeDetails> {
           height: 90,
           color: Colors.white,
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Cheque No.',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400, color: Colors.grey[500]),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  chequeNum,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w500, color: Colors.black),
-                ),
-              ]),
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Cheque No.',
+                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Text(chequeNum,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+              ),
+            ],
+          ),
         ),
         const SizedBox(height: 2),
         Container(
@@ -229,18 +210,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Cheque Date',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400, color: Colors.grey[500]),
+              Text('Cheque Date',
+                style: TextStyle(fontWeight: FontWeight.w400, color: Colors.grey[500]),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                chequeDate,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black),
+              Text(chequeDate,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
               ),
             ],
           ),
@@ -255,20 +232,14 @@ class _ChequeDetailsState extends State<ChequeDetails> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Cheque Type',
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey[500]),
+              Text('Cheque Type',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: Colors.grey[500]),
               ),
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                chequeType,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w500, color: Colors.black),
+              Text(chequeType,
+                style: const TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
               ),
             ],
           ),

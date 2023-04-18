@@ -104,8 +104,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
       // ChequeData.imgName = fileName.toString();
       // OrderData.setChequeImg = true;
       UserData.img = fileName.toString();
-      showGlobalSnackbar(
-          'Information', 'Image Uploaded', Colors.white, ColorsTheme.mainColor);
+      showGlobalSnackbar('Information', 'Image Uploaded', Colors.white, ColorsTheme.mainColor);
 
       if (UserData.position == 'Salesman') {
         // print(UserData.id);
@@ -130,7 +129,8 @@ class _ProfileInfoState extends State<ProfileInfo> {
             // }));
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/smmenu', (Route<dynamic> route) => false);
+              '/smmenu', (Route<dynamic> route) => false,
+            );
           }
         }
       } else {
@@ -143,14 +143,14 @@ class _ProfileInfoState extends State<ProfileInfo> {
           // ignore: use_build_context_synchronously
           Navigator.pop(context);
           // ignore: use_build_context_synchronously
-          final action = await WarningDialogs.openDialog(context, 'Information',
-              'Changes Successfully Saved!', false, 'OK');
+          final action = await WarningDialogs.openDialog(context, 'Information', 'Changes Successfully Saved!', false, 'OK');
           if (action == DialogAction.yes) {
             GlobalVariables.processedPressed = true;
             GlobalVariables.menuKey = 4;
             // ignore: use_build_context_synchronously
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/hepemenu', (Route<dynamic> route) => false);
+              '/hepemenu', (Route<dynamic> route) => false,
+            );
           }
         }
       }
@@ -176,13 +176,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
             ),
           );
         } else if (null != snapshot.error) {
-          return const Text(
-            'Error Picking Image',
+          return const Text('Error Picking Image',
             textAlign: TextAlign.center,
           );
         } else {
-          return const Text(
-            'No Image Selected',
+          return const Text('No Image Selected',
             textAlign: TextAlign.center,
           );
         }
@@ -217,13 +215,13 @@ class _ProfileInfoState extends State<ProfileInfo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text(
-                "Edit Profile",
+              const Text("Edit Profile",
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               // Visibility(visible: false, child: showImage()),
               const SizedBox(height: 10),
@@ -260,12 +258,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
                         child: CircleAvatar(
                           radius: 75,
                           backgroundImage: (_image != null)
-                              ? Image.file(
-                                  _image!,
-                                  fit: BoxFit.cover,
-                                ).image
-                              : NetworkImage(
-                                  UrlAddress.userImg + UserData.img!),
+                            ? Image.file(
+                                _image!,
+                                fit: BoxFit.cover,
+                              ).image
+                            : NetworkImage(
+                                UrlAddress.userImg + UserData.img!),
 
                           // backgroundImage:
                           //     NetworkImage(UrlAddress.userImg + UserData.img),
@@ -279,10 +277,9 @@ class _ProfileInfoState extends State<ProfileInfo> {
                       InkWell(
                         onTap: () {
                           showDialog(
-                                  barrierDismissible: false,
-                                  context: context,
-                                  builder: (context) => const Option())
-                              .then((value) {
+                            barrierDismissible: false,
+                            context: context,
+                            builder: (context) => const Option()).then((value) {
                             if (UserData.getImgfrom == 'Camera') {
                               openCamera();
                             } else {
@@ -294,8 +291,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                         child: Row(
                           // ignore: prefer_const_literals_to_create_immutables
                           children: [
-                            const Text(
-                              'Change Photo',
+                            const Text('Change Photo',
                               style: TextStyle(fontSize: 12),
                             ),
                             const Icon(CupertinoIcons.camera_circle)
@@ -317,11 +313,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
                 // padding: EdgeInsets.symmetric(horizontal: 10),
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    )),
+                  color: Colors.grey[100],
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
                 child: Column(
                   children: [
                     const SizedBox(
@@ -343,19 +340,19 @@ class _ProfileInfoState extends State<ProfileInfo> {
                               child: InkWell(
                                 onTap: () async {
                                   final action = await Dialogs.openDialog(
-                                      context,
-                                      'Confirmation',
-                                      'Are you sure you want to save image?',
-                                      true,
-                                      'No',
-                                      'Yes');
+                                    context,
+                                    'Confirmation',
+                                    'Are you sure you want to save image?',
+                                    true,
+                                    'No',
+                                    'Yes',
+                                  );
                                   if (action == DialogAction.yes) {
                                     Spinkit.label = 'Uploading Image...';
                                     showDialog(
-                                        barrierDismissible: false,
-                                        context: context,
-                                        builder: (context) =>
-                                            const LoadingSpinkit());
+                                      barrierDismissible: false,
+                                      context: context,
+                                      builder: (context) => const LoadingSpinkit());
                                     uploadImage();
                                   }
 
@@ -381,12 +378,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
                                         CrossAxisAlignment.center,
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Text(
-                                        'SAVE CHANGES',
+                                      Text('SAVE CHANGES',
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            color: ColorsTheme.mainColor,
-                                            fontWeight: FontWeight.w500),
+                                          fontSize: 14,
+                                          color: ColorsTheme.mainColor,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -394,13 +391,13 @@ class _ProfileInfoState extends State<ProfileInfo> {
                               ),
                             ),
                           ],
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -416,32 +413,36 @@ class _ProfileInfoState extends State<ProfileInfo> {
           const Padding(
             padding: EdgeInsets.only(left: 10),
             child: Text('Personal Information',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500)),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
           Row(
             children: [
               Expanded(
-                  child: Container(
-                padding: const EdgeInsets.only(left: 15),
-                color: Colors.white,
-                height: 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${UserData.firstname!} ${UserData.lastname!}",
-                      style: TextStyle(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15),
+                  color: Colors.white,
+                  height: 50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "${UserData.firstname!} ${UserData.lastname!}",
+                        style: TextStyle(
                           color: Colors.grey[850],
                           fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              ),
             ],
           ),
           const SizedBox(
@@ -450,24 +451,25 @@ class _ProfileInfoState extends State<ProfileInfo> {
           Row(
             children: [
               Expanded(
-                  child: Container(
-                padding: const EdgeInsets.only(left: 15),
-                color: Colors.white,
-                height: 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${UserData.position!}(${UserData.department!} - ExTruck)',
-                      style: TextStyle(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15),
+                  color: Colors.white,
+                  height: 50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('${UserData.position!}(${UserData.department!} - ExTruck)',
+                        style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              ),
             ],
           ),
           const SizedBox(
@@ -476,24 +478,26 @@ class _ProfileInfoState extends State<ProfileInfo> {
           Row(
             children: [
               Expanded(
-                  child: Container(
-                padding: const EdgeInsets.only(left: 15),
-                color: Colors.white,
-                height: 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      UserData.address.toString(),
-                      style: TextStyle(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15),
+                  color: Colors.white,
+                  height: 50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        UserData.address.toString(),
+                        style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 14,
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              ),
             ],
           ),
         ],
@@ -510,10 +514,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
           const Padding(
             padding: EdgeInsets.only(left: 10),
             child: Text('Contact Information',
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500)),
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ),
           Row(
             children: [
@@ -533,12 +539,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
                             child: Container(
                               child: Row(
                                 children: [
-                                  Text(
-                                    'Mobile:',
+                                  Text('Mobile:',
                                     style: TextStyle(
-                                        color: Colors.grey[700],
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w500),
+                                      color: Colors.grey[700],
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
                                   ),
                                   const SizedBox(
                                     width: 10,
@@ -546,9 +552,10 @@ class _ProfileInfoState extends State<ProfileInfo> {
                                   Text(
                                     UserData.contact!,
                                     style: TextStyle(
-                                        color: Colors.grey[850],
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                                      color: Colors.grey[850],
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -557,19 +564,20 @@ class _ProfileInfoState extends State<ProfileInfo> {
                           InkWell(
                             onTap: () {
                               showGlobalSnackbar(
-                                  'Information',
-                                  'This feature is currently unavailable.',
-                                  Colors.white,
-                                  ColorsTheme.mainColor);
+                                'Information',
+                                'This feature is currently unavailable.',
+                                Colors.white,
+                                ColorsTheme.mainColor,
+                              );
                             },
                             child: Row(
                               children: [
-                                Text(
-                                  'Edit',
+                                Text('Edit',
                                   style: TextStyle(
-                                      fontSize: 10,
-                                      color: ColorsTheme.mainColor,
-                                      fontWeight: FontWeight.w500),
+                                    fontSize: 10,
+                                    color: ColorsTheme.mainColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                                 Icon(
                                   CupertinoIcons.pencil,
@@ -578,7 +586,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                                 ),
                               ],
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ],
@@ -593,69 +601,71 @@ class _ProfileInfoState extends State<ProfileInfo> {
           Row(
             children: [
               Expanded(
-                  child: Container(
-                padding: const EdgeInsets.only(left: 15),
-                color: Colors.white,
-                height: 50,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Text(
-                                'Email:',
-                                style: TextStyle(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15),
+                  color: Colors.white,
+                  height: 50,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Text('Email:',
+                                  style: TextStyle(
                                     color: Colors.grey[700],
                                     fontSize: 12,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Text(
-                                'sample@mail.com',
-                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text('sample@mail.com',
+                                  style: TextStyle(
                                     color: Colors.grey[850],
                                     fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            showGlobalSnackbar(
+                          InkWell(
+                            onTap: () {
+                              showGlobalSnackbar(
                                 'Information',
                                 'This feature is currently unavailable.',
                                 Colors.white,
-                                ColorsTheme.mainColor);
-                          },
-                          child: Row(
-                            children: [
-                              Text(
-                                'Edit',
-                                style: TextStyle(
+                                ColorsTheme.mainColor,
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text('Edit',
+                                  style: TextStyle(
                                     fontSize: 10,
                                     color: ColorsTheme.mainColor,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                              Icon(
-                                CupertinoIcons.pencil,
-                                size: 20,
-                                color: ColorsTheme.mainColor,
-                              ),
-                            ],
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Icon(
+                                  CupertinoIcons.pencil,
+                                  size: 20,
+                                  color: ColorsTheme.mainColor,
+                                ),
+                              ],
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ))
+              ),
             ],
           ),
         ],

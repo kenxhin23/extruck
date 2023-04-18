@@ -17,8 +17,7 @@ class SessionTimer {
       GlobalTimer.timerSessionInactivity?.cancel();
     }
 
-    GlobalTimer.timerSessionInactivity =
-        Timer(const Duration(minutes: 90), () async {
+    GlobalTimer.timerSessionInactivity = Timer(const Duration(minutes: 90), () async {
       // print('session over');
 
       // if (GlobalVariables.timerCheckIfCustomerLogIn != null) {
@@ -49,8 +48,7 @@ class SessionTimer {
                   Icons.timelapse_outlined,
                   color: Colors.red,
                 ),
-                Text(
-                  " You are inactive for 90 minutes.",
+                Text(" You are inactive for 90 minutes.",
                   style: TextStyle(fontSize: 14),
                 ),
               ],
@@ -65,8 +63,7 @@ class SessionTimer {
                   //   ),
                   //   (Route route) => false,
                   // );
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/splash', (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil('/splash', (route) => false);
                 },
               ),
             ],
